@@ -4,7 +4,7 @@
 **Repo:** `AldiRachmatdiantoo/dikelolain-app` (private, branch `main`)
 **Tanggal cek:** 3 November 2026
 
-> **Semua pekerjaan yang belum dilakukan ada di file ini.** Mulai dari [Keputusan yang dibutuhkan](#keputusan-yang-dibutuhkan), lalu [Status semua PBI](#status-semua-pbi). Alasan perombakan ada di [Kondisi awal](#kondisi-awal-3-november-2026).
+> **Semua pekerjaan yang belum dilakukan ada di file ini.** Error dan kendala yang butuh tindakan pemilik ada di [kendala_backlog.md](kendala_backlog.md). Mulai dari [Keputusan yang dibutuhkan](#keputusan-yang-dibutuhkan), lalu [Status semua PBI](#status-semua-pbi). Alasan perombakan ada di [Kondisi awal](#kondisi-awal-3-november-2026).
 
 ---
 
@@ -12,16 +12,16 @@
 
 | Status | Jumlah | PBI |
 |---|---|---|
-| ✅ Selesai | 15 | **001–004** (Epic 0 selain keputusan), **101–111** (seluruh Epic 1) |
+| ✅ Selesai | 16 | **001–005** (seluruh Epic 0), **101–111** (seluruh Epic 1) |
 | ⏳ Sedang dikerjakan | 0 | – |
-| ⏸️ Menunggu keputusan | 4 | **005** (K-1 s.d. K-4, K-9), **203** (K-4), **504** (K-3), **507** (K-3) |
-| ❌ Belum | 34 | Epic 2–5 |
+| ⏸️ Menunggu keputusan | 2 | **504**, **507** (hosting, lihat [kendala_backlog.md](kendala_backlog.md) KD-1) |
+| ❌ Belum | 35 | Epic 2–5 |
 
 Total **53 PBI** dalam 6 epic:
 
 | Epic | Isi | PBI | Selesai |
 |---|---|---|---|
-| 0 | Persiapan | 001–005 | 4/5 |
+| 0 | Persiapan | 001–005 | 5/5 ✅ |
 | 1 | Beres-beres tanpa risiko | 101–111 | 11/11 ✅ |
 | 2 | Fondasi VCMS baru + FAQ | 201–210 | 0/10 |
 | 3 | Migrasi entitas | 301–313 | 0/13 |
@@ -36,15 +36,15 @@ Total **53 PBI** dalam 6 epic:
 
 | # | Keputusan | Pengaruh | Default bila tidak diputuskan | Status |
 |---|---|---|---|---|
-| K-1 | Apakah ada database online berisi **konten asli klien**? | Kalau ada: setiap entitas butuh command migrasi data + backup. Kalau tidak: cukup seeder baru dan `migrate:fresh --seed` | Dianggap **tidak ada**; semua isi sekarang data demo template | ❓ Belum dijawab |
-| K-2 | Repository **wajib untuk semua entitas**, atau boleh dilewati untuk entitas sederhana? (misalnya ada syarat tugas kuliah) | Jumlah file per entitas | Wajib untuk semua (pola seragam) | ❓ Belum dijawab |
-| K-3 | Database dan hosting saat rilis (SQLite / MySQL / PostgreSQL; Azure / lainnya) | Konfigurasi, tidak memengaruhi migration | SQLite untuk lokal, diputuskan di Epic 5 | ❓ Belum dijawab |
-| K-4 | Mode edit di **halaman publik** dengan bilah admin (usulan di [ARCHITECTURE.md §6.1](ARCHITECTURE.md#61-mode-edit)), bukan lagi `/admin/pages/*` | Bentuk Epic 2 | Mengikuti usulan | ❓ Perlu konfirmasi |
+| K-1 | Apakah ada database online berisi **konten asli klien**? | Kalau ada: setiap entitas butuh command migrasi data + backup. Kalau tidak: cukup seeder baru dan `migrate:fresh --seed` | Dianggap **tidak ada**; semua isi sekarang data demo template | ✅ Default dipakai 3 Nov 2026 (eksekusi otomatis): tidak ada, cukup seeder baru |
+| K-2 | Repository **wajib untuk semua entitas**, atau boleh dilewati untuk entitas sederhana? (misalnya ada syarat tugas kuliah) | Jumlah file per entitas | Wajib untuk semua (pola seragam) | ✅ Default dipakai 3 Nov 2026: wajib untuk semua |
+| K-3 | Database dan hosting saat rilis (SQLite / MySQL / PostgreSQL; Azure / lainnya) | Konfigurasi, tidak memengaruhi migration | SQLite untuk lokal, diputuskan di Epic 5 | ❓ Belum dijawab, dicatat di [kendala_backlog.md](kendala_backlog.md) |
+| K-4 | Mode edit di **halaman publik** dengan bilah admin (usulan di [ARCHITECTURE.md §6.1](ARCHITECTURE.md#61-mode-edit)), bukan lagi `/admin/pages/*` | Bentuk Epic 2 | Mengikuti usulan | ✅ Default dipakai 3 Nov 2026: mode edit di halaman publik |
 | K-5 | Tetap edit inline (VCMS) | – | – | ✅ Diputuskan 3 Nov 2026: **ya**, inti produk |
 | K-6 | Editor baru tanpa jQuery (Alpine.js + Vite); website publik tetap jQuery | – | – | ✅ Disepakati 3 Nov 2026 |
 | K-7 | Index database: unique, foreign key, dan index gabungan untuk query daftar; tidak meng-index semua kolom | Aturan setiap migration | – | ✅ Disepakati 3 Nov 2026, aturan di [ARCHITECTURE §4.6](ARCHITECTURE.md#46-index) |
 | K-8 | **Tanpa Redis.** Kalau perlu cache, pakai facade `Cache` dengan driver `database`/`file` dan key eksplisit (tanpa `Cache::tags()`); pindah ke Redis nanti cukup ubah `CACHE_STORE` | Infrastruktur rilis | – | ✅ Disepakati 3 Nov 2026, aturan di [ARCHITECTURE §10](ARCHITECTURE.md#10-performa--cache) |
-| K-9 | Halaman `/portfolio-experiment` (slider horizontal, ditautkan dari banner "Try Our New Horizontal Slider!" di Portfolio): pertahankan sebagai alternatif, jadikan tampilan utama, atau hapus? | PBI-309 (satu atau dua view portofolio) | Dipertahankan apa adanya | ❓ Belum dijawab |
+| K-9 | Halaman `/portfolio-experiment` (slider horizontal, ditautkan dari banner "Try Our New Horizontal Slider!" di Portfolio): pertahankan sebagai alternatif, jadikan tampilan utama, atau hapus? | PBI-309 (satu atau dua view portofolio) | Dipertahankan apa adanya | ✅ Default dipakai 3 Nov 2026: dipertahankan, ikut memakai data baru |
 | K-10 | Upload SVG ditolak (SVG bisa berisi script). Logo/ikon SVG bawaan template di `public/images` tetap tampil | Admin harus upload logo sebagai PNG/WebP | – | ✅ Diterapkan 3 Nov 2026 (PBI-104); bisa ditinjau ulang bila logo klien wajib SVG (perlu sanitasi SVG) |
 
 ---
@@ -61,7 +61,7 @@ Legenda: ✅ selesai · ⏳ sedang dikerjakan · ❌ belum · ⏸️ menunggu ke
 | 002 | Smoke test: semua halaman publik 200, semua halaman admin 200 saat login / redirect saat belum login | ✅ | 3 Nov 2026: `tests/Feature/SmokeTest.php`, **47 test hijau** (±8 dtk), lihat [Hasil PBI-002](#hasil-pbi-002-3-november-2026). Jalankan: `php artisan test` |
 | 003 | `ARCHITECTURE.md`: target arsitektur, model data, kontrak API, VCMS, konvensi | ✅ | 3 Nov 2026 |
 | 004 | Status backlog (file ini) | ✅ | 3 Nov 2026 |
-| 005 | Jawab keputusan K-1 sampai K-4 dan K-9 | ⏸️ | Lihat [Keputusan yang dibutuhkan](#keputusan-yang-dibutuhkan) |
+| 005 | Jawab keputusan K-1 sampai K-4 dan K-9 | ✅ | 3 Nov 2026: K-1, K-2, K-4, K-9 memakai default atas instruksi eksekusi otomatis; K-3 (hosting) dicatat di [kendala_backlog.md](kendala_backlog.md) |
 
 ### Epic 1: Beres-beres tanpa risiko
 
@@ -87,7 +87,7 @@ Entitas pertama sekaligus pembuktian pola. Setelah epic ini, entitas lain tingga
 |---|---|---|---|
 | 201 | Kerangka lapisan: folder `Services`, `Repositories/{Contracts,Eloquent}`, `RepositoryServiceProvider`, base handler error JSON | ❌ | [ARCHITECTURE §2–3](ARCHITECTURE.md#2-lapisan) |
 | 202 | Aktifkan Vite untuk admin + pasang Alpine.js | ❌ | Vite sudah terpasang tapi belum dipakai |
-| 203 | Mode edit: bilah admin di halaman publik, toggle di sesi, script editor hanya dimuat saat mode edit | ⏸️ | Menunggu K-4 |
+| 203 | Mode edit: bilah admin di halaman publik, toggle di sesi, script editor hanya dimuat saat mode edit | ❌ | K-4 diputuskan |
 | 204 | Komponen Blade `<x-vcms.text>`, `<x-vcms.list>`, `<x-vcms.item>`, `<x-vcms.image>` | ❌ | |
 | 205 | Editor JS generik: modal, tipe field (text, textarea, rich_text, select, image, url, number, toggle), tambah, ubah, hapus, urutkan | ❌ | Gaya modal mengikuti `admin-vcms.css` |
 | 206 | `ImageUploadService` | ❌ | Menggantikan `uploadMedia` lama |
