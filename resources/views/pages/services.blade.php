@@ -5,64 +5,15 @@
 @section('content')
 
 @php
-    // Helper function to get content from database
-    if (!function_exists('getContent')) {
-        function getContent($sections, $sectionKey, $contentKey, $default = '') {
-            if (!isset($sections[$sectionKey])) {
-                return $default;
-            }
-            $content = $sections[$sectionKey]->contents->firstWhere('key', $contentKey);
-            return $content ? $content->value : $default;
-        }
-    }
-
-    // Get services from database
-    $services = [];
-    $servicesSection = collect($sections)->firstWhere('key', 'services');
-
-    if ($servicesSection && isset($servicesSection['contents'])) {
-        $serviceIds = [];
-        foreach ($servicesSection['contents'] as $content) {
-            // Match service title but exclude sub-section titles (benefits_title, process_title, faq_title, etc.)
-            if (preg_match('/services-list-1_service_(.+)_title$/', $content['key'], $matches)) {
-                $serviceId = $matches[1];
-                // Skip if this is a sub-section title (contains _benefits, _process, _faq, _cta anywhere)
-                if (!preg_match('/_(benefits|process|faq|cta)/', $serviceId)) {
-                    $serviceIds[$serviceId] = $content['value'];
-                }
-            }
-        }
-        foreach ($serviceIds as $id => $title) {
-            $services[] = ['id' => $id, 'title' => $title];
-        }
-    }
-
-    // Default services if database is empty
-    if (empty($services)) {
-        $services = [
-            ['id' => '01', 'title' => 'UI/UX Design'],
-            ['id' => '02', 'title' => 'Web Development'],
-            ['id' => '03', 'title' => '3D Designs'],
-            ['id' => '04', 'title' => 'Digital Marketing'],
-            ['id' => '05', 'title' => 'Motion Graphics'],
-            ['id' => '06', 'title' => 'Logos & Branding'],
-        ];
-    }
-
-    $totalServices = count($services);
-
-    // Pagination settings
     $servicesPerPage = 12;
-    $totalPages = ceil($totalServices / $servicesPerPage);
-
-    // Page Header data from database
-    $headerTitle = getContent($sections, 'services-header', 'services-header-1_title', 'Explore our <span>services</span>');
-    $headerBreadcrumb = getContent($sections, 'services-header', 'services-header-1_breadcrumb', 'Services');
+    $totalPages = (int) ceil($services->count() / $servicesPerPage);
 @endphp
 
-    <x-page-header title="{!! $headerTitle !!}">
-        <li class="breadcrumb-item active" aria-current="page">{{ $headerBreadcrumb }}</li>
-    </x-page-header>
+    <x-vcms.settings :keys="['services.header.title', 'services.header.breadcrumb']" label="Header">
+        <x-page-header :title="$settings->get('services.header.title')">
+            <li class="breadcrumb-item active" aria-current="page">{{ $settings->get('services.header.breadcrumb') }}</li>
+        </x-page-header>
+    </x-vcms.settings>
 
     <div class="page-services">
         <div class="container">
@@ -80,7 +31,7 @@
                                 </button>
                             @endfor
                             <span style="color: #888; font-size: 13px; margin-left: 10px;">
-                                ({{ $totalServices }} services)
+                                ({{ $services->count() }} services)
                             </span>
                         </div>
                     </div>
@@ -88,42 +39,37 @@
             @endif
 
             <div class="row service-items-row" style="min-height: 400px;">
-                @foreach ($services as $index => $service)
+                @foreach ($services as $service)
                     @php
-                        $serviceId = $service['id'];
-                        $serviceTitle = getContent($sections, 'services', "services-list-1_service_{$serviceId}_title", $service['title'] ?? 'Service Title');
-                        $serviceDesc = getContent($sections, 'services', "services-list-1_service_{$serviceId}_desc", 'We provide excellent service for your needs.');
-                        $serviceImage = getContent($sections, 'services', "services-list-1_service_{$serviceId}_image", "images/service-image-" . (($index % 6) + 1) . ".jpg");
-                        $serviceLink = route('pages.service.single', ['serviceId' => $serviceId]);
-
-                        // Calculate animation delay
-                        $delay = ($index % 3) * 0.2;
-
-                        // Calculate page number for this service
-                        $pageNum = floor($index / $servicesPerPage) + 1;
+                        $serviceLink = route('pages.service.single', $service->slug);
+                        $delay = ($loop->index % 3) * 0.2;
+                        $pageNum = intdiv($loop->index, $servicesPerPage) + 1;
                     @endphp
                     <div class="col-lg-4 col-md-6 service-item-col" data-page="{{ $pageNum }}" style="{{ $pageNum > 1 ? 'display: none;' : '' }}">
-                        <div class="service-item wow fadeInUp" data-service-id="{{ $serviceId }}" @if($delay > 0) data-wow-delay="{{ $delay }}s" @endif>
+                        <x-vcms.item resource="services" :item="$service" :fields="$serviceFields" label="layanan"
+                            class="service-item wow fadeInUp {{ $service->is_active ? '' : 'vcms-hidden' }}" :data-wow-delay="$delay > 0 ? $delay . 's' : null">
                             <div class="service-image">
                                 <a href="{{ $serviceLink }}" data-cursor-text="View">
                                     <figure class="image-anime">
-                                        <img src="{{ asset($serviceImage) }}" alt="{{ $serviceTitle }}">
+                                        <img src="{{ $service->image_url }}" alt="{{ $service->name }}">
                                     </figure>
                                 </a>
                             </div>
                             <div class="service-body">
                                 <div class="service-content">
-                                    <h3><a href="{{ $serviceLink }}">{{ $serviceTitle }}</a></h3>
-                                    <p>{{ $serviceDesc }}</p>
+                                    <h3><a href="{{ $serviceLink }}">{{ $service->name }}</a></h3>
+                                    <p>{{ $service->summary }}</p>
                                 </div>
                                 <div class="service-btn">
                                     <a href="{{ $serviceLink }}"><img src="{{ asset('images/arrrow-light.svg') }}" alt=""></a>
                                 </div>
                             </div>
-                        </div>
+                        </x-vcms.item>
                     </div>
                 @endforeach
             </div>
+
+            <x-vcms.add resource="services" :fields="$serviceFields" label="layanan" />
         </div>
     </div>
 
@@ -132,6 +78,7 @@
     <!-- Creative Tools Section End -->
 
 @endsection
+
 
 @push('scripts')
     <script>

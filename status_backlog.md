@@ -14,7 +14,7 @@
 
 **Mode:** eksekusi otomatis atas instruksi pemilik (3 Nov 2026): kerjakan PBI berurutan tanpa bertanya, uji setiap PBI (`php artisan test` + cek browser bila terlihat), commit + push per PBI, kendala dicatat di [kendala_backlog.md](kendala_backlog.md).
 
-**Sedang dikerjakan:** Epic 3, PBI-308 (Layanan). Selesai: Epic 0–2, PBI-301–307.
+**Sedang dikerjakan:** Epic 3, PBI-309 (Project / portofolio). Selesai: Epic 0–2, PBI-301–308.
 
 **Contoh pola entitas = Testimonial** (memakai kerangka daftar bersama, [ARCHITECTURE §7.1](ARCHITECTURE.md#71-kerangka-bersama-untuk-daftar-terurut)). Entitas berikutnya meniru file-file ini:
 - `database/migrations/2026_11_03_000003_create_testimonials_table.php`, `app/Models/Testimonial.php` (scope + accessor `logo_url`/`photo_url`)
@@ -35,10 +35,10 @@
 
 | Status | Jumlah | PBI |
 |---|---|---|
-| ✅ Selesai | 33 | **001–005** (seluruh Epic 0), **101–111** (seluruh Epic 1), **201–210** (seluruh Epic 2), **301–307** |
+| ✅ Selesai | 34 | **001–005** (seluruh Epic 0), **101–111** (seluruh Epic 1), **201–210** (seluruh Epic 2), **301–308** |
 | ⏳ Sedang dikerjakan | 0 | – |
 | ⏸️ Menunggu keputusan | 2 | **504**, **507** (hosting, lihat [kendala_backlog.md](kendala_backlog.md) KD-1) |
-| ❌ Belum | 18 | Epic 3–5 |
+| ❌ Belum | 17 | Epic 3–5 |
 
 Total **53 PBI** dalam 6 epic:
 
@@ -47,7 +47,7 @@ Total **53 PBI** dalam 6 epic:
 | 0 | Persiapan | 001–005 | 5/5 ✅ |
 | 1 | Beres-beres tanpa risiko | 101–111 | 11/11 ✅ |
 | 2 | Fondasi VCMS baru + FAQ | 201–210 | 10/10 ✅ |
-| 3 | Migrasi entitas | 301–313 | 7/13 |
+| 3 | Migrasi entitas | 301–313 | 8/13 |
 | 4 | Pembersihan akhir | 401–406 | 0/6 |
 | 5 | Setelah rombak (fitur & rilis) | 501–508 | 0/8 |
 
@@ -133,7 +133,7 @@ Urutan dari yang paling sederhana. Setiap PBI mengikuti checklist [ARCHITECTURE 
 | 305 | Pencapaian | `achievements` | `achievements` (achievement-list) | Home, About | ✅ 3 Nov 2026: section kembar di Home dan About kini satu `partials/achievements.blade.php` + `SectionData::achievements()`. Judul, deskripsi, dan tombol jadi setting `achievements.*`. Seeder memuat 7 pencapaian seperti seed lama (fallback di view dulu hanya 6). Dicek di browser: edit di About ikut tampil di Home. 184 test hijau |
 | 306 | Counter | `counters` | `cta` (counter-list) | Home, About | ✅ 3 Nov 2026: section CTA kembar di Home dan About kini satu `partials/cta.blade.php` + `SectionData::counters()`. Teks dan tombol bulat jadi setting `cta.*`. Angka divalidasi (hanya digit, boleh pemisah `.`/`,`) supaya animasi counterUp tidak rusak. Dicek di browser: pesan validasi tampil, angka `1.250` teranimasi benar. 204 test hijau |
 | 307 | Tim | `team_members`, `team_member_skills`, `team_member_expertises` | `our-team` (team-list) | Home, About, Team, Team detail | ✅ 3 Nov 2026: halaman detail kini `/pages/team/{slug}` (sebelumnya `/pages/team/{index}`, dan index yang tidak ada tetap menampilkan "Team Member"); slug dibuat dari nama saat anggota ditambahkan dan tidak berubah saat nama diganti, jadi link dan reload editor tetap jalan. Anggota tersembunyi/tidak dikenal → 404. Section tim Home/About satu `partials/team.blade.php` (4 anggota aktif pertama), judulnya setting `team.*` (About sebelumnya teks tetap). Skill dan keahlian diurutkan per anggota; editor dapat tipe field `hidden` (untuk `team_member_id`) dan `<x-vcms.item :deletable="false">`. Seed lama tidak berisi anggota, kini `TeamMemberSeeder` berisi 8 anggota demo (foto template) sampai isi asli ada (KD-2). Dicek di browser: tambah anggota + upload foto, tambah/hapus skill, animasi skillbar. 246 test hijau |
-| 308 | Layanan | `services`, `service_benefits`, `service_process_steps`, `service_faqs` | `services` (service-list, service-detail) | Home, Services, Service detail | ❌ |
+| 308 | Layanan | `services`, `service_benefits`, `service_faqs` | `services` (service-list, service-detail) | Home, Services, Service detail | ✅ 3 Nov 2026: halaman detail kini `/pages/service/{slug}` (sebelumnya `/pages/service/{01}`); slug dibuat dari nama saat layanan ditambahkan dan tidak berubah saat nama diganti (logika slug dipindah ke trait `CreatesSlugs`, dipakai juga oleh tim). Layanan tersembunyi/tidak dikenal → 404. Satu data dipakai tab Home, kartu halaman Services, sidebar kategori, dan detail (gambar besar jatuh ke gambar kartu bila kosong, ikon jatuh ke ikon bawaan). Tabel `service_process_steps` tidak dibuat: tidak ada view publik maupun admin yang pernah menampilkan langkah proses per layanan. Judul FAQ, judul sidebar, dan kotak CTA di detail yang dulu per layanan kini setting bersama `services.*` (isinya memang sama di kelima layanan). Seed layanan lama dihapus dari `SectionContentSeeder`, `ServiceSeeder` berisi 5 layanan template (6 manfaat + 5 FAQ masing-masing). Dicek di browser: tab Home berpindah, tambah/hapus manfaat lewat `service_id` tersembunyi, pesan validasi FAQ. 285 test hijau |
 | 309 | Project / portofolio | `projects` | `our-work` (project-list, portfolio-item) | Home, Portfolio | ❌ |
 | 310 | Paket harga | `pricing_plans`, `pricing_features` | `pricing` (pricing-section) | Pricing | ❌ |
 | 311 | Daftar halaman | `page_list_items` | `about-us` (list item), `vision-mission`, pricing-benefits | About, Pricing | ❌ |
@@ -278,3 +278,4 @@ Ringkasan hasil membaca kode di commit `02fa1fd` (isi sama dengan branch `back-e
 | 3 Nov 2026 | PBI-305 selesai: pencapaian di tabel `achievements`, section bersama Home/About; 184 test hijau |
 | 3 Nov 2026 | PBI-306 selesai: angka CTA di tabel `counters`, section CTA bersama Home/About; 204 test hijau |
 | 3 Nov 2026 | PBI-307 selesai: tim di tabel `team_members` (+ skill, keahlian), detail anggota lewat slug, 8 anggota demo; 246 test hijau |
+| 3 Nov 2026 | PBI-308 selesai: layanan di tabel `services` (+ manfaat, FAQ), detail layanan lewat slug, satu data untuk Home/Services/detail; 285 test hijau |

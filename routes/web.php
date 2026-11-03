@@ -5,6 +5,9 @@ use App\Http\Controllers\Admin\Api\ClientLogoController;
 use App\Http\Controllers\Admin\Api\CounterController;
 use App\Http\Controllers\Admin\Api\FaqController;
 use App\Http\Controllers\Admin\Api\ProcessStepController;
+use App\Http\Controllers\Admin\Api\ServiceBenefitController;
+use App\Http\Controllers\Admin\Api\ServiceController;
+use App\Http\Controllers\Admin\Api\ServiceFaqController;
 use App\Http\Controllers\Admin\Api\SettingController;
 use App\Http\Controllers\Admin\Api\TeamMemberController;
 use App\Http\Controllers\Admin\Api\TeamMemberExpertiseController;
@@ -17,6 +20,7 @@ use App\Http\Controllers\Pages\AboutPageController;
 use App\Http\Controllers\Pages\FaqPageController;
 use App\Http\Controllers\Pages\HomePageController;
 use App\Http\Controllers\Pages\PricingPageController;
+use App\Http\Controllers\Pages\ServiceDetailPageController;
 use App\Http\Controllers\Pages\ServicePageController;
 use App\Http\Controllers\Pages\TeamMemberPageController;
 use App\Http\Controllers\Pages\TeamPageController;
@@ -60,10 +64,7 @@ Route::get('/team', TeamPageController::class)->name('team');
 Route::get('/testimonials', TestimonialPageController::class)->name('testimonials');
 
 Route::prefix('pages')->name('pages.')->group(function () {
-    Route::get('/service/{serviceId}', function ($serviceId) {
-        $sections = App\Models\Section::with('contents.media')->active()->ordered()->get()->keyBy('key');
-        return view('pages.service-single', compact('sections', 'serviceId'));
-    })->name('service.single');
+    Route::get('/service/{slug}', ServiceDetailPageController::class)->name('service.single');
 
     Route::get('/team/{slug}', TeamMemberPageController::class)->name('team.single');
 });
@@ -128,6 +129,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
                 'team-members' => TeamMemberController::class,
                 'team-member-skills' => TeamMemberSkillController::class,
                 'team-member-expertises' => TeamMemberExpertiseController::class,
+                'services' => ServiceController::class,
+                'service-benefits' => ServiceBenefitController::class,
+                'service-faqs' => ServiceFaqController::class,
             ];
             foreach ($lists as $uri => $controller) {
                 Route::get("/{$uri}", [$controller, 'index'])->name("{$uri}.index");

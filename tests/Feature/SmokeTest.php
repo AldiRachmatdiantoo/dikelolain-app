@@ -29,7 +29,7 @@ class SmokeTest extends TestCase
             'home' => ['/'],
             'about' => ['/about'],
             'services' => ['/services'],
-            'service detail' => ['/pages/service/01'],
+            'service detail' => ['/pages/service/web-development'],
             'portfolio' => ['/portfolio'],
             'portfolio experiment' => ['/portfolio-experiment'],
             'pricing' => ['/pricing'],

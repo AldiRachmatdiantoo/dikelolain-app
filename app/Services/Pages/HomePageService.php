@@ -3,13 +3,16 @@
 namespace App\Services\Pages;
 
 use App\Services\ProcessStepService;
+use App\Services\ServiceService;
 use App\Vcms\Fields\ProcessStepFields;
+use App\Vcms\Fields\ServiceFields;
 
 class HomePageService
 {
     public function __construct(
         private SectionData $sections,
         private ProcessStepService $processSteps,
+        private ServiceService $services,
     ) {
     }
 
@@ -28,6 +31,8 @@ class HomePageService
             ...$this->sections->team($editing),
             'processSteps' => $this->processSteps->all(activeOnly: !$editing),
             'processStepFields' => $editing ? ProcessStepFields::definition() : [],
+            'services' => $this->services->all(activeOnly: !$editing),
+            'serviceFields' => $editing ? ServiceFields::definition() : [],
         ];
     }
 }

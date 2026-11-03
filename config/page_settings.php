@@ -31,6 +31,20 @@ return [
     'clients.title' => ['type' => 'rich_text', 'label' => 'Judul', 'default' => 'Trusted by <span>Teams at</span>'],
     'clients.box_title' => ['type' => 'text', 'label' => 'Judul kotak logo', 'default' => 'Our Clients'],
 
+    // Services section (Home), Services page and service detail pages
+    'services.sub_title' => ['type' => 'text', 'label' => 'Sub judul', 'default' => 'our Services'],
+    'services.title' => ['type' => 'rich_text', 'label' => 'Judul', 'default' => 'Our innovative <span>services</span>'],
+    'services.button_text' => ['type' => 'text', 'label' => 'Teks tombol', 'default' => 'view all services'],
+    'services.button_link' => ['type' => 'url', 'label' => 'Link tombol', 'default' => '/services'],
+    'services.header.title' => ['type' => 'rich_text', 'label' => 'Judul header', 'default' => 'Explore our <span>services</span>'],
+    'services.header.breadcrumb' => ['type' => 'text', 'label' => 'Breadcrumb', 'default' => 'Services'],
+    'services.sidebar_title' => ['type' => 'text', 'label' => 'Judul daftar layanan (sidebar)', 'default' => 'services category'],
+    'services.faq.sub_title' => ['type' => 'text', 'label' => 'Sub judul FAQ', 'default' => "FAQ's"],
+    'services.faq.title' => ['type' => 'rich_text', 'label' => 'Judul FAQ', 'default' => 'Find your <span>answers here</span>'],
+    'services.cta.text' => ['type' => 'textarea', 'label' => 'Teks kotak kontak', 'default' => 'We always available to discuss with you'],
+    'services.cta.email' => ['type' => 'email', 'label' => 'Email kontak', 'default' => 'info@domain.com'],
+    'services.cta.button_text' => ['type' => 'text', 'label' => 'Teks tombol', 'default' => 'contact us'],
+
     // Team section (Home, About) and Team page
     'team.sub_title' => ['type' => 'text', 'label' => 'Sub judul', 'default' => 'our team'],
     'team.title' => ['type' => 'rich_text', 'label' => 'Judul', 'default' => 'The Minds Behind <span>the Magic</span>'],

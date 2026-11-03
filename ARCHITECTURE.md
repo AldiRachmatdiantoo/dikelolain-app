@@ -45,7 +45,7 @@ Route ──► Controller ──► FormRequest (validasi)
 
 **Repository:** dipakai untuk semua entitas supaya polanya seragam. Interface di `Repositories/Contracts`, implementasi Eloquent di `Repositories/Eloquent`, binding di `RepositoryServiceProvider`. *(Masih bisa dilonggarkan untuk entitas sederhana; lihat keputusan K-2 di backlog.)*
 
-**Halaman gabungan:** halaman yang memakai banyak entitas (Home, About, dll) punya page service sendiri, misalnya `HomePageService::data()`, yang mengumpulkan semua data untuk halaman itu. Controller halaman cukup memanggil satu method. Section yang muncul di beberapa halaman (logo klien, tools, pencapaian, CTA) punya satu partial di `resources/views/partials/` dan satu method di `Pages/SectionData`, sehingga page service tidak mengulang kode.
+**Halaman gabungan:** halaman yang memakai banyak entitas (Home, About, dll) punya page service sendiri, misalnya `HomePageService::data()`, yang mengumpulkan semua data untuk halaman itu. Controller halaman cukup memanggil satu method. Section yang muncul di beberapa halaman (logo klien, tools, pencapaian, CTA, tim) punya satu partial di `resources/views/partials/` dan satu method di `Pages/SectionData`, sehingga page service tidak mengulang kode.
 
 ---
 
@@ -111,9 +111,8 @@ Semua tabel daftar punya `id`, `sort_order` (int), `is_active` (bool, default tr
 | `team_members` | `slug` (dibuat sekali dari nama), `name`, `role`, `photo`, `experience`, `about`, `expertise_intro`, `skills_intro` | Home, About (4 pertama), Team, Team detail |
 | `team_member_skills` | `team_member_id`, `name`, `percent` | Team detail |
 | `team_member_expertises` | `team_member_id`, `name` | Team detail |
-| `services` | `slug`, `number`, `name`, `summary`, `description`, `image_path` | Home, Services |
+| `services` | `slug` (dibuat sekali dari nama), `name`, `summary`, `image`, `icon`, `feature_image`, `description` (paragraf dipisah baris kosong), `benefits_title`, `benefits_intro` | Home (tab), Services, Service detail |
 | `service_benefits` | `service_id`, `text` | Service detail |
-| `service_process_steps` | `service_id`, `title`, `description` | Service detail |
 | `service_faqs` | `service_id`, `question`, `answer` | Service detail |
 | `projects` | `slug`, `title`, `category`, `media_type` (image/video), `media_url`, `thumbnail_path`, `description`, `client`, `link` | Home (our work), Portfolio |
 | `pricing_plans` | `name`, `price`, `period`, `description`, `is_featured`, `button_text`, `button_link` | Pricing |
@@ -195,7 +194,7 @@ Semua endpoint di bawah `/admin/api`, middleware `web` + `auth` (sesi login + CS
 
 Geser bertukar posisi dengan item tetangga dalam kelompok yang sama (misalnya FAQ dalam satu kategori). Item di ujung tidak bergeser dan tetap `204`.
 
-Sub-daftar memakai rute bersarang, misalnya `POST /admin/api/services/{service}/benefits`, `PATCH /admin/api/pricing-plans/{plan}/features/{feature}`.
+Sub-daftar memakai resource datar dengan kolom induk di body, misalnya `POST /admin/api/service-benefits` dengan `service_id` atau `POST /admin/api/team-member-skills` dengan `team_member_id`. Editor mengirim kolom induk lewat field bertipe `hidden` yang diisi `:defaults` tombol tambah.
 
 Upload gambar dikirim sebagai field file (`image`, `photo`, `logo`, ...) pada `POST`/`PATCH` milik entitasnya. Karena browser tidak mengirim file lewat `PATCH`, kirim `POST` dengan `_method=PATCH`.
 
@@ -304,7 +303,7 @@ Hampir semua entitas berupa daftar dengan `sort_order` dan `is_active`. Logika y
 
 | Lapisan | Kelas dasar | Yang diisi per entitas |
 |---|---|---|
-| Repository | `Contracts\ListRepositoryInterface`, `Eloquent\EloquentListRepository` | `$model`; `$groupColumns` bila urutan per kelompok (FAQ: `['category']`, nanti `['service_id']`, ...) |
+| Repository | `Contracts\ListRepositoryInterface`, `Eloquent\EloquentListRepository` | `$model`; `$groupColumns` bila urutan per kelompok (FAQ: `['category']`, skill tim: `['team_member_id']`, manfaat layanan: `['service_id']`) |
 | Service | `Services\ListService` (item baru di akhir kelompok, pindah kelompok → di akhir, geser, ganti/hapus file gambar) | `$images` = kolom gambar => folder upload; method khusus halaman (misalnya `FaqService::grouped()`) |
 | FormRequest | `Requests\Admin\ListItemRequest` (satu kelas untuk POST dan PATCH; di PATCH semua field otomatis `sometimes`) | `fields()` + `messages()` |
 | Controller | `Admin\Api\ListController` (index, store, update, destroy, move) | `$request`, `$resource`, `service()` |

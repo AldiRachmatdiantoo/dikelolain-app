@@ -17,16 +17,6 @@ class SectionContentSeeder extends Seeder
         // 1. DEFAULT DATA DEFINITIONS (FIXED SCOPE)
         // ========================================
         
-        // Data Default untuk Section Services
-        $defaultServices = [
-            ['id' => '01', 'name' => 'UI/UX Design', 'img_index' => 1],
-            ['id' => '02', 'name' => 'Web Development', 'img_index' => 2],
-            ['id' => '03', 'name' => '3D Designs', 'img_index' => 3],
-            ['id' => '04', 'name' => 'Digital Marketing Design', 'img_index' => 4],
-            ['id' => '05', 'name' => 'Motion Graphics', 'img_index' => 5],
-        ];
-        $serviceDefaultDesc = 'We\'re a full-service design agency specializing in branding, web design, and creative strategies that elevate businesses.';
-
         // Data Default untuk Section Work Projects (12 projects)
         $defaultProjects = [
             ['type' => 'video', 'src' => 'https://www.youtube.com/embed/EszaEO236lw', 'title' => 'Viera - Bersamamu', 'desc' => 'Music video project.', 'link' => '/portfolio/single'],
@@ -65,16 +55,6 @@ class SectionContentSeeder extends Seeder
                     ['key' => 'hero-images-1_image_5', 'type' => 'image', 'value' => 'images/hero-img-5.jpg', 'order' => 10],
                 ]
             ],
-            // 3. SERVICES SECTION (Order 3)
-            [
-                'key' => 'services', 'name' => 'Our Services', 'order' => 3,
-                'contents' => [
-                    ['key' => 'services_sub_title', 'type' => 'text', 'value' => 'our Services', 'order' => 1],        // KEY CHANGE: services-title_sub_title -> services_sub_title
-                    ['key' => 'services_main_title', 'type' => 'text', 'value' => 'Our innovative <span>services</span>', 'order' => 2], // KEY CHANGE: services-title_main_title -> services_main_title
-                    ['key' => 'services_btn_text', 'type' => 'text', 'value' => 'view all services', 'order' => 3], // KEY CHANGE: services-btn_button_text -> services_btn_text
-                    ['key' => 'services_btn_link', 'type' => 'url', 'value' => '/services', 'order' => 4],    // KEY CHANGE: services-btn_button_link -> services_btn_link
-                ]
-            ],
             // 4. OUR WORK SECTION (Order 4)
             [
                 'key' => 'our-work', 'name' => 'Our Work', 'order' => 4,
@@ -104,41 +84,6 @@ class SectionContentSeeder extends Seeder
                     ['key' => $content['key']],
                     $content
                 );
-            }
-        }
-
-        // ========================================
-        // 4. SEED LOOPED CONTENT (Service List)
-        // ========================================
-        $servicesSection = Section::where('key', 'services')->first();
-        if ($servicesSection) {
-            $order = 5;
-            foreach ($defaultServices as $index => $service) {
-                $serviceIndex = $service['id'];
-                $imgIndex = $service['img_index'];
-                
-                // Tambahkan key untuk tab title
-                $contents = [
-                    ['key' => 'service-tab-' . $serviceIndex . '_title', 'type' => 'text', 'value' => $service['name'], 'order' => $order++],
-                ];
-
-                // Base key untuk konten service list
-                $baseKey = "services-list-1_service_{$serviceIndex}";
-
-                $contents = array_merge($contents, [
-                    ['key' => $baseKey . '_title', 'type' => 'text', 'value' => $service['name'], 'order' => $order++],
-                    ['key' => $baseKey . '_desc', 'type' => 'textarea', 'value' => $serviceDefaultDesc, 'order' => $order++],
-                    ['key' => $baseKey . '_image', 'type' => 'image', 'value' => "images/service-image-{$imgIndex}.jpg", 'order' => $order++],
-                    // Icon disamakan dengan yang ada di Blade: images/icon-service-1.svg, images/icon-service-2.svg, dst.
-                    ['key' => $baseKey . '_icon', 'type' => 'image', 'value' => "images/icon-service-{$imgIndex}.svg", 'order' => $order++], 
-                    ['key' => $baseKey . '_link', 'type' => 'url', 'value' => '/services', 'order' => $order++],
-                ]);
-
-                // Hapus key _active di seeder, karena di Blade tidak di-getContent() tapi menggunakan index loop
-                
-                foreach ($contents as $content) {
-                    $servicesSection->contents()->updateOrCreate(['key' => $content['key']], $content);
-                }
             }
         }
 

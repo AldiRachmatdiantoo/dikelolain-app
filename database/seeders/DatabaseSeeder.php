@@ -40,6 +40,7 @@ class DatabaseSeeder extends Seeder
             AchievementSeeder::class,
             CounterSeeder::class,
             TeamMemberSeeder::class,
+            ServiceSeeder::class,
         ]);
     }
 }

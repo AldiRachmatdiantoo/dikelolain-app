@@ -8,6 +8,9 @@ use App\Repositories\Contracts\CounterRepositoryInterface;
 use App\Repositories\Contracts\FaqRepositoryInterface;
 use App\Repositories\Contracts\PageSettingRepositoryInterface;
 use App\Repositories\Contracts\ProcessStepRepositoryInterface;
+use App\Repositories\Contracts\ServiceBenefitRepositoryInterface;
+use App\Repositories\Contracts\ServiceFaqRepositoryInterface;
+use App\Repositories\Contracts\ServiceRepositoryInterface;
 use App\Repositories\Contracts\TeamMemberExpertiseRepositoryInterface;
 use App\Repositories\Contracts\TeamMemberRepositoryInterface;
 use App\Repositories\Contracts\TeamMemberSkillRepositoryInterface;
@@ -19,6 +22,9 @@ use App\Repositories\Eloquent\EloquentCounterRepository;
 use App\Repositories\Eloquent\EloquentFaqRepository;
 use App\Repositories\Eloquent\EloquentPageSettingRepository;
 use App\Repositories\Eloquent\EloquentProcessStepRepository;
+use App\Repositories\Eloquent\EloquentServiceBenefitRepository;
+use App\Repositories\Eloquent\EloquentServiceFaqRepository;
+use App\Repositories\Eloquent\EloquentServiceRepository;
 use App\Repositories\Eloquent\EloquentTeamMemberExpertiseRepository;
 use App\Repositories\Eloquent\EloquentTeamMemberRepository;
 use App\Repositories\Eloquent\EloquentTeamMemberSkillRepository;
@@ -46,5 +52,8 @@ class RepositoryServiceProvider extends ServiceProvider
         TeamMemberRepositoryInterface::class => EloquentTeamMemberRepository::class,
         TeamMemberSkillRepositoryInterface::class => EloquentTeamMemberSkillRepository::class,
         TeamMemberExpertiseRepositoryInterface::class => EloquentTeamMemberExpertiseRepository::class,
+        ServiceRepositoryInterface::class => EloquentServiceRepository::class,
+        ServiceBenefitRepositoryInterface::class => EloquentServiceBenefitRepository::class,
+        ServiceFaqRepositoryInterface::class => EloquentServiceFaqRepository::class,
     ];
 }

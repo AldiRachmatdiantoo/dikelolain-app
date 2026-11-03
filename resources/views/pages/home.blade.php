@@ -117,23 +117,15 @@
         <div class="container">
             <div class="row section-row">
                 <div class="col-lg-6">
-                    <div class="section-title">
-                        @php
-                            $servicesSubTitle = getContent($sections, 'services', 'services_sub_title', 'our Services');
-                            $servicesMainTitle = getContent($sections, 'services', 'services_main_title', 'Our innovative <span>services</span>');
-                        @endphp
-                        <h3>{{ $servicesSubTitle }}</h3>
-                        <h2 class="text-anime-style-2" data-cursor="-opaque">{!! $servicesMainTitle !!}</h2>
-                    </div>
+                    <x-vcms.settings :keys="['services.sub_title', 'services.title']" label="Judul" class="section-title">
+                        <h3>{{ $settings->get('services.sub_title') }}</h3>
+                        <h2 class="text-anime-style-2" data-cursor="-opaque">{!! $settings->get('services.title') !!}</h2>
+                    </x-vcms.settings>
                 </div>
                 <div class="col-lg-6">
-                    <div class="section-btn wow fadeInUp" data-wow-delay="0.2s">
-                        @php
-                            $servicesBtnText = getContent($sections, 'services', 'services_btn_text', 'view all services');
-                            $servicesBtnLink = getContent($sections, 'services', 'services_btn_link', route('services'));
-                        @endphp
-                        <a href="{{ $servicesBtnLink }}" class="btn-default">{{ $servicesBtnText }}</a>
-                    </div>
+                    <x-vcms.settings :keys="['services.button_text', 'services.button_link']" label="Tombol" class="section-btn wow fadeInUp" data-wow-delay="0.2s">
+                        <a href="{{ $settings->get('services.button_link') }}" class="btn-default">{{ $settings->get('services.button_text') }}</a>
+                    </x-vcms.settings>
                 </div>
             </div>
 
@@ -142,90 +134,41 @@
                     <div class="our-services-boxes tab-content wow fadeInUp" data-wow-delay="0.25s" id="servicesbox">
                         <div class="our-services-nav">
                             <ul class="nav nav-tabs" id="servicestab" role="tablist">
-                                @php
-                                    $defaultServices = [
-                                        ['id' => '01', 'name' => 'UI/UX Design'],
-                                        ['id' => '02', 'name' => 'Web Development'],
-                                        ['id' => '03', 'name' => '3D Designs'],
-                                        ['id' => '04', 'name' => 'Digital Marketing Design'],
-                                        ['id' => '05', 'name' => 'Motion Graphics'],
-                                    ];
-
-                                    $dynamicServices = [];
-                                    $servicesSection = collect($sections)->firstWhere('key', 'services');
-
-                                    if ($servicesSection && isset($servicesSection['contents'])) {
-                                        $serviceIds = [];
-                                        foreach ($servicesSection['contents'] as $content) {
-                                            if (preg_match('/services-list-1_service_(.+)_title$/', $content['key'], $matches)) {
-                                                $serviceIds[$matches[1]] = $content['value'];
-                                            }
-                                        }
-                                        $index = 0;
-                                        foreach ($serviceIds as $id => $name) {
-                                            $dynamicServices[] = ['id' => $id, 'name' => $name, 'index' => $index];
-                                            $index++;
-                                        }
-                                    }
-
-                                    $services = !empty($dynamicServices) ? $dynamicServices : $defaultServices;
-                                @endphp
-
-                                @foreach ($services as $index => $service)
-                                    @php
-                                        $tabTitle = getContent(
-                                            $sections,
-                                            'services',
-                                            'services-list-1_service_' . $service['id'] . '_title',
-                                            $service['name'] ?? 'Service ' . ($index + 1),
-                                        );
-                                    @endphp
+                                @foreach ($services as $service)
                                     <li class="nav-item" role="presentation">
-                                        <button class="nav-link {{ $index == 0 ? 'active' : '' }}"
-                                            id="{{ $service['id'] }}-tab" data-bs-toggle="tab"
-                                            data-bs-target="#{{ $service['id'] }}" type="button" role="tab"
-                                            aria-selected="{{ $index == 0 ? 'true' : 'false' }}">
-                                            <span>{{ str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}</span> {{ $tabTitle }}
+                                        <button class="nav-link {{ $loop->first ? 'active' : '' }}"
+                                            id="service-{{ $service->id }}-tab" data-bs-toggle="tab"
+                                            data-bs-target="#service-{{ $service->id }}" type="button" role="tab"
+                                            aria-selected="{{ $loop->first ? 'true' : 'false' }}">
+                                            <span>{{ str_pad($loop->iteration, 2, '0', STR_PAD_LEFT) }}</span> {{ $service->name }}
                                         </button>
                                     </li>
                                 @endforeach
                             </ul>
                         </div>
 
-                        @foreach ($services as $index => $service)
-                            @php
-                                $serviceIndex = $service['id'];
-                                $activeClass = $index == 0 ? 'show active' : '';
-                                $titleDefault = $service['name'] ?? 'Service ' . ($index + 1);
-                                $descDefault = 'We\'re a full-service design agency specializing in branding, web design, and creative strategies that elevate businesses.';
-                                $imgDefault = 'images/service-image-' . (($index % 5) + 1) . '.jpg';
-                                $iconDefault = 'images/icon-service-' . (($index % 5) + 1) . '.svg';
-
-                                $serviceTitle = getContent($sections, 'services', "services-list-1_service_{$serviceIndex}_title", $titleDefault);
-                                $serviceDesc = getContent($sections, 'services', "services-list-1_service_{$serviceIndex}_desc", $descDefault);
-                                $serviceImg = getContent($sections, 'services', "services-list-1_service_{$serviceIndex}_image", $imgDefault);
-                                $serviceIcon = getContent($sections, 'services', "services-list-1_service_{$serviceIndex}_icon", $iconDefault);
-                                $readMoreLink = getContent($sections, 'services', "services-list-1_service_{$serviceIndex}_link", route('services'));
-                            @endphp
-                            <div class="our-service-box tab-pane fade {{ $activeClass }}" id="{{ $service['id'] }}" role="tabpanel">
+                        @foreach ($services as $service)
+                            <x-vcms.item resource="services" :item="$service" :fields="$serviceFields" label="layanan"
+                                class="our-service-box tab-pane fade {{ $loop->first ? 'show active' : '' }} {{ $service->is_active ? '' : 'vcms-hidden' }}"
+                                id="service-{{ $service->id }}" role="tabpanel">
                                 <div class="service-box-image">
                                     <figure>
-                                        <img src="{{ asset($serviceImg) }}" alt="{{ $serviceTitle }}">
+                                        <img src="{{ $service->image_url }}" alt="{{ $service->name }}">
                                     </figure>
                                 </div>
                                 <div class="service-box-item">
                                     <div class="icon-box">
-                                        <img src="{{ asset('images/icon-service-1.svg') }}" alt="Service Icon">
+                                        <img src="{{ $service->icon_url }}" alt="Service Icon">
                                     </div>
                                     <div class="service-box-item-content">
-                                        <h3><a href="{{ $readMoreLink }}">{{ $serviceTitle }}</a></h3>
-                                        <p>{{ $serviceDesc }}</p>
+                                        <h3><a href="{{ route('pages.service.single', $service->slug) }}">{{ $service->name }}</a></h3>
+                                        <p>{{ $service->summary }}</p>
                                     </div>
                                     <div class="service-box-item-btn">
-                                        <a href="{{ $readMoreLink }}" class="readmore-btn">read more</a>
+                                        <a href="{{ route('pages.service.single', $service->slug) }}" class="readmore-btn">read more</a>
                                     </div>
                                 </div>
-                            </div>
+                            </x-vcms.item>
                         @endforeach
                     </div>
                 </div>

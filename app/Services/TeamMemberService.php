@@ -4,17 +4,17 @@ namespace App\Services;
 
 use App\Models\TeamMember;
 use App\Repositories\Contracts\TeamMemberRepositoryInterface;
+use App\Services\Concerns\CreatesSlugs;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Str;
 
 /**
- * Team members. The slug (used in /pages/team/{slug}) is made from the name
- * once, when the member is created, so links and the editor's reload keep working
- * after a rename.
+ * Team members, each with a detail page at /pages/team/{slug}.
  */
 class TeamMemberService extends ListService
 {
+    use CreatesSlugs;
+
     protected array $images = ['photo' => 'team'];
 
     public function __construct(private TeamMemberRepositoryInterface $members, ImageUploadService $uploads)
@@ -24,7 +24,7 @@ class TeamMemberService extends ListService
 
     public function create(array $data): Model
     {
-        return parent::create([...$data, 'slug' => $this->uniqueSlug($data['name'])]);
+        return parent::create([...$data, 'slug' => $this->uniqueSlug($data['name'], 'anggota')]);
     }
 
     public function findBySlug(string $slug, bool $activeOnly = true): ?TeamMember
@@ -42,15 +42,8 @@ class TeamMemberService extends ListService
         return $this->members->all(activeOnly: true)->take($limit)->values()->toBase();
     }
 
-    private function uniqueSlug(string $name): string
+    protected function slugExists(string $slug): bool
     {
-        $base = Str::slug($name) ?: 'anggota';
-        $slug = $base;
-
-        for ($i = 2; $this->members->slugExists($slug); $i++) {
-            $slug = "{$base}-{$i}";
-        }
-
-        return $slug;
+        return $this->members->slugExists($slug);
     }
 }
