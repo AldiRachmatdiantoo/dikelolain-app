@@ -6,12 +6,14 @@
 @section('content')
 
 @php
-    function getContent($sections, $sectionKey, $contentKey, $default = '') {
-        if (!isset($sections[$sectionKey])) {
-            return $default;
+    if (!function_exists('getContent')) {
+        function getContent($sections, $sectionKey, $contentKey, $default = '') {
+            if (!isset($sections[$sectionKey])) {
+                return $default;
+            }
+            $content = $sections[$sectionKey]->contents->firstWhere('key', $contentKey);
+            return $content ? $content->value : $default;
         }
-        $content = $sections[$sectionKey]->contents->firstWhere('key', $contentKey);
-        return $content ? $content->value : $default;
     }
 
     // Get service data

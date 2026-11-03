@@ -6,24 +6,26 @@
 
 @php
     // Helper function to get content from database
-    function getContent($sections, $sectionKey, $contentKey, $default = '')
-    {
-        if (!isset($sections[$sectionKey])) {
-            return $default;
-        }
-        $content = $sections[$sectionKey]->contents->firstWhere('key', $contentKey);
-        $value = $content ? $content->value : $default;
-
-        if (
-            strpos($contentKey, 'image') !== false ||
-            strpos($contentKey, 'video') !== false ||
-            strpos($contentKey, 'icon') !== false
-        ) {
-            if (!preg_match('/^(http|https):\/\//i', $value)) {
-                return $value;
+    if (!function_exists('getContent')) {
+        function getContent($sections, $sectionKey, $contentKey, $default = '')
+        {
+            if (!isset($sections[$sectionKey])) {
+                return $default;
             }
+            $content = $sections[$sectionKey]->contents->firstWhere('key', $contentKey);
+            $value = $content ? $content->value : $default;
+    
+            if (
+                strpos($contentKey, 'image') !== false ||
+                strpos($contentKey, 'video') !== false ||
+                strpos($contentKey, 'icon') !== false
+            ) {
+                if (!preg_match('/^(http|https):\/\//i', $value)) {
+                    return $value;
+                }
+            }
+            return $value;
         }
-        return $value;
     }
 @endphp
 

@@ -12,17 +12,17 @@
 
 | Status | Jumlah | PBI |
 |---|---|---|
-| ✅ Selesai | 3 | **001** (jalan di lokal + README), **003** (ARCHITECTURE.md), **004** (status backlog) |
+| ✅ Selesai | 5 | **001** (jalan di lokal + README), **002** (smoke test), **003** (ARCHITECTURE.md), **004** (status backlog), **111** (pengaman `getContent()`) |
 | ⏳ Sedang dikerjakan | 0 | – |
 | ⏸️ Menunggu keputusan | 4 | **005** (K-1 s.d. K-4), **203** (K-4), **504** (K-3), **507** (K-3) |
-| ❌ Belum | 45 | Semua PBI lain |
+| ❌ Belum | 44 | Semua PBI lain |
 
-Total **52 PBI** dalam 6 epic:
+Total **53 PBI** dalam 6 epic:
 
 | Epic | Isi | PBI | Selesai |
 |---|---|---|---|
-| 0 | Persiapan | 001–005 | 3/5 |
-| 1 | Beres-beres tanpa risiko | 101–110 | 0/10 |
+| 0 | Persiapan | 001–005 | 4/5 |
+| 1 | Beres-beres tanpa risiko | 101–111 | 1/11 |
 | 2 | Fondasi VCMS baru + FAQ | 201–210 | 0/10 |
 | 3 | Migrasi entitas | 301–313 | 0/13 |
 | 4 | Pembersihan akhir | 401–406 | 0/6 |
@@ -56,7 +56,7 @@ Legenda: ✅ selesai · ⏳ sedang dikerjakan · ❌ belum · ⏸️ menunggu ke
 | PBI | Judul | Status | Catatan |
 |---|---|---|---|
 | 001 | Project jalan di lokal (`composer install`, `.env`, `migrate --seed`, `storage:link`) dan langkahnya ditulis di README | ✅ | 3 Nov 2026, lihat [Hasil PBI-001](#hasil-pbi-001-3-november-2026). npm belum diperlukan (Vite hanya dirujuk `welcome.blade.php`) |
-| 002 | Smoke test: semua halaman publik 200, semua halaman admin 200 saat login / redirect saat belum login | ❌ | Jaring pengaman sebelum mengubah apa pun |
+| 002 | Smoke test: semua halaman publik 200, semua halaman admin 200 saat login / redirect saat belum login | ✅ | 3 Nov 2026: `tests/Feature/SmokeTest.php`, **47 test hijau** (±8 dtk), lihat [Hasil PBI-002](#hasil-pbi-002-3-november-2026). Jalankan: `php artisan test` |
 | 003 | `ARCHITECTURE.md`: target arsitektur, model data, kontrak API, VCMS, konvensi | ✅ | 3 Nov 2026 |
 | 004 | Status backlog (file ini) | ✅ | 3 Nov 2026 |
 | 005 | Jawab keputusan K-1 sampai K-4 | ⏸️ | Lihat [Keputusan yang dibutuhkan](#keputusan-yang-dibutuhkan) |
@@ -75,6 +75,7 @@ Legenda: ✅ selesai · ⏳ sedang dikerjakan · ❌ belum · ⏸️ menunggu ke
 | 108 | Link project di seeder mengarah ke `/portfolio/single` yang tidak punya route (jatuh ke 404); `portfolio-single.blade.php` tidak dipakai | ❌ | Putuskan: buat route detail project atau hapus view |
 | 109 | Halaman 404 dikirim dengan status **200**, bukan 404 (`Route::fallback` mengembalikan view tanpa status) | ❌ | Buruk untuk SEO; ditemukan di PBI-001 |
 | 110 | Error JS di setiap halaman: `magiccursor.js:104` `Cannot read properties of undefined (reading 'x')` saat halaman dimuat sebelum mouse bergerak | ❌ | Plugin template; ditemukan di PBI-001 |
+| 111 | Fungsi global `getContent()` dideklarasikan tanpa `function_exists` di 6 view → fatal "Cannot redeclare" bila dua halaman dirender dalam satu proses PHP (test, Octane) | ✅ | 3 Nov 2026, ditemukan oleh PBI-002. Dibungkus `function_exists` seperti view lain; isi semua versi identik secara perilaku. Fungsi ini tetap dihapus di PBI-404 |
 
 ### Epic 2: Fondasi VCMS baru + FAQ
 
@@ -166,6 +167,27 @@ Dijalankan di Windows dengan Laragon: PHP 8.3.29, Composer 2.9.3, SQLite. `compo
 
 ---
 
+## Hasil PBI-002 (3 November 2026)
+
+`tests/Feature/SmokeTest.php` menggantikan `tests/Feature/ExampleTest.php` bawaan Laravel (yang gagal karena tidak menyiapkan database). Setiap test memakai SQLite in-memory baru + `DatabaseSeeder` (data demo).
+
+| Kelompok | Jumlah | Isi |
+|---|---|---|
+| Halaman publik | 13 | 10 halaman utama, detail layanan, detail tim, login admin → 200 |
+| Halaman 404 | 1 | URL tak dikenal memakai view `pages.404` (status belum diperiksa; menunggu PBI-109) |
+| Admin tanpa login | 14 | Semua halaman admin → redirect ke `/admin/login` |
+| Admin dengan login | 14 | Dashboard, analytics, 11 editor halaman, profil, ganti password → 200 |
+| API konten | 2 | `GET /admin/api/content/hero` dan `media-list` → 200 |
+| Login | 2 | Login + logout berhasil; password salah ditolak |
+
+Total 46 test di `SmokeTest` + 1 `tests/Unit/ExampleTest` = **47 hijau, 73 assertion, ±8 detik**.
+
+**Ditemukan saat menulis test:** PBI-111 (fatal "Cannot redeclare getContent()"), langsung diperbaiki. Enam route admin yang mati (PBI-102) sengaja tidak dimasukkan karena memang error 500; route itu akan dihapus.
+
+**Aturan:** `php artisan test` wajib hijau sebelum setiap commit perombakan. Setiap halaman atau endpoint baru ditambahkan ke test.
+
+---
+
 ## Kondisi awal (3 November 2026)
 
 Ringkasan hasil membaca kode di commit `02fa1fd` (isi sama dengan branch `back-end` repo asal, 16 Jan 2026).
@@ -207,3 +229,4 @@ Ringkasan hasil membaca kode di commit `02fa1fd` (isi sama dengan branch `back-e
 | 3 Nov 2026 | Audit kode, `ARCHITECTURE.md` dan status backlog dibuat (PBI-003, PBI-004) |
 | 3 Nov 2026 | Keputusan index (K-7) dan tanpa Redis (K-8) dicatat; PBI-506–508 (performa) ditambahkan |
 | 3 Nov 2026 | PBI-001 selesai: project jalan di lokal, README ditulis ulang; temuan baru PBI-109, PBI-110 |
+| 3 Nov 2026 | PBI-002 selesai: smoke test 47 hijau; PBI-111 ditemukan dan diperbaiki |

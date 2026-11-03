@@ -32,6 +32,14 @@ Buka:
 
 Node/npm **belum diperlukan**: halaman belum memakai Vite. Vite baru dipakai untuk editor VCMS baru (lihat PBI-202 di backlog).
 
+### Test
+
+```bash
+php artisan test
+```
+
+Memakai database SQLite in-memory dan data seeder, tidak menyentuh `database/database.sqlite`. Wajib hijau sebelum setiap commit.
+
 ### Mengulang database dari awal
 
 ```bash
