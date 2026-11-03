@@ -8,6 +8,24 @@
 
 ---
 
+## Posisi kerja terakhir
+
+> Dibaca pertama kali saat melanjutkan pekerjaan (misalnya setelah konteks percakapan diringkas). Diperbarui setiap PBI selesai.
+
+**Mode:** eksekusi otomatis atas instruksi pemilik (3 Nov 2026): kerjakan PBI berurutan tanpa bertanya, uji setiap PBI (`php artisan test` + cek browser bila terlihat), commit + push per PBI, kendala dicatat di [kendala_backlog.md](kendala_backlog.md).
+
+**Sedang dikerjakan:** Epic 2, mulai PBI-201.
+
+**Rencana desain Epic 2 (ditulis ke ARCHITECTURE.md begitu diimplementasikan):**
+- Registri setting di `config/page_settings.php` (key → type, label, default). `SettingService::get()` mengambil nilai DB atau default registri; seeder mengisi default.
+- Komponen: `<x-vcms.settings :keys="[...]" label="...">` (grup nilai tunggal dengan satu tombol edit), `<x-vcms.list>` (tambah), `<x-vcms.item>` (edit, hapus, naik/turun).
+- Editor menyimpan lewat API lalu **memuat ulang halaman** (sederhana dan andal, sama seperti editor lama).
+- Mode edit: `GET /admin/edit-mode?to=/path` menyalakan, `DELETE /admin/edit-mode` mematikan; status di sesi.
+- Vite hanya membundel `resources/js/vcms/editor.js` + `resources/css/vcms.css` (tanpa Tailwind, supaya tidak merusak CSS template). `TestCase` memakai `withoutVite()`.
+- Kategori FAQ tetap empat (general, technical, project, support); judulnya berupa setting.
+
+---
+
 ## Ringkasan
 
 | Status | Jumlah | PBI |
@@ -74,7 +92,7 @@ Legenda: ✅ selesai · ⏳ sedang dikerjakan · ❌ belum · ⏸️ menunggu ke
 | 105 | Seeder admin dari `.env` | ✅ | 3 Nov 2026: `ADMIN_NAME`, `ADMIN_EMAIL`, `ADMIN_PASSWORD` lewat `config('app.admin')`; tanpa `ADMIN_PASSWORD` seeder membuat password acak dan menampilkannya sekali. Test: `AdminSeederTest` (2). **Database lokal yang sudah ada tidak berubah**; jalankan `migrate:fresh --seed` untuk memakai akun baru |
 | 106 | Respons error API tidak lagi menyertakan `$e->getMessage()` | ✅ | 3 Nov 2026: 6 respons di `Admin/ContentController` diganti pesan umum berbahasa Indonesia; detail dicatat ke log (`report($e)` ditambahkan di 3 tempat yang belum mencatat) |
 | 107 | `.env.example` | ✅ | 3 Nov 2026: `APP_NAME=Dikelolain`, `APP_URL=http://localhost:8000`, `APP_LOCALE=id`, `APP_FAKER_LOCALE=id_ID`, variabel `ADMIN_*` |
-| 108 | `portfolio-single.blade.php` tidak terjangkau | ✅ | 3 Nov 2026: view dihapus. Klik project membuka modal; `data-link` tidak pernah dipakai modal, jadi `/portfolio/single` di seeder tidak pernah dikunjungi. Halaman detail project (bila diinginkan) dibuat di PBI-309 |
+| 108 | `portfolio-single.blade.php` tidak terjangkau | ✅ | 3 Nov 2026: view dihapus (tidak punya route). Klik project membuka modal; tombol **Visit Project** di modal memakai `data-link`, dan link demo `/portfolio/single` dari seeder jatuh ke halaman 404, sama seperti sebelum perubahan. Di PBI-309: link project opsional, tombol disembunyikan bila kosong, dan isi modal di-escape |
 | 109 | Halaman 404 dikirim dengan status 200 | ✅ | 3 Nov 2026: `Route::fallback` kini mengirim status 404; smoke test memeriksa status |
 | 110 | Error JS `magiccursor.js:104` | ✅ | 3 Nov 2026: terjadi saat halaman dimuat dengan lebar viewport 0 (tab/iframe tersembunyi): `-window.innerWidth` bernilai 0 sehingga jatuh ke `this.pos` yang belum ada. Diberi posisi awal |
 | 111 | Fungsi global `getContent()` dideklarasikan tanpa `function_exists` di 6 view → fatal "Cannot redeclare" bila dua halaman dirender dalam satu proses PHP (test, Octane) | ✅ | 3 Nov 2026, ditemukan oleh PBI-002. Dibungkus `function_exists` seperti view lain; isi semua versi identik secara perilaku. Fungsi ini tetap dihapus di PBI-404 |
