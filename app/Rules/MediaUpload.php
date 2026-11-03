@@ -7,7 +7,7 @@ use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Http\UploadedFile;
 
 /**
- * Accepts only images and videos, judged by the file's content (not its name),
+ * Accepts only images and/or videos, judged by the file's content (not its name),
  * each within its own size limit. SVG is refused: it can carry scripts.
  */
 class MediaUpload implements ValidationRule
@@ -17,6 +17,12 @@ class MediaUpload implements ValidationRule
 
     public const IMAGE_MAX_KB = 10 * 1024;
     public const VIDEO_MAX_KB = 50 * 1024;
+
+    public function __construct(
+        private bool $images = true,
+        private bool $videos = true,
+    ) {
+    }
 
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
@@ -28,20 +34,24 @@ class MediaUpload implements ValidationRule
         $mime = $value->getMimeType();
         $sizeKb = $value->getSize() / 1024;
 
-        if (in_array($mime, self::IMAGE_MIMES, true)) {
+        if ($this->images && in_array($mime, self::IMAGE_MIMES, true)) {
             if ($sizeKb > self::IMAGE_MAX_KB) {
                 $fail('Gambar maksimal ' . (self::IMAGE_MAX_KB / 1024) . ' MB.');
             }
             return;
         }
 
-        if (in_array($mime, self::VIDEO_MIMES, true)) {
+        if ($this->videos && in_array($mime, self::VIDEO_MIMES, true)) {
             if ($sizeKb > self::VIDEO_MAX_KB) {
                 $fail('Video maksimal ' . (self::VIDEO_MAX_KB / 1024) . ' MB.');
             }
             return;
         }
 
-        $fail('Format file tidak didukung. Gunakan JPG, PNG, GIF, WebP, MP4, atau WebM.');
+        $fail(match (true) {
+            $this->images && $this->videos => 'Format file tidak didukung. Gunakan JPG, PNG, GIF, WebP, MP4, atau WebM.',
+            $this->images => 'Format gambar tidak didukung. Gunakan JPG, PNG, GIF, atau WebP.',
+            default => 'Format video tidak didukung. Gunakan MP4 atau WebM.',
+        });
     }
 }

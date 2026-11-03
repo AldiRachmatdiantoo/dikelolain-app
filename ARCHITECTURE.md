@@ -60,27 +60,35 @@ app/
 │   │       ├── Api/               FaqController, TestimonialController, SettingController, ...
 │   │       ├── AuthController.php
 │   │       └── ProfileController.php
-│   ├── Requests/Admin/            StoreFaqRequest, UpdateFaqRequest, ReorderRequest, ...
+│   ├── Requests/Admin/            StoreFaqRequest, UpdateFaqRequest, MoveRequest, UpdateSettingRequest, ...
 │   └── Resources/                 FaqResource, ...
 ├── Services/
 │   ├── Pages/                     HomePageService, AboutPageService, ...
 │   ├── FaqService.php
+│   ├── SettingService.php         nilai tunggal (page_settings)
 │   └── ImageUploadService.php
 ├── Repositories/
-│   ├── Contracts/                 FaqRepositoryInterface, ...
+│   ├── Contracts/                 FaqRepositoryInterface, PageSettingRepositoryInterface, ...
 │   └── Eloquent/                  EloquentFaqRepository, ...
 ├── Models/                        Faq, Testimonial, TeamMember, ..., PageSetting
+├── Rules/MediaUpload.php          validasi upload dari isi file
+├── Support/                       RichText (sanitasi), Media (path → URL)
 ├── Vcms/
+│   ├── EditMode.php               status mode edit di sesi
+│   ├── FieldSet.php               mengisi definisi field dengan nilai
 │   └── Fields/                    definisi field yang bisa diedit per entitas (FaqFields, ...)
-├── View/Components/Vcms/          Text, Item, ItemList, Image
 └── Providers/RepositoryServiceProvider.php
+
+config/page_settings.php           daftar semua nilai tunggal: tipe, label, default
 
 resources/
 ├── views/
 │   ├── pages/                     satu file per halaman publik (dipakai juga untuk mode edit)
-│   ├── components/vcms/           komponen editable
+│   ├── components/vcms/           komponen anonim: settings, item, add
+│   ├── vcms/admin-bar.blade.php   bilah admin + modal editor
 │   └── admin/                     hanya login, dashboard, analytics, profil
-└── js/vcms/                       editor generik (Alpine.js), dibundel Vite khusus admin
+├── css/vcms.css                   gaya editor
+└── js/vcms/editor.js              editor generik (Alpine.js); Vite hanya membundel editor ini
 ```
 
 ---
@@ -119,19 +127,31 @@ Semua tabel daftar punya `id`, `sort_order` (int), `is_active` (bool, default tr
 | Kolom | Isi |
 |---|---|
 | `key` | unik, berpola `halaman.bagian.field`, contoh `home.hero.title`, `contact.whatsapp_number`, `analytics.looker_url` |
-| `type` | `text`, `textarea`, `rich_text`, `image`, `video`, `url` |
-| `value` | isi |
+| `value` | isi; `null` berarti memakai default |
+
+Tipe, label, dan default **tidak** disimpan di database, tapi di `config/page_settings.php`:
+
+```php
+'faqs.cta.email' => ['type' => 'email', 'label' => 'Email kontak', 'default' => 'info@domainname.com'],
+```
+
+- Tabel hanya berisi nilai yang pernah diubah admin, jadi tidak perlu seeder. Menambah setting baru = satu baris di config.
+- Tipe: `text`, `textarea`, `rich_text`, `url`, `email`, `image`, `video`.
+- Mengosongkan nilai mengembalikannya ke default.
+- Key memakai titik, jadi dicari di array config (`config('page_settings')[$key]`), bukan lewat dot notation.
+- `SettingService::get()` memuat semua nilai sekali per request.
 
 Dipakai untuk: judul dan deskripsi hero, header setiap halaman, judul section, CTA, info kontak, peta, footer, URL Looker Studio.
 
-`rich_text` hanya menerima tag yang diizinkan (`span`, `strong`, `em`, `br`) dan dibersihkan saat disimpan. Semua tipe lain ditampilkan dengan `{{ }}` (di-escape).
+`rich_text` hanya menerima tag yang diizinkan (`span`, `strong`, `em`, `br`) tanpa atribut, dibersihkan saat disimpan dan saat ditampilkan (`App\Support\RichText`). Semua tipe lain ditampilkan dengan `{{ }}` (di-escape).
 
 ### 4.3 Gambar & video
 
-- Disimpan di disk `public`, folder per entitas: `storage/app/public/{tabel}/{nama-acak}.{ext}`; perlu `php artisan storage:link`.
-- Kolom menyimpan path relatif (`faqs/abc123.webp`). URL dibuat oleh model (accessor `image_url`).
-- `ImageUploadService` memvalidasi **isi file** (mime sebenarnya, bukan ekstensi dari pengguna), membatasi ukuran, memberi nama acak dengan ekstensi dari mime, dan menghapus file lama saat diganti.
-- Video berupa URL (YouTube/MP4 eksternal), tidak di-upload.
+- Disimpan di disk `public`, folder per entitas: `storage/app/public/uploads/{folder}/{nama-acak}.{ext}`; perlu `php artisan storage:link`.
+- Kolom menyimpan path yang siap untuk `asset()`: `storage/uploads/faqs/abc123.webp`. Gambar bawaan template tetap `images/...`. URL dibuat oleh `App\Support\Media::url()` (nilai yang sudah berupa `http(s)://` dipakai apa adanya).
+- Validasi di rule `App\Rules\MediaUpload`: tipe dideteksi dari **isi file**, JPG/PNG/GIF/WebP maks. 10 MB, MP4/WebM maks. 50 MB, SVG ditolak (K-10).
+- `ImageUploadService` memberi nama acak dengan ekstensi dari isi file, dan hanya menghapus file di bawah `storage/uploads/` saat diganti.
+- Video boleh berupa URL atau file MP4/WebM.
 - Tabel `media` dan media library tidak dipakai lagi.
 
 ### 4.4 Tabel yang tetap
@@ -171,7 +191,9 @@ Semua endpoint di bawah `/admin/api`, middleware `web` + `auth` (sesi login + CS
 | Tambah | `POST /admin/api/{resource}` | field entitas (multipart bila ada gambar) | `201 { "data": {...} }` |
 | Ubah sebagian | `PATCH /admin/api/{resource}/{id}` | hanya field yang diubah | `200 { "data": {...} }` |
 | Hapus | `DELETE /admin/api/{resource}/{id}` | – | `204` |
-| Ubah urutan | `POST /admin/api/{resource}/reorder` | `{ "ids": [3, 1, 2] }` | `204` |
+| Geser urutan | `POST /admin/api/{resource}/{id}/move` | `{ "direction": "up" }` atau `"down"` | `204` |
+
+Geser bertukar posisi dengan item tetangga dalam kelompok yang sama (misalnya FAQ dalam satu kategori). Item di ujung tidak bergeser dan tetap `204`.
 
 Sub-daftar memakai rute bersarang, misalnya `POST /admin/api/services/{service}/benefits`, `PATCH /admin/api/pricing-plans/{plan}/features/{feature}`.
 
@@ -183,6 +205,8 @@ Upload gambar dikirim sebagai field file (`image`, `photo`, `logo`, ...) pada `P
 |---|---|---|
 | Ambil | `GET /admin/api/settings/{key}` | – |
 | Ubah | `PATCH /admin/api/settings/{key}` | `{ "value": "..." }` atau file `file` |
+
+Keduanya membalas `200 { "data": { "name", "label", "type", "value", "url"? } }`; key yang tidak ada di registry → `404`. Aturan validasi mengikuti tipe setting.
 
 ### 5.3 Error
 
@@ -199,29 +223,33 @@ Upload gambar dikirim sebagai field file (`image`, `photo`, `logo`, ...) pada `P
 
 ### 6.1 Mode edit
 
-- Admin yang login membuka halaman publik biasa (`/`, `/faqs`, ...) lalu menyalakan **mode edit** lewat bilah admin di atas halaman. Status mode edit disimpan di sesi.
-- Pengunjung dan admin dengan mode edit mati melihat HTML yang persis sama, tanpa atribut atau script editor.
+- Admin yang login melihat **bilah admin** melayang di bawah setiap halaman publik: "Edit halaman ini", Dashboard, Keluar.
+- `GET /admin/edit-mode?to=/faqs` menyalakan mode edit lalu membuka halaman itu; `POST /admin/edit-mode/off` mematikannya. `to` hanya menerima path di situs ini (bukan `//...`, URL lain, atau backslash).
+- Status disimpan di sesi (`App\Vcms\EditMode`), dan hanya berlaku bila sedang login. Blade: `@vcmsediting ... @endvcmsediting`.
+- Pengunjung dan admin dengan mode edit mati melihat HTML yang sama, tanpa atribut atau script editor. Aset editor (`@vite`) hanya dimuat dalam mode edit.
 - Panel `/admin` hanya berisi: login, dashboard, analytics, profil, dan tautan "Edit halaman X" yang membuka halaman publik dalam mode edit.
 
 ### 6.2 Komponen Blade
 
 ```blade
-{{-- nilai tunggal --}}
-<x-vcms.text key="home.hero.title" :value="$hero['title']" tag="h1" />
+{{-- sekelompok nilai tunggal dengan satu tombol edit --}}
+<x-vcms.settings :keys="['faqs.cta.text', 'faqs.cta.email']" label="Kotak kontak" class="sidebar-cta-box">
+    <p>{{ $settings->get('faqs.cta.text') }}</p>
+</x-vcms.settings>
 
-{{-- daftar: tombol tambah + urutkan --}}
-<x-vcms.list resource="faqs" :fields="App\Vcms\Fields\FaqFields::class">
-    @foreach ($faqs as $faq)
-        {{-- satu item: tombol edit + hapus --}}
-        <x-vcms.item resource="faqs" :model="$faq">
-            <h3>{{ $faq->question }}</h3>
-            <p>{{ $faq->answer }}</p>
-        </x-vcms.item>
-    @endforeach
-</x-vcms.list>
+{{-- satu item daftar: edit, naik, turun, hapus --}}
+@foreach ($faqs as $faq)
+    <x-vcms.item resource="faqs" :item="$faq" :fields="$faqFields" label="FAQ" class="accordion-item">
+        <h3>{{ $faq->question }}</h3>
+    </x-vcms.item>
+@endforeach
+
+{{-- tombol tambah (hanya muncul di mode edit) --}}
+<x-vcms.add resource="faqs" :fields="$faqFields" label="FAQ" :defaults="['category' => 'general']" />
 ```
 
-Dalam mode edit, komponen menambahkan atribut `data-vcms-*`: endpoint, id, dan definisi field (JSON). Di luar mode edit, komponen hanya merender isinya.
+- `settings` dan `item` selalu merender elemennya (`tag`, default `div`, dengan atribut dan class yang diberikan), jadi markup template tidak berubah. Dalam mode edit ditambah class `vcms-zone`/`vcms-item`, tombol, dan `data-vcms` berisi JSON `{ kind, title, endpoint, fields }`.
+- `fields` berisi definisi field yang sudah diberi nilai (`App\Vcms\FieldSet::withValues()`).
 
 ### 6.3 Definisi field
 
@@ -244,7 +272,9 @@ class FaqFields
 ### 6.4 Editor JS
 
 - Satu editor generik dengan **Alpine.js** + `fetch`, di `resources/js/vcms/`, dibundel Vite dan hanya dimuat saat mode edit.
-- Editor membaca `data-vcms-*`, membuat form dari definisi field (text, textarea, rich_text, select, image, url, number, toggle), mengirim ke endpoint, lalu memperbarui tampilan.
+- Editor membaca `data-vcms`, membuat form dari definisi field (text, textarea, rich_text, select, image, video, url, email, number, toggle), mengirim ke endpoint, lalu **memuat ulang halaman**. Error 422 ditampilkan di bawah field-nya.
+- Settings: satu `PATCH` per field yang berubah. Item: satu `POST`/`PATCH` berisi semua field; gambar hanya dikirim bila dipilih file baru.
+- Klik tombol editor ditangkap di fase capture, jadi tidak ikut membuka accordion, slider, atau link template.
 - Tidak ada pengetahuan khusus per entitas di JS. Menambah entitas baru = definisi field + endpoint, tanpa mengubah JS.
 - Tampilan modal mengikuti gaya `admin-vcms.css` yang sekarang supaya terasa sama bagi admin.
 - Website publik tetap memakai jQuery dan plugin template. Editor baru tidak memakai jQuery.
@@ -259,7 +289,7 @@ Setiap entitas dianggap selesai kalau semua poin ini terpenuhi:
 2. Model dengan cast dan scope `ordered()`/`active()`.
 3. Repository interface + implementasi Eloquent + binding.
 4. Service.
-5. FormRequest untuk tambah, ubah, dan urutkan.
+5. FormRequest untuk tambah dan ubah (geser memakai `MoveRequest` bersama).
 6. Controller API admin + API Resource.
 7. Definisi field VCMS.
 8. View publik memakai data dari service dan komponen `<x-vcms.*>`.

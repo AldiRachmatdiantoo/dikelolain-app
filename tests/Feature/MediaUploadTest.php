@@ -36,18 +36,6 @@ class MediaUploadTest extends TestCase
         Storage::disk('public')->assertExists($media->path);
     }
 
-    /**
-     * A real upload whose type is detected from its content. Laravel's fake files
-     * report a type from their name, which would hide exactly what is tested here.
-     */
-    private function uploadedFile(string $name, string $content): UploadedFile
-    {
-        $path = tempnam(sys_get_temp_dir(), 'upl');
-        file_put_contents($path, $content);
-
-        return new UploadedFile($path, $name, null, null, true);
-    }
-
     public function test_php_file_disguised_as_an_image_is_rejected(): void
     {
         $script = $this->uploadedFile('logo.jpg', '<?php echo "pwned";');

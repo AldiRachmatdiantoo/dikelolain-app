@@ -1,1 +1,171 @@
-/* VCMS editor styles */
+/* VCMS editor: only loaded for an admin in edit mode. Colours follow the old admin-vcms.css. */
+
+[x-cloak] { display: none !important; }
+
+/* Editable zones and items */
+.vcms-zone,
+.vcms-item {
+    position: relative;
+    outline: 2px dashed transparent;
+    outline-offset: 4px;
+    transition: outline-color .2s ease;
+}
+
+.vcms-zone:hover,
+.vcms-item:hover {
+    outline-color: rgba(255, 204, 1, .7);
+}
+
+.vcms-btn {
+    border: 0;
+    border-radius: 6px;
+    background: #ffcc01;
+    color: #161616;
+    font: 600 13px/1 "Montserrat", sans-serif;
+    padding: 8px 12px;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .35);
+}
+
+.vcms-btn:hover { background: #ffdd33; }
+.vcms-btn-danger { background: #e5484d; color: #fff; }
+.vcms-btn-danger:hover { background: #f2555a; }
+
+.vcms-zone-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    z-index: 50;
+}
+
+.vcms-toolbar {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    z-index: 50;
+    display: flex;
+    gap: 4px;
+}
+
+.vcms-toolbar .vcms-btn { padding: 6px 9px; }
+
+.vcms-add { margin: 16px 0; }
+.vcms-add-btn { width: 100%; padding: 14px; border: 2px dashed #ffcc01; background: rgba(255, 204, 1, .08); color: #ffcc01; box-shadow: none; }
+.vcms-add-btn:hover { background: rgba(255, 204, 1, .18); }
+
+/* Modal */
+.vcms-modal { position: fixed; inset: 0; z-index: 10001; }
+.vcms-modal-overlay { position: absolute; inset: 0; background: rgba(0, 0, 0, .85); backdrop-filter: blur(4px); }
+
+.vcms-modal-content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 92%;
+    max-width: 720px;
+    max-height: 90vh;
+    margin: 5vh auto;
+    background: #1e1e1e;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 25px 80px rgba(0, 0, 0, .5), 0 0 0 1px rgba(255, 204, 1, .1);
+    font-family: "Montserrat", sans-serif;
+}
+
+.vcms-modal-header,
+.vcms-modal-footer {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 18px 24px;
+    background: #161616;
+}
+
+.vcms-modal-header { justify-content: space-between; border-bottom: 1px solid #2a2a2a; }
+.vcms-modal-footer { justify-content: flex-end; border-top: 1px solid #2a2a2a; }
+
+.vcms-modal-header h3 {
+    margin: 0;
+    color: #fff;
+    font-size: 18px;
+    font-weight: 700;
+    border-left: 4px solid #ffcc01;
+    padding-left: 12px;
+}
+
+.vcms-modal-close {
+    width: 38px;
+    height: 38px;
+    border: 0;
+    border-radius: 10px;
+    background: #2a2a2a;
+    color: #aaa;
+    font-size: 22px;
+    cursor: pointer;
+}
+
+.vcms-modal-close:hover { background: #ffcc01; color: #161616; }
+
+.vcms-modal-body { flex: 1; overflow-y: auto; padding: 24px; }
+
+.vcms-field { margin-bottom: 18px; }
+
+.vcms-field label {
+    display: block;
+    margin-bottom: 8px;
+    color: #e0e0e0;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: .5px;
+    text-transform: uppercase;
+}
+
+.vcms-field input[type="text"],
+.vcms-field input[type="email"],
+.vcms-field input[type="number"],
+.vcms-field select,
+.vcms-field textarea {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1px solid #333;
+    border-radius: 8px;
+    background: #161616;
+    color: #fff;
+    font: 14px/1.5 "Montserrat", sans-serif;
+}
+
+.vcms-field input:focus,
+.vcms-field select:focus,
+.vcms-field textarea:focus { outline: none; border-color: #ffcc01; }
+
+.vcms-field input[type="checkbox"] { width: 20px; height: 20px; accent-color: #ffcc01; }
+.vcms-field small { display: block; margin-top: 6px; color: #888; font-size: 12px; }
+
+.vcms-file img {
+    display: block;
+    max-width: 100%;
+    max-height: 180px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    background: #2a2a2a;
+}
+
+.vcms-file input { color: #ccc; font-size: 13px; }
+
+.vcms-field-error,
+.vcms-form-error { margin: 6px 0 0; color: #ff6b6b; font-size: 13px; }
+.vcms-form-error { margin: 0 0 16px; padding: 10px 14px; border-radius: 8px; background: rgba(229, 72, 77, .12); }
+
+.vcms-btn-cancel,
+.vcms-btn-save {
+    padding: 10px 22px;
+    border-radius: 6px;
+    border: 0;
+    font: 600 14px "Montserrat", sans-serif;
+    cursor: pointer;
+}
+
+.vcms-btn-cancel { background: #2a2a2a; color: #aaa; border: 1px solid #3a3a3a; }
+.vcms-btn-cancel:hover { color: #fff; }
+.vcms-btn-save { background: linear-gradient(135deg, #ffcc01 0%, #ffdd33 100%); color: #161616; font-weight: 700; }
+.vcms-btn-save:disabled { opacity: .6; cursor: wait; }

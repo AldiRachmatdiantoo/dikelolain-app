@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Repositories\Contracts\PageSettingRepositoryInterface;
+use App\Repositories\Eloquent\EloquentPageSettingRepository;
 use Illuminate\Support\ServiceProvider;
 
 /**
@@ -12,5 +14,7 @@ class RepositoryServiceProvider extends ServiceProvider
     /**
      * @var array<class-string, class-string>
      */
-    public array $bindings = [];
+    public array $bindings = [
+        PageSettingRepositoryInterface::class => EloquentPageSettingRepository::class,
+    ];
 }

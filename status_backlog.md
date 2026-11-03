@@ -14,15 +14,15 @@
 
 **Mode:** eksekusi otomatis atas instruksi pemilik (3 Nov 2026): kerjakan PBI berurutan tanpa bertanya, uji setiap PBI (`php artisan test` + cek browser bila terlihat), commit + push per PBI, kendala dicatat di [kendala_backlog.md](kendala_backlog.md).
 
-**Sedang dikerjakan:** Epic 2, PBI-203 (mode edit). Selesai: 201, 202.
+**Sedang dikerjakan:** Epic 2, PBI-208–210 (FAQ end to end). Selesai: 201–207 (fondasi VCMS, desain akhirnya di [ARCHITECTURE §4.2, §5, §6](ARCHITECTURE.md#6-vcms-editor-inline)).
 
-**Rencana desain Epic 2 (ditulis ke ARCHITECTURE.md begitu diimplementasikan):**
-- Registri setting di `config/page_settings.php` (key → type, label, default). `SettingService::get()` mengambil nilai DB atau default registri; seeder mengisi default.
-- Komponen: `<x-vcms.settings :keys="[...]" label="...">` (grup nilai tunggal dengan satu tombol edit), `<x-vcms.list>` (tambah), `<x-vcms.item>` (edit, hapus, naik/turun).
-- Editor menyimpan lewat API lalu **memuat ulang halaman** (sederhana dan andal, sama seperti editor lama).
-- Mode edit: `GET /admin/edit-mode?to=/path` menyalakan, `DELETE /admin/edit-mode` mematikan; status di sesi.
-- Vite hanya membundel `resources/js/vcms/editor.js` + `resources/css/vcms.css` (tanpa Tailwind, supaya tidak merusak CSS template). `TestCase` memakai `withoutVite()`.
-- Kategori FAQ tetap empat (general, technical, project, support); judulnya berupa setting.
+**Rencana FAQ:**
+- Tabel `faqs` (`category`, `question`, `answer`, `sort_order`, `is_active`; index `(category, is_active, sort_order)`); kategori tetap empat (general, technical, project, support), judulnya berupa setting `faqs.category.*`.
+- `FaqService`: item baru masuk paling akhir di kategorinya; `move` bertukar dengan tetangga dalam kategori yang sama.
+- `FaqSeeder` berisi 13 FAQ bawaan yang sekarang hardcoded di `pages/faqs.blade.php`.
+- Setelah halaman baru jalan: hapus `admin/pages/faqs.blade.php`, route `admin.pages.faqs`, bagian FAQ di `admin-vcms.js` dan `batchUpdate`; link sidebar admin → mode edit `/faqs`.
+
+**Catatan cek browser:** panel browser yang tersembunyi tidak menjalankan animasi, jadi modal Alpine (`x-transition`) terlihat tetap `display: none` sampai panel dirender (misalnya diambil screenshot). Ini bukan bug.
 
 ---
 
@@ -30,10 +30,10 @@
 
 | Status | Jumlah | PBI |
 |---|---|---|
-| ✅ Selesai | 16 | **001–005** (seluruh Epic 0), **101–111** (seluruh Epic 1) |
-| ⏳ Sedang dikerjakan | 0 | – |
+| ✅ Selesai | 23 | **001–005** (seluruh Epic 0), **101–111** (seluruh Epic 1), **201–207** |
+| ⏳ Sedang dikerjakan | 3 | **208–210** (FAQ) |
 | ⏸️ Menunggu keputusan | 2 | **504**, **507** (hosting, lihat [kendala_backlog.md](kendala_backlog.md) KD-1) |
-| ❌ Belum | 35 | Epic 2–5 |
+| ❌ Belum | 25 | Epic 3–5 |
 
 Total **53 PBI** dalam 6 epic:
 
@@ -41,7 +41,7 @@ Total **53 PBI** dalam 6 epic:
 |---|---|---|---|
 | 0 | Persiapan | 001–005 | 5/5 ✅ |
 | 1 | Beres-beres tanpa risiko | 101–111 | 11/11 ✅ |
-| 2 | Fondasi VCMS baru + FAQ | 201–210 | 0/10 |
+| 2 | Fondasi VCMS baru + FAQ | 201–210 | 7/10 |
 | 3 | Migrasi entitas | 301–313 | 0/13 |
 | 4 | Pembersihan akhir | 401–406 | 0/6 |
 | 5 | Setelah rombak (fitur & rilis) | 501–508 | 0/8 |
@@ -105,11 +105,11 @@ Entitas pertama sekaligus pembuktian pola. Setelah epic ini, entitas lain tingga
 |---|---|---|---|
 | 201 | Kerangka lapisan: folder `Services`, `Repositories/{Contracts,Eloquent}`, `RepositoryServiceProvider`, base handler error JSON | ✅ | 3 Nov 2026: `RepositoryServiceProvider` (daftar `$bindings`) terdaftar; `/admin/api/*` selalu menjawab JSON (test `AdminApiTest`). Bonus: `View::composer('*')` di `AppServiceProvider` dihapus — menjalankan 2 query di **setiap** render view untuk `$currentFont` yang tidak dipakai di mana pun |
 | 202 | Aktifkan Vite untuk admin + pasang Alpine.js | ✅ | 3 Nov 2026: Vite hanya membundel `resources/js/vcms/editor.js` + `resources/css/vcms.css`; Tailwind, axios, dan `resources/{css/app.css,js/app.js,js/bootstrap.js}` dihapus (tidak dipakai, dan reset Tailwind akan merusak CSS template). `npm run build` berhasil; `TestCase` memakai `withoutVite()` |
-| 203 | Mode edit: bilah admin di halaman publik, toggle di sesi, script editor hanya dimuat saat mode edit | ❌ | K-4 diputuskan |
-| 204 | Komponen Blade `<x-vcms.text>`, `<x-vcms.list>`, `<x-vcms.item>`, `<x-vcms.image>` | ❌ | |
-| 205 | Editor JS generik: modal, tipe field (text, textarea, rich_text, select, image, url, number, toggle), tambah, ubah, hapus, urutkan | ❌ | Gaya modal mengikuti `admin-vcms.css` |
-| 206 | `ImageUploadService` | ❌ | Menggantikan `uploadMedia` lama |
-| 207 | Tabel `page_settings` + `SettingService` + endpoint `settings/{key}` + sanitasi `rich_text` | ❌ | Dibutuhkan untuk header halaman FAQ |
+| 203 | Mode edit: bilah admin di halaman publik, toggle di sesi, script editor hanya dimuat saat mode edit | ✅ | 3 Nov 2026: `App\Vcms\EditMode`, `GET /admin/edit-mode?to=` / `POST /admin/edit-mode/off` (redirect hanya ke path situs ini), bilah admin `vcms/admin-bar.blade.php` di `layouts/app` untuk admin yang login. Test `EditModeTest` (11) |
+| 204 | Komponen Blade `<x-vcms.settings>`, `<x-vcms.item>`, `<x-vcms.add>` | ✅ | 3 Nov 2026: komponen anonim; selalu merender elemen template yang sama, atribut editor hanya di mode edit. Desain berubah dari rencana (`text`/`list`/`image` → `settings` untuk grup nilai tunggal, `add` untuk tombol tambah); [ARCHITECTURE §6.2](ARCHITECTURE.md#62-komponen-blade) diperbarui |
+| 205 | Editor JS generik: modal, tipe field (text, textarea, rich_text, select, image, video, url, email, number, toggle), tambah, ubah, hapus, geser | ✅ | 3 Nov 2026: `resources/js/vcms/editor.js` (Alpine) + `resources/css/vcms.css`; urutan memakai `POST {id}/move` naik/turun, bukan reorder daftar id. Dicek di browser: modal tampil, simpan → reload, `onclick` dibuang. Tambah/hapus/geser diuji bersama FAQ (PBI-208) |
+| 206 | `ImageUploadService` | ✅ | 3 Nov 2026: simpan ke `storage/uploads/{folder}/{acak}.{ext}`, hapus file lama hanya di bawah `storage/uploads/`; validasi tetap di rule `MediaUpload` (kini bisa khusus gambar / khusus video) |
+| 207 | Tabel `page_settings` + `SettingService` + endpoint `settings/{key}` + sanitasi `rich_text` | ✅ | 3 Nov 2026: tipe/label/default di `config/page_settings.php`, tabel hanya menyimpan nilai yang diubah (kosong = default). Test `SettingApiTest` (12) + `RichTextTest` (7). Bug ditemukan saat test: key bertitik tidak terbaca lewat dot notation `config()` → kini dicari di array |
 | 208 | **FAQ**: tabel `faqs`, model, repository, service, request, controller API, resource, definisi field, seeder | ❌ | Kategori: general, technical, project, support |
 | 209 | Halaman `/faqs` memakai data baru + komponen VCMS; header FAQ pindah ke `page_settings` | ❌ | |
 | 210 | Test FAQ + hapus key FAQ lama dari `admin-vcms.js`, `batchUpdate`, `admin/pages/faqs.blade.php` | ❌ | Definition of done: [ARCHITECTURE §7](ARCHITECTURE.md#7-pola-per-entitas-checklist) |
@@ -263,3 +263,4 @@ Ringkasan hasil membaca kode di commit `02fa1fd` (isi sama dengan branch `back-e
 | 3 Nov 2026 | PBI-001 selesai: project jalan di lokal, README ditulis ulang; temuan baru PBI-109, PBI-110 |
 | 3 Nov 2026 | PBI-002 selesai: smoke test 47 hijau; PBI-111 ditemukan dan diperbaiki |
 | 3 Nov 2026 | Epic 1 selesai (PBI-101–110): kode mati dihapus, upload aman, admin dari `.env`, error tidak bocor, 404 benar, `magiccursor` diperbaiki; keputusan baru K-9, K-10 |
+| 3 Nov 2026 | PBI-201–207 selesai: lapisan dasar, Vite + Alpine khusus editor, mode edit + bilah admin, komponen `<x-vcms.*>`, editor generik, `ImageUploadService`, `page_settings` + API; 84 test hijau |

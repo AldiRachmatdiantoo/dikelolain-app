@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Admin\Api\SettingController;
+use App\Http\Controllers\Admin\EditModeController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -107,6 +109,16 @@ Route::prefix('admin')->name('admin.')->group(function () {
         })->name('profile-detail');
         // Logout
         Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+        // VCMS: edit mode on the public pages
+        Route::get('/edit-mode', [EditModeController::class, 'enable'])->name('edit-mode.on');
+        Route::post('/edit-mode/off', [EditModeController::class, 'disable'])->name('edit-mode.off');
+
+        // VCMS API (ARCHITECTURE.md §5)
+        Route::prefix('api')->name('api.')->group(function () {
+            Route::get('/settings/{key}', [SettingController::class, 'show'])->name('settings.show');
+            Route::patch('/settings/{key}', [SettingController::class, 'update'])->name('settings.update');
+        });
 
         // Dashboard
         Route::get('/dashboard', function () {

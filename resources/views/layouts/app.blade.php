@@ -171,5 +171,9 @@
     </script>
 
     @stack('scripts')
+
+    @auth
+        @include('vcms.admin-bar')
+    @endauth
 </body>
 </html>
