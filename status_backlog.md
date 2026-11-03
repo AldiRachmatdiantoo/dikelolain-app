@@ -14,7 +14,7 @@
 
 **Mode:** eksekusi otomatis atas instruksi pemilik (3 Nov 2026): kerjakan PBI berurutan tanpa bertanya, uji setiap PBI (`php artisan test` + cek browser bila terlihat), commit + push per PBI, kendala dicatat di [kendala_backlog.md](kendala_backlog.md).
 
-**Sedang dikerjakan:** Epic 4, PBI-401 (hapus `ContentController` dan `/admin/api/content/*`). Selesai: Epic 0–3. Tidak ada halaman publik maupun dashboard yang membaca `sections` lama; yang masih memakainya hanya editor lama `/admin/pages/*` (route closure-nya sengaja dibiarkan sampai dihapus di PBI-403).
+**Sedang dikerjakan:** Epic 4, PBI-402 (hapus `public/js/admin-vcms.js` dan CSS editor lama). Selesai: Epic 0–3, PBI-401. Tidak ada halaman publik maupun dashboard yang membaca `sections` lama; yang masih memakainya hanya editor lama `/admin/pages/*` (route closure-nya sengaja dibiarkan sampai dihapus di PBI-403).
 
 **Contoh pola entitas = Testimonial** (memakai kerangka daftar bersama, [ARCHITECTURE §7.1](ARCHITECTURE.md#71-kerangka-bersama-untuk-daftar-terurut)). Entitas berikutnya meniru file-file ini:
 - `database/migrations/2026_11_03_000003_create_testimonials_table.php`, `app/Models/Testimonial.php` (scope + accessor `logo_url`/`photo_url`)
@@ -35,10 +35,10 @@
 
 | Status | Jumlah | PBI |
 |---|---|---|
-| ✅ Selesai | 39 | **001–005** (seluruh Epic 0), **101–111** (seluruh Epic 1), **201–210** (seluruh Epic 2), **301–313** (seluruh Epic 3) |
+| ✅ Selesai | 40 | **001–005** (seluruh Epic 0), **101–111** (seluruh Epic 1), **201–210** (seluruh Epic 2), **301–313** (seluruh Epic 3), **401** |
 | ⏳ Sedang dikerjakan | 0 | – |
 | ⏸️ Menunggu keputusan | 2 | **504**, **507** (hosting, lihat [kendala_backlog.md](kendala_backlog.md) KD-1) |
-| ❌ Belum | 12 | Epic 4–5 |
+| ❌ Belum | 11 | Epic 4–5 |
 
 Total **53 PBI** dalam 6 epic:
 
@@ -48,7 +48,7 @@ Total **53 PBI** dalam 6 epic:
 | 1 | Beres-beres tanpa risiko | 101–111 | 11/11 ✅ |
 | 2 | Fondasi VCMS baru + FAQ | 201–210 | 10/10 ✅ |
 | 3 | Migrasi entitas | 301–313 | 13/13 ✅ |
-| 4 | Pembersihan akhir | 401–406 | 0/6 |
+| 4 | Pembersihan akhir | 401–406 | 1/6 |
 | 5 | Setelah rombak (fitur & rilis) | 501–508 | 0/8 |
 
 **Urutan wajib:** Epic 0 → 1 → 2 → 3 → 4. Fitur baru (Epic 5) baru dikerjakan setelah Epic 4, kecuali yang tidak menyentuh model konten (lihat [PBI-501](#epic-5-setelah-rombak-fitur--rilis)).
@@ -144,7 +144,7 @@ Urutan dari yang paling sederhana. Setiap PBI mengikuti checklist [ARCHITECTURE 
 
 | PBI | Judul | Status | Catatan |
 |---|---|---|---|
-| 401 | Hapus `Admin/ContentController` (`batchUpdate` dkk) dan route `/admin/api/content/*` | ❌ | Setelah semua entitas pindah |
+| 401 | Hapus `Admin/ContentController` (`batchUpdate` dkk) dan route `/admin/api/content/*` | ✅ 3 Nov 2026 | Controller 966 baris dan enam route dihapus. Test upload (`MediaUploadTest`: ekstensi dari isi file, PHP menyamar gambar, SVG, ukuran, pesan yang terbaca) kini memakai endpoint setting gambar/video, karena aturan `MediaUpload` yang sama dipakai semua API baru. Sejak ini editor lama `/admin/pages/*` tidak bisa menyimpan lagi (halamannya dihapus di PBI-403). Tanpa cek browser: tidak ada perubahan yang terlihat di halaman publik maupun mode edit. 378 test hijau |
 | 402 | Hapus `public/js/admin-vcms.js` dan CSS yang tidak dipakai lagi | ❌ | |
 | 403 | Hapus semua `resources/views/admin/pages/*` kecuali analytics dan profil | ❌ | Sekaligus hapus route closure `/admin/pages/*` (kecuali analytics) dan ganti menu "Pages Management" di sidebar dengan tautan mode edit dari `App\Vcms\EditablePages` |
 | 404 | Hapus semua fungsi `getContent()` / `get*Content()` di view | ❌ | |
@@ -284,3 +284,4 @@ Ringkasan hasil membaca kode di commit `02fa1fd` (isi sama dengan branch `back-e
 | 3 Nov 2026 | PBI-311 selesai: daftar About/visi/misi/keuntungan Pricing di tabel `page_list_items`, nilai tunggal About jadi setting; About dan Pricing lepas dari `sections` lama; 360 test hijau |
 | 3 Nov 2026 | PBI-312 selesai: hero, Contact, footer, header Testimonials, dan URL Looker Studio pindah ke `page_settings`; kontak footer = kontak halaman Contact, layanan footer dari tabel `services`; `SectionContentSeeder` dihapus; 375 test hijau |
 | 3 Nov 2026 | PBI-313 selesai (Epic 3 tuntas): route closure yang tersisa (404, dashboard, analytics, profil) jadi controller; dashboard baru berisi tautan Edit halaman; 381 test hijau |
+| 3 Nov 2026 | PBI-401 selesai: `ContentController` dan `/admin/api/content/*` dihapus, test upload pindah ke API setting; 378 test hijau |

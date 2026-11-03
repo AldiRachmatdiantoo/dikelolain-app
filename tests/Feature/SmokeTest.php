@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\Models\Section;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -85,25 +84,6 @@ class SmokeTest extends TestCase
     public function test_admin_page_renders_for_admin(string $url): void
     {
         $this->actingAs(User::first())->get($url)->assertOk();
-    }
-
-    public function test_content_api_returns_a_section(): void
-    {
-        // The old editor's API (removed in Epic 4); nothing seeds sections any more.
-        Section::create(['key' => 'hero', 'name' => 'Hero Section', 'order' => 1]);
-
-        $this->actingAs(User::first())
-            ->getJson('/admin/api/content/hero')
-            ->assertOk()
-            ->assertJsonPath('success', true)
-            ->assertJsonPath('data.key', 'hero');
-    }
-
-    public function test_content_api_lists_media(): void
-    {
-        $this->actingAs(User::first())
-            ->getJson('/admin/api/content/media-list')
-            ->assertOk();
     }
 
     public function test_admin_can_log_in_and_out(): void

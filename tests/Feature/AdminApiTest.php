@@ -11,7 +11,7 @@ class AdminApiTest extends TestCase
 
     public function test_guest_gets_json_401_even_without_accept_header(): void
     {
-        $this->get('/admin/api/content/hero')
+        $this->get('/admin/api/settings/footer.title')
             ->assertUnauthorized()
             ->assertJson(['message' => 'Unauthenticated.']);
     }

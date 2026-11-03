@@ -188,15 +188,5 @@ Route::prefix('admin')->name('admin.')->group(function () {
                 return view('admin.pages.testimonials', compact('sections'));
             })->name('testimonials');
         });
-
-        // API Routes for Content Management
-        Route::prefix('api/content')->name('api.content.')->group(function () {
-            Route::post('/update', [App\Http\Controllers\Admin\ContentController::class, 'updateContent'])->name('update');
-            Route::post('/batch-update', [App\Http\Controllers\Admin\ContentController::class, 'batchUpdate'])->name('batch-update');
-            Route::post('/upload', [App\Http\Controllers\Admin\ContentController::class, 'uploadFile'])->name('upload');
-            Route::get('/media-list', [App\Http\Controllers\Admin\ContentController::class, 'getMediaList'])->name('media.list');
-            Route::get('/{sectionKey}', [App\Http\Controllers\Admin\ContentController::class, 'getContent'])->name('get');
-            Route::delete('/media/{id}', [App\Http\Controllers\Admin\ContentController::class, 'deleteMedia'])->name('media.delete');
-        });
     });
 });
