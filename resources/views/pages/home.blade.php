@@ -4,113 +4,47 @@
 
 @section('content')
 
-@php
-    // Helper function to get content from database
-    if (!function_exists('getContent')) {
-        function getContent($sections, $sectionKey, $contentKey, $default = '')
-        {
-            if (!isset($sections[$sectionKey])) {
-                return $default;
-            }
-            $content = $sections[$sectionKey]->contents->firstWhere('key', $contentKey);
-            $value = $content ? $content->value : $default;
-    
-            if (
-                strpos($contentKey, 'image') !== false ||
-                strpos($contentKey, 'video') !== false ||
-                strpos($contentKey, 'icon') !== false
-            ) {
-                if (!preg_match('/^(http|https):\/\//i', $value)) {
-                    return $value;
-                }
-            }
-            return $value;
-        }
-    }
-@endphp
-
     <!-- Hero Section Start -->
     <div class="hero">
         <div class="hero-bg-video">
-            @php
-                $videoSrc = getContent(
-                    $sections,
-                    'hero',
-                    'hero-video_video_url',
-                    'https://demo.awaikenthemes.com/assets/videos/rovex-video-1.mp4',
-                );
-            @endphp
             <video autoplay muted loop id="myVideo">
-                <source src="{{ asset($videoSrc) }}" type="video/mp4">
+                <source src="{{ $settings->url('hero.video') }}" type="video/mp4">
             </video>
         </div>
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-7">
-                    <div class="hero-content">
+                    <x-vcms.settings :keys="['hero.title', 'hero.description', 'hero.button_text', 'hero.button_link']" label="Teks" class="hero-content">
                         <div class="section-title">
-                            @php
-                                $heroTitle = getContent($sections, 'hero', 'hero-content-1_hero_title', 'Where <span>creativity</span> meets strategy');
-                                $heroDesc = getContent($sections, 'hero', 'hero-content-1_hero_description', 'We\'re a full-service design agency specializing in branding, web design, and creative strategies that elevate businesses.');
-                                $heroBtn = getContent($sections, 'hero', 'hero-content-1_btn_text', 'view our portfolio');
-                                $heroLink = getContent($sections, 'hero', 'hero-content-1_btn_link', route('portfolio'));
-                            @endphp
-                            <h1 class="text-anime-style-2" data-cursor="-opaque">{!! $heroTitle !!}</h1>
-                            <p class="wow fadeInUp" data-wow-delay="0.2s">{{ $heroDesc }}</p>
+                            <h1 class="text-anime-style-2" data-cursor="-opaque">{!! $settings->get('hero.title') !!}</h1>
+                            <p class="wow fadeInUp" data-wow-delay="0.2s">{{ $settings->get('hero.description') }}</p>
                         </div>
                         <div class="hero-btn wow fadeInUp" data-wow-delay="0.4s">
-                            <a href="{{ $heroLink }}" class="btn-default">{{ $heroBtn }}</a>
+                            <a href="{{ $settings->get('hero.button_link') }}" class="btn-default">{{ $settings->get('hero.button_text') }}</a>
                         </div>
-                    </div>
+                    </x-vcms.settings>
                 </div>
 
                 <div class="col-lg-5">
-                    <div class="hero-images">
-                        @php
-                            $img1 = getContent($sections, 'hero', 'hero-images-1_image_1', 'images/hero-img-1.jpg');
-                            $img2 = getContent($sections, 'hero', 'hero-images-1_image_2', 'images/hero-img-2.jpg');
-                            $img3 = getContent($sections, 'hero', 'hero-images-1_image_3', 'images/hero-img-3.jpg');
-                            $img4 = getContent($sections, 'hero', 'hero-images-1_image_4', 'images/hero-img-4.jpg');
-                            $img5 = getContent($sections, 'hero', 'hero-images-1_image_5', 'images/hero-img-5.jpg');
-                        @endphp
-                        <div class="hero-image-box-1">
-                            <div class="hero-img">
-                                <figure class="image-anime reveal">
-                                    <img src="{{ asset($img1) }}" alt="Hero Image 1">
-                                </figure>
+                    {{-- The background video sits behind the content, so it is edited with the images. --}}
+                    <x-vcms.settings :keys="['hero.image_1', 'hero.image_2', 'hero.image_3', 'hero.image_4', 'hero.image_5', 'hero.video']" label="Gambar & video" class="hero-images">
+                        @foreach ([[1, 2], [3], [4, 5]] as $box => $images)
+                            <div class="{{ $box === 1 ? 'hero-image-box-2' : 'hero-image-box-1' }}">
+                                @foreach ($images as $i)
+                                    <div class="hero-img">
+                                        <figure class="image-anime reveal">
+                                            <img src="{{ $settings->url("hero.image_{$i}") }}" alt="Hero Image {{ $i }}">
+                                        </figure>
+                                    </div>
+                                @endforeach
                             </div>
-                            <div class="hero-img">
-                                <figure class="image-anime reveal">
-                                    <img src="{{ asset($img2) }}" alt="Hero Image 2">
-                                </figure>
-                            </div>
-                        </div>
-                        <div class="hero-image-box-2">
-                            <div class="hero-img">
-                                <figure class="image-anime reveal">
-                                    <img src="{{ asset($img3) }}" alt="Hero Image 3">
-                                </figure>
-                            </div>
-                        </div>
-                        <div class="hero-image-box-1">
-                            <div class="hero-img">
-                                <figure class="image-anime reveal">
-                                    <img src="{{ asset($img4) }}" alt="Hero Image 4">
-                                </figure>
-                            </div>
-                            <div class="hero-img">
-                                <figure class="image-anime reveal">
-                                    <img src="{{ asset($img5) }}" alt="Hero Image 5">
-                                </figure>
-                            </div>
-                        </div>
-                    </div>
+                        @endforeach
+                    </x-vcms.settings>
                 </div>
             </div>
         </div>
     </div>
     <!-- Hero Section End -->
-
 
     <!-- Our Services Section Start -->
     <div class="our-services">

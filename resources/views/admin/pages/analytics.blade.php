@@ -4,13 +4,9 @@
 
 @section('content')
 @php
-    $defaultIframeUrl = 'https://lookerstudio.google.com/embed/reporting/c13bd4e0-3d10-48f4-ad69-27e600a65c1a/page/GzLhF';
-    $iframeUrl = isset($sections['analytics'])
-        ? ($sections['analytics']->contents->firstWhere('key', 'looker_iframe_url')?->value ?? $defaultIframeUrl)
-        : $defaultIframeUrl;
-    $iframeHeight = isset($sections['analytics'])
-        ? ($sections['analytics']->contents->firstWhere('key', 'looker_iframe_height')?->value ?? '')
-        : '';
+    // Stored in page_settings (analytics.*); an empty or invalid height means auto.
+    $iframeUrl = $settings->get('analytics.looker_url');
+    $iframeHeight = max(0, (int) $settings->get('analytics.looker_height'));
 @endphp
 
 <div class="container-fluid" style="padding-left: 15px; padding-right: 15px;">
@@ -187,7 +183,7 @@
     }
 
     // Custom height from database (empty = auto)
-    let customIframeHeight = '{{ $iframeHeight }}';
+    let customIframeHeight = @json($iframeHeight ? (string) $iframeHeight : '');
     
     // Calculate and set optimal iframe height
     function adjustIframeHeight(forceHeight = null) {
@@ -258,51 +254,37 @@
         saveBtn.disabled = true;
         saveBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-1"></i> Saving...';
 
-        // Save URL
-        const saveUrl = fetch('{{ route("admin.api.content.update") }}', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify({
-                section_key: 'analytics',
-                content_key: 'looker_iframe_url',
-                value: url,
-                type: 'url'
-            })
-        });
+        // Both values are page settings (PATCH /admin/api/settings/{key}).
+        const saveSetting = (key, value) => {
+            const body = new FormData();
+            body.append('_method', 'PATCH');
+            body.append('value', value);
 
-        // Save Height
-        const saveHeight = fetch('{{ route("admin.api.content.update") }}', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify({
-                section_key: 'analytics',
-                content_key: 'looker_iframe_height',
-                value: height || '',
-                type: 'text'
-            })
-        });
-
-        Promise.all([saveUrl, saveHeight])
-            .then(responses => Promise.all(responses.map(r => r.json())))
-            .then(results => {
-                const allSuccess = results.every(r => r.success);
-                if (allSuccess) {
-                    document.getElementById('looker-iframe').src = url;
-                    customIframeHeight = height;
-                    adjustIframeHeight(height);
-                    editIframeModal.hide();
-                    showToast('Settings updated successfully!', 'success');
-                } else {
-                    throw new Error('Failed to save some settings');
+            return fetch(@json(route('admin.api.settings.update', ['key' => '__key__'])).replace('__key__', key), {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json'
+                },
+                body
+            }).then(r => r.json().then(json => {
+                if (!r.ok) {
+                    throw new Error(json.message || 'HTTP ' + r.status);
                 }
+                return json;
+            }));
+        };
+
+        Promise.all([
+            saveSetting('analytics.looker_url', url),
+            saveSetting('analytics.looker_height', height || '')
+        ])
+            .then(() => {
+                document.getElementById('looker-iframe').src = url;
+                customIframeHeight = height;
+                adjustIframeHeight(height);
+                editIframeModal.hide();
+                showToast('Settings updated successfully!', 'success');
             })
             .catch(error => {
                 console.error('Error:', error);

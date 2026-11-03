@@ -77,7 +77,8 @@ app/
 │   ├── EditMode.php               status mode edit di sesi
 │   ├── FieldSet.php               mengisi definisi field dengan nilai
 │   └── Fields/                    definisi field yang bisa diedit per entitas (FaqFields, ...)
-└── Providers/RepositoryServiceProvider.php
+├── View/Composers/FooterComposer.php  data footer (setting + layanan) untuk semua halaman, 404 juga
+└── Providers/                     AppServiceProvider (composer, scoped SettingService), RepositoryServiceProvider
 
 config/page_settings.php           daftar semua nilai tunggal: tipe, label, default
 
@@ -125,7 +126,7 @@ Semua tabel daftar punya `id`, `sort_order` (int), `is_active` (bool, default tr
 
 | Kolom | Isi |
 |---|---|
-| `key` | unik, berpola `halaman.bagian.field`, contoh `home.hero.title`, `contact.whatsapp_number`, `analytics.looker_url` |
+| `key` | unik, berpola `halaman.bagian.field`, contoh `hero.title`, `contact.whatsapp`, `analytics.looker_url` |
 | `value` | isi; `null` berarti memakai default |
 
 Tipe, label, dan default **tidak** disimpan di database, tapi di `config/page_settings.php`:
@@ -295,7 +296,7 @@ Setiap entitas dianggap selesai kalau semua poin ini terpenuhi:
 8. View publik memakai data dari service dan komponen `<x-vcms.*>`.
 9. Seeder data demo dalam format baru.
 10. Test: feature test endpoint (wajib login, 422, tambah/ubah/hapus/urutkan) + halaman publik tampil.
-11. Key lama entitas ini **tidak disebut lagi** di view publik maupun `SectionContentSeeder`. Editor lama (`admin-vcms.js`, `ContentController`, `admin/pages/*`) dihapus sekaligus di Epic 4 (keputusan K-11), jadi tidak dipotong per entitas.
+11. Key lama entitas ini **tidak disebut lagi** di view publik (`SectionContentSeeder` sudah dihapus di PBI-312). Editor lama (`admin-vcms.js`, `ContentController`, `admin/pages/*`) dihapus sekaligus di Epic 4 (keputusan K-11), jadi tidak dipotong per entitas.
 
 ### 7.1 Kerangka bersama untuk daftar terurut
 

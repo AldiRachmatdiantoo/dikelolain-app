@@ -110,4 +110,62 @@ return [
     'faqs.cta.email' => ['type' => 'email', 'label' => 'Email kontak', 'default' => 'info@domainname.com'],
     'faqs.cta.button_text' => ['type' => 'text', 'label' => 'Teks tombol', 'default' => 'Hubungi Kami Sekarang'],
 
+    // Hero section (Home)
+    'hero.video' => ['type' => 'video', 'label' => 'Video latar', 'default' => 'https://demo.awaikenthemes.com/assets/videos/rovex-video-1.mp4'],
+    'hero.title' => ['type' => 'rich_text', 'label' => 'Judul', 'default' => 'Where <span>creativity</span> meets strategy'],
+    'hero.description' => ['type' => 'textarea', 'label' => 'Deskripsi', 'default' => 'We\'re a full-service design agency specializing in branding, web design, and creative strategies that elevate businesses.'],
+    'hero.button_text' => ['type' => 'text', 'label' => 'Teks tombol', 'default' => 'view our portfolio'],
+    'hero.button_link' => ['type' => 'url', 'label' => 'Link tombol', 'default' => '/portfolio'],
+    'hero.image_1' => ['type' => 'image', 'label' => 'Gambar 1', 'default' => 'images/hero-img-1.jpg'],
+    'hero.image_2' => ['type' => 'image', 'label' => 'Gambar 2', 'default' => 'images/hero-img-2.jpg'],
+    'hero.image_3' => ['type' => 'image', 'label' => 'Gambar 3', 'default' => 'images/hero-img-3.jpg'],
+    'hero.image_4' => ['type' => 'image', 'label' => 'Gambar 4', 'default' => 'images/hero-img-4.jpg'],
+    'hero.image_5' => ['type' => 'image', 'label' => 'Gambar 5', 'default' => 'images/hero-img-5.jpg'],
+
+    // Contact page (phone, email and address are also shown in the footer)
+    'contact.header.title' => ['type' => 'rich_text', 'label' => 'Judul header', 'default' => 'Contact <span>us</span>'],
+    'contact.header.breadcrumb' => ['type' => 'text', 'label' => 'Breadcrumb', 'default' => 'Contact'],
+    'contact.sub_title' => ['type' => 'text', 'label' => 'Sub judul', 'default' => 'contact us'],
+    'contact.title' => ['type' => 'rich_text', 'label' => 'Judul', 'default' => 'Let\'s start a <span>conversation</span>'],
+    'contact.phone_icon' => ['type' => 'image', 'label' => 'Ikon telepon', 'default' => 'images/icon-phone.svg'],
+    'contact.phone_label' => ['type' => 'text', 'label' => 'Label telepon', 'default' => 'phone number'],
+    'contact.phone' => ['type' => 'text', 'label' => 'Nomor telepon', 'default' => '+987 654 3210'],
+    'contact.email_icon' => ['type' => 'image', 'label' => 'Ikon email', 'default' => 'images/icon-mail.svg'],
+    'contact.email_label' => ['type' => 'text', 'label' => 'Label email', 'default' => 'email us'],
+    'contact.email' => ['type' => 'email', 'label' => 'Email', 'default' => 'info@domain.com'],
+    'contact.address_icon' => ['type' => 'image', 'label' => 'Ikon alamat', 'default' => 'images/icon-location.svg'],
+    'contact.address_label' => ['type' => 'text', 'label' => 'Label alamat', 'default' => 'address'],
+    'contact.address' => ['type' => 'textarea', 'label' => 'Alamat', 'default' => '7676 Arden Avenue, Ginashire'],
+    'contact.form_title' => ['type' => 'rich_text', 'label' => 'Judul form', 'default' => 'Get a <span>free advise</span>'],
+    'contact.form_button' => ['type' => 'text', 'label' => 'Teks tombol kirim', 'default' => 'send message'],
+    'contact.whatsapp' => ['type' => 'text', 'label' => 'Nomor WhatsApp tujuan form (angka saja, diawali 62)', 'default' => '6281234567890'],
+    'contact.map_url' => ['type' => 'url', 'label' => 'Link embed Google Maps', 'default' => 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d96737.10562045308!2d-74.08535042841811!3d40.739265258395164!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c24fa5d33f083b%3A0xc80b8f06e177fe62!2sNew%20York%2C%20NY%2C%20USA!5e0!3m2!1sen!2sin!4v1703158537552!5m2!1sen!2sin'],
+
+    // Footer (every page)
+    'footer.title' => ['type' => 'text', 'label' => 'Judul besar', 'default' => 'Let\'s Connect'],
+    'footer.title_link' => ['type' => 'url', 'label' => 'Link judul besar', 'default' => '/contact'],
+    'footer.logo' => ['type' => 'image', 'label' => 'Logo', 'default' => 'images/logo-dikelolain-full-hitam.png'],
+    'footer.description' => ['type' => 'textarea', 'label' => 'Teks', 'default' => 'The creativity and professionalism shown by Rovex exceeded our expectations. Their design transformed our brand, and the results speak for themselves.'],
+    'footer.facebook' => ['type' => 'url', 'label' => 'Link Facebook', 'default' => '#'],
+    'footer.x' => ['type' => 'url', 'label' => 'Link X', 'default' => '#'],
+    'footer.linkedin' => ['type' => 'url', 'label' => 'Link LinkedIn', 'default' => '#'],
+    'footer.instagram' => ['type' => 'url', 'label' => 'Link Instagram', 'default' => '#'],
+    'footer.quick_1_text' => ['type' => 'text', 'label' => 'Link cepat 1: teks', 'default' => 'home'],
+    'footer.quick_1_url' => ['type' => 'url', 'label' => 'Link cepat 1: alamat', 'default' => '/'],
+    'footer.quick_2_text' => ['type' => 'text', 'label' => 'Link cepat 2: teks', 'default' => 'about us'],
+    'footer.quick_2_url' => ['type' => 'url', 'label' => 'Link cepat 2: alamat', 'default' => '/about'],
+    'footer.quick_3_text' => ['type' => 'text', 'label' => 'Link cepat 3: teks', 'default' => 'team'],
+    'footer.quick_3_url' => ['type' => 'url', 'label' => 'Link cepat 3: alamat', 'default' => '/team'],
+    'footer.quick_4_text' => ['type' => 'text', 'label' => 'Link cepat 4: teks', 'default' => 'our portfolio'],
+    'footer.quick_4_url' => ['type' => 'url', 'label' => 'Link cepat 4: alamat', 'default' => '/portfolio'],
+    'footer.copyright' => ['type' => 'text', 'label' => 'Copyright', 'default' => 'Copyright © 2025 All Rights Reserved.'],
+
+    // Testimonials page
+    'testimonials.header.title' => ['type' => 'rich_text', 'label' => 'Judul header', 'default' => 'Testimonials'],
+    'testimonials.header.breadcrumb' => ['type' => 'text', 'label' => 'Breadcrumb', 'default' => 'Testimonials'],
+
+    // Admin dashboard: Looker Studio report
+    'analytics.looker_url' => ['type' => 'url', 'label' => 'Link embed Looker Studio', 'default' => 'https://lookerstudio.google.com/embed/reporting/c13bd4e0-3d10-48f4-ad69-27e600a65c1a/page/GzLhF'],
+    'analytics.looker_height' => ['type' => 'text', 'label' => 'Tinggi laporan (piksel, kosong = otomatis)', 'default' => ''],
+
 ];

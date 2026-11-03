@@ -2,30 +2,14 @@
 
 @section('title', 'Testimonials - Dikelolain')
 
-@php
-    // Helper function to get content from database
-    if (!function_exists('getTestimonialContent')) {
-        function getTestimonialContent($sections, $sectionKey, $contentKey, $default = '') {
-            $section = collect($sections)->firstWhere('key', $sectionKey);
-            if (!$section || !isset($section['contents'])) {
-                return $default;
-            }
-            $content = collect($section['contents'])->firstWhere('key', $contentKey);
-            return $content ? $content['value'] : $default;
-        }
-    }
-
-    // Page Header data
-    $headerTitle = getTestimonialContent($sections, 'testimonials-header', 'testimonials-header-1_title', 'Testimonials');
-    $headerBreadcrumb = getTestimonialContent($sections, 'testimonials-header', 'testimonials-header-1_breadcrumb', 'Testimonials');
-@endphp
-
 @section('content')
 
     <!-- Page Header -->
-    <x-page-header title="{!! $headerTitle !!}">
-        <li class="breadcrumb-item active" aria-current="page">{{ $headerBreadcrumb }}</li>
-    </x-page-header>
+    <x-vcms.settings :keys="['testimonials.header.title', 'testimonials.header.breadcrumb']" label="Header">
+        <x-page-header :title="$settings->get('testimonials.header.title')">
+            <li class="breadcrumb-item active" aria-current="page">{{ $settings->get('testimonials.header.breadcrumb') }}</li>
+        </x-page-header>
+    </x-vcms.settings>
 
     <!-- Page Testimonials Start -->
     <div class="page-testimonial">

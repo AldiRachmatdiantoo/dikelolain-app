@@ -2,70 +2,13 @@
 
 @section('title', 'Contact - Dikelolain')
 
-@php
-if (!function_exists('getContent')) {
-    function getContent($sections, $sectionKey, $contentKey, $default = '') {
-        if (!isset($sections[$sectionKey])) {
-            return $default;
-        }
-        $content = $sections[$sectionKey]->contents->firstWhere('key', $contentKey);
-        return $content ? $content->value : $default;
-    }
-}
-
-// Header - check both sections for backward compatibility
-$headerTitle = getContent($sections, 'contact-header', 'contact-header-1_title', 'Contact <span>us</span>');
-$headerBreadcrumb = getContent($sections, 'contact-header', 'contact-header-1_breadcrumb', 'Contact');
-
-if (empty($headerTitle)) {
-    $headerTitle = getContent($sections, 'contact', 'contact-header-1_title', 'Contact <span>us</span>');
-}
-
-// Section Title
-$subTitle = getContent($sections, 'contact', 'contact-section_sub_title', 'contact us');
-$mainTitle = getContent($sections, 'contact', 'contact-section_main_title', "Let's start a <span>conversation</span>");
-
-// Contact Info
-$phoneIcon = getContent($sections, 'contact', 'contact-section_phone_icon', 'images/icon-phone.svg');
-$phoneLabel = getContent($sections, 'contact', 'contact-section_phone_label', 'phone number');
-$phoneValue = getContent($sections, 'contact', 'contact-section_phone_value', '+987 654 3210');
-
-$emailIcon = getContent($sections, 'contact', 'contact-section_email_icon', 'images/icon-mail.svg');
-$emailLabel = getContent($sections, 'contact', 'contact-section_email_label', 'email us');
-$emailValue = getContent($sections, 'contact', 'contact-section_email_value', 'info@domain.com');
-
-$addressIcon = getContent($sections, 'contact', 'contact-section_address_icon', 'images/icon-location.svg');
-$addressLabel = getContent($sections, 'contact', 'contact-section_address_label', 'address');
-$addressValue = getContent($sections, 'contact', 'contact-section_address_value', '7676 Arden Avenue, Ginashire');
-
-// Form Settings - check contact-form_ first (where data is stored), then fallback
-$formTitle = getContent($sections, 'contact', 'contact-form_form_title', '');
-if (empty($formTitle)) {
-    $formTitle = getContent($sections, 'contact', 'contact-section_form_title', 'Get a <span>free advise</span>');
-}
-
-$formBtnText = getContent($sections, 'contact', 'contact-form_form_btn_text', '');
-if (empty($formBtnText)) {
-    $formBtnText = getContent($sections, 'contact', 'contact-section_form_btn_text', 'send message');
-}
-
-$whatsappNumber = getContent($sections, 'contact', 'contact-form_whatsapp_number', '');
-if (empty($whatsappNumber)) {
-    $whatsappNumber = getContent($sections, 'contact', 'contact-section_whatsapp_number', '6281234567890');
-}
-
-// Map - check both key formats
-$mapEmbed = getContent($sections, 'contact-map', 'contact-map_embed_url', '');
-if (empty($mapEmbed)) {
-    $mapEmbed = getContent($sections, 'contact-map', 'contact-map-embed_url', 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d96737.10562045308!2d-74.08535042841811!3d40.739265258395164!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c24fa5d33f083b%3A0xc80b8f06e177fe62!2sNew%20York%2C%20NY%2C%20USA!5e0!3m2!1sen!2sin!4v1703158537552!5m2!1sen!2sin');
-}
-@endphp
-
 @section('content')
 
-    <x-page-header title="{!! $headerTitle !!}">
-        <li class="breadcrumb-item active" aria-current="page">{{ $headerBreadcrumb }}</li>
-    </x-page-header>
+    <x-vcms.settings :keys="['contact.header.title', 'contact.header.breadcrumb']" label="Header">
+        <x-page-header :title="$settings->get('contact.header.title')">
+            <li class="breadcrumb-item active" aria-current="page">{{ $settings->get('contact.header.breadcrumb') }}</li>
+        </x-page-header>
+    </x-vcms.settings>
 
     <!-- Page Contact Us Start -->
     <div class="page-contact-us">
@@ -74,50 +17,25 @@ if (empty($mapEmbed)) {
                 <div class="col-lg-6">
                     <!-- Contact Us Content Start -->
                     <div class="contact-us-content">
-                        <!-- Section Title Start -->
-                        <div class="section-title">
-                            <h3>{{ $subTitle }}</h3>
-                            <h2 class="text-anime-style-2" data-cursor="-opaque">{!! $mainTitle !!}</h2>
-                        </div>
-                        <!-- Section Title End -->
+                        <x-vcms.settings :keys="['contact.sub_title', 'contact.title']" label="Judul" class="section-title">
+                            <h3>{{ $settings->get('contact.sub_title') }}</h3>
+                            <h2 class="text-anime-style-2" data-cursor="-opaque">{!! $settings->get('contact.title') !!}</h2>
+                        </x-vcms.settings>
 
                         <!-- Contact Info List Start -->
                         <div class="contact-info-list">
-                            <!-- Contact Info Item Start -->
-                            <div class="contact-info-item wow fadeInUp">
-                                <div class="icon-box">
-                                    <img src="{{ asset($phoneIcon) }}" alt="">
-                                </div>
-                                <div class="contact-info-content">
-                                    <h3>{{ $phoneLabel }}</h3>
-                                    <p>{{ $phoneValue }}</p>
-                                </div>
-                            </div>
-                            <!-- Contact Info Item End -->
-
-                            <!-- Contact Info Item Start -->
-                            <div class="contact-info-item wow fadeInUp" data-wow-delay="0.25s">
-                                <div class="icon-box">
-                                    <img src="{{ asset($emailIcon) }}" alt="">
-                                </div>
-                                <div class="contact-info-content">
-                                    <h3>{{ $emailLabel }}</h3>
-                                    <p>{{ $emailValue }}</p>
-                                </div>
-                            </div>
-                            <!-- Contact Info Item End -->
-
-                            <!-- Contact Info Item Start -->
-                            <div class="contact-info-item wow fadeInUp" data-wow-delay="0.5s">
-                                <div class="icon-box">
-                                    <img src="{{ asset($addressIcon) }}" alt="">
-                                </div>
-                                <div class="contact-info-content">
-                                    <h3>{{ $addressLabel }}</h3>
-                                    <p>{{ $addressValue }}</p>
-                                </div>
-                            </div>
-                            <!-- Contact Info Item End -->
+                            @foreach (['phone' => 'Telepon', 'email' => 'Email', 'address' => 'Alamat'] as $item => $label)
+                                <x-vcms.settings :keys="['contact.' . $item . '_icon', 'contact.' . $item . '_label', 'contact.' . $item]" :label="$label"
+                                    class="contact-info-item wow fadeInUp" :data-wow-delay="$loop->first ? null : (0.25 * $loop->index) . 's'">
+                                    <div class="icon-box">
+                                        <img src="{{ $settings->url('contact.' . $item . '_icon') }}" alt="">
+                                    </div>
+                                    <div class="contact-info-content">
+                                        <h3>{{ $settings->get('contact.' . $item . '_label') }}</h3>
+                                        <p>{{ $settings->get('contact.' . $item) }}</p>
+                                    </div>
+                                </x-vcms.settings>
+                            @endforeach
                         </div>
                         <!-- Contact Info List End -->
                     </div>
@@ -126,16 +44,15 @@ if (empty($mapEmbed)) {
 
                 <div class="col-lg-6">
                     <!-- Contact Us Form Start -->
-                    <div class="contact-us-form">
-                        <!-- Section Title Start -->
+                    <x-vcms.settings :keys="['contact.form_title', 'contact.form_button', 'contact.whatsapp']" label="Form" class="contact-us-form">
                         <div class="section-title">
-                            <h2 class="text-anime-style-2" data-cursor="-opaque">{!! $formTitle !!}</h2>
+                            <h2 class="text-anime-style-2" data-cursor="-opaque">{!! $settings->get('contact.form_title') !!}</h2>
                         </div>
-                        <!-- Section Title End -->
 
                         <!-- Contact Form Start -->
                         <div class="contact-form">
-                            <form id="contactForm" action="#" method="POST" class="wow fadeInUp" data-wow-delay="0.25s" data-whatsapp="{{ $whatsappNumber }}">
+                            {{-- The form opens WhatsApp with the message; the number keeps digits only. --}}
+                            <form id="contactForm" action="#" method="POST" class="wow fadeInUp" data-wow-delay="0.25s" data-whatsapp="{{ preg_replace('/\D+/', '', $settings->get('contact.whatsapp')) }}">
                                 <div class="row">
                                     <div class="form-group col-md-6 mb-4">
                                         <label class="form-label">first name</label>
@@ -168,14 +85,14 @@ if (empty($mapEmbed)) {
                                     </div>
 
                                     <div class="col-md-12">
-                                        <button type="submit" class="btn-default">{{ $formBtnText }}</button>
+                                        <button type="submit" class="btn-default">{{ $settings->get('contact.form_button') }}</button>
                                         <div id="msgSubmit" class="h3 hidden"></div>
                                     </div>
                                 </div>
                             </form>
                         </div>
                         <!-- Contact Form End -->
-                    </div>
+                    </x-vcms.settings>
                     <!-- Contact Us Form End -->
                 </div>
             </div>
@@ -188,11 +105,9 @@ if (empty($mapEmbed)) {
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
-                    <!-- Google Map IFrame Start -->
-                    <div class="google-map-iframe">
-                        <iframe src="{{ $mapEmbed }}" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-                    </div>
-                    <!-- Google Map IFrame End -->
+                    <x-vcms.settings :keys="['contact.map_url']" label="Peta" class="google-map-iframe">
+                        <iframe src="{{ $settings->get('contact.map_url') }}" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </x-vcms.settings>
                 </div>
             </div>
         </div>

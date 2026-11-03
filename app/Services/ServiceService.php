@@ -6,6 +6,7 @@ use App\Models\Service;
 use App\Repositories\Contracts\ServiceRepositoryInterface;
 use App\Services\Concerns\CreatesSlugs;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 
 /**
  * The services the business offers, each with a detail page at /pages/service/{slug}.
@@ -29,6 +30,16 @@ class ServiceService extends ListService
     public function findBySlug(string $slug, bool $activeOnly = true): ?Service
     {
         return $this->services->findBySlug($slug, $activeOnly);
+    }
+
+    /**
+     * The first active services, for the footer.
+     *
+     * @return Collection<int, Service>
+     */
+    public function highlights(int $limit): Collection
+    {
+        return $this->services->all(activeOnly: true)->take($limit)->values()->toBase();
     }
 
     protected function slugExists(string $slug): bool

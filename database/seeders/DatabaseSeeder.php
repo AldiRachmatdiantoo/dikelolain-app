@@ -29,9 +29,8 @@ class DatabaseSeeder extends Seeder
             'password' => $password,
         ]);
 
-        // Seed VCMS sections and content
+        // Demo content for the lists (single values fall back to config/page_settings.php)
         $this->call([
-            SectionContentSeeder::class,
             FaqSeeder::class,
             TestimonialSeeder::class,
             ClientLogoSeeder::class,

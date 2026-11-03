@@ -19,7 +19,6 @@ class TestimonialPageService
     public function data(bool $editing = false): array
     {
         return [
-            ...$this->sections->legacy(),
             ...$this->sections->settings(),
             ...$this->sections->tools($editing),
             'testimonials' => $this->testimonials->all(activeOnly: !$editing),

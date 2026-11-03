@@ -25,7 +25,6 @@ class HomePageService
     public function data(bool $editing = false): array
     {
         return [
-            ...$this->sections->legacy(),
             ...$this->sections->settings(),
             ...$this->sections->clientLogos($editing),
             ...$this->sections->tools($editing),

@@ -21,6 +21,7 @@ use App\Http\Controllers\Admin\Api\ToolController;
 use App\Http\Controllers\Admin\EditModeController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Pages\AboutPageController;
+use App\Http\Controllers\Pages\ContactPageController;
 use App\Http\Controllers\Pages\FaqPageController;
 use App\Http\Controllers\Pages\HomePageController;
 use App\Http\Controllers\Pages\PortfolioPageController;
@@ -31,6 +32,7 @@ use App\Http\Controllers\Pages\TeamMemberPageController;
 use App\Http\Controllers\Pages\TeamPageController;
 use App\Http\Controllers\Pages\TestimonialPageController;
 use App\Http\Controllers\ProfileController;
+use App\Services\SettingService;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -45,10 +47,7 @@ Route::get('/about', AboutPageController::class)->name('about');
 
 Route::get('/services', ServicePageController::class)->name('services');
 
-Route::get('/contact', function () {
-    $sections = App\Models\Section::with('contents.media')->active()->ordered()->get()->keyBy('key');
-    return view('pages.contact', compact('sections'));
-})->name('contact');
+Route::get('/contact', ContactPageController::class)->name('contact');
 
 Route::get('/portfolio', [PortfolioPageController::class, 'index'])->name('portfolio');
 Route::get('/portfolio-experiment', [PortfolioPageController::class, 'experiment'])->name('portfolio.experiment');
@@ -157,10 +156,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         // Pages Management (VCMS Editor)
         Route::prefix('pages')->name('pages.')->group(function () {
-            Route::get('/analytics', function () {
-                $sections = App\Models\Section::with('contents')
-                    ->active()->ordered()->get()->keyBy('key');
-                return view('admin.pages.analytics', compact('sections'));
+            Route::get('/analytics', function (SettingService $settings) {
+                return view('admin.pages.analytics', compact('settings'));
             })->name('analytics');
 
             Route::get('/home', function () {

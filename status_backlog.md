@@ -14,7 +14,7 @@
 
 **Mode:** eksekusi otomatis atas instruksi pemilik (3 Nov 2026): kerjakan PBI berurutan tanpa bertanya, uji setiap PBI (`php artisan test` + cek browser bila terlihat), commit + push per PBI, kendala dicatat di [kendala_backlog.md](kendala_backlog.md).
 
-**Sedang dikerjakan:** Epic 3, PBI-312 (Nilai tunggal sisanya). Selesai: Epic 0–2, PBI-301–311.
+**Sedang dikerjakan:** Epic 3, PBI-313 (Controller per halaman untuk route closure yang tersisa). Selesai: Epic 0–2, PBI-301–312. Halaman publik tidak lagi membaca `sections` lama; yang masih memakainya hanya editor lama `/admin/pages/*` dan dashboard admin (dihapus di Epic 4).
 
 **Contoh pola entitas = Testimonial** (memakai kerangka daftar bersama, [ARCHITECTURE §7.1](ARCHITECTURE.md#71-kerangka-bersama-untuk-daftar-terurut)). Entitas berikutnya meniru file-file ini:
 - `database/migrations/2026_11_03_000003_create_testimonials_table.php`, `app/Models/Testimonial.php` (scope + accessor `logo_url`/`photo_url`)
@@ -23,7 +23,7 @@
 - `app/Http/Requests/Admin/TestimonialRequest.php`, `app/Http/Resources/TestimonialResource.php`, `app/Http/Controllers/Admin/Api/TestimonialController.php` + satu baris di `$lists` (`routes/web.php`)
 - `app/Http/Controllers/Pages/TestimonialPageController.php`, `app/Vcms/Fields/TestimonialFields.php`, `database/seeders/TestimonialSeeder.php` (+ `DatabaseSeeder`)
 - Test: `tests/Feature/TestimonialApiTest.php` (pakai `ListApiContract`), `TestimonialPageTest.php`
-- Halaman yang masih memakai `$sections` lama diberi page controller + page service; data lama tetap dikirim sebagai `sections` sampai semua section-nya pindah.
+- Data untuk partial yang tampil di semua halaman (footer) diberikan lewat view composer (`app/View/Composers/FooterComposer.php`, didaftarkan di `AppServiceProvider`), jadi halaman 404 pun punya datanya.
 - Section yang muncul di beberapa halaman: satu partial di `resources/views/partials/` + satu method di `app/Services/Pages/SectionData.php` (contoh: `tools()` + `partials/creative-tools.blade.php`); page service cukup menggabungkan `...$this->sections->tools($editing)`.
 - Kode lama dipotong dengan skrip penanda (scratchpad `cut.php`/`swap.php`: hapus teks di antara dua penanda yang masing-masing harus unik), lalu `node --check public/js/admin-vcms.js` + `php -l`.
 
@@ -35,10 +35,10 @@
 
 | Status | Jumlah | PBI |
 |---|---|---|
-| ✅ Selesai | 37 | **001–005** (seluruh Epic 0), **101–111** (seluruh Epic 1), **201–210** (seluruh Epic 2), **301–311** |
+| ✅ Selesai | 38 | **001–005** (seluruh Epic 0), **101–111** (seluruh Epic 1), **201–210** (seluruh Epic 2), **301–312** |
 | ⏳ Sedang dikerjakan | 0 | – |
 | ⏸️ Menunggu keputusan | 2 | **504**, **507** (hosting, lihat [kendala_backlog.md](kendala_backlog.md) KD-1) |
-| ❌ Belum | 14 | Epic 3–5 |
+| ❌ Belum | 13 | Epic 3–5 |
 
 Total **53 PBI** dalam 6 epic:
 
@@ -47,7 +47,7 @@ Total **53 PBI** dalam 6 epic:
 | 0 | Persiapan | 001–005 | 5/5 ✅ |
 | 1 | Beres-beres tanpa risiko | 101–111 | 11/11 ✅ |
 | 2 | Fondasi VCMS baru + FAQ | 201–210 | 10/10 ✅ |
-| 3 | Migrasi entitas | 301–313 | 11/13 |
+| 3 | Migrasi entitas | 301–313 | 12/13 |
 | 4 | Pembersihan akhir | 401–406 | 0/6 |
 | 5 | Setelah rombak (fitur & rilis) | 501–508 | 0/8 |
 
@@ -137,7 +137,7 @@ Urutan dari yang paling sederhana. Setiap PBI mengikuti checklist [ARCHITECTURE 
 | 309 | Project / portofolio | `projects` | `our-work` (project-list, portfolio-item) | Home, Portfolio | ✅ 3 Nov 2026: satu tabel dan satu partial kartu (`partials/work-item.blade.php`) untuk Home, Portfolio, dan `/portfolio-experiment` (K-9: dipertahankan, ikut data baru). Tanpa slug karena tidak ada halaman detail (dihapus di PBI-108). Jenis Video memakai link YouTube (divalidasi, diputar lewat `youtube-nocookie`); jenis Desain memakai gambar upload; editor menolak jenis tanpa medianya, juga saat jenis diganti. Home tetap memakai aturan lama: 6 video aktif pertama lalu 6 desain aktif pertama; di Home kartu bisa diedit/disembunyikan/dihapus tetapi digeser dan ditambah dari halaman Portfolio. Modal project kini disusun dengan `text()`/`attr()` (isi tidak bisa menyisipkan HTML), link project opsional dan harus http(s), tombol Visit Project disembunyikan bila kosong, video berhenti saat modal ditutup; klik gambar desain membuka modal (dulu ke link demo `/portfolio/single` yang 404). Judul/tombol section dan header jadi setting `work.*`, `portfolio.*`. Seed project lama dihapus dari `SectionContentSeeder`; `ProjectSeeder` berisi 12 video lama (tanpa link) + 6 desain demo dari gambar template supaya filter Design berisi (KD-2). Ikut diperbaiki: paginasi Portfolio tertimpa filter `function.js` dan nomor halaman dihitung dari semua project (filter Design kosong begitu project lebih dari 12), serta error `imagesLoaded is not a function`. Dicek di browser: tambah project desain + upload, judul berisi HTML tampil sebagai teks di kartu dan modal, validasi ganti jenis, hapus (file ikut terhapus), filter + paginasi, slider eksperimen. 317 test hijau |
 | 310 | Paket harga | `pricing_plans`, `pricing_features` | `pricing` (pricing-section) | Pricing | ✅ 3 Nov 2026: tiga paket dulu tertulis tetap di view (key `pricing-plans_plan_*` tidak pernah di-seed), kini tabel sendiri dan bisa ditambah, diedit, disembunyikan, digeser, dan dihapus dari mode edit; fitur diurutkan per paket (`pricing_plan_id` lewat field `hidden`), hapus paket ikut menghapus fiturnya. Harga dan periode berupa teks bebas (misalnya "Rp 300 Rb", "/per month"); paket yang ditonjolkan (kotak kuning) diatur dengan toggle; tombol disembunyikan bila teksnya kosong, link divalidasi sama seperti setting link. Judul "What included?" jadi setting `pricing.list_title` (diedit dari kotak pertama), header jadi `pricing.header.*`. Daftar keuntungan (3 ikon) di bawah paket masih data lama sampai PBI-311. `PricingPlanSeeder` berisi tiga paket dari view lama (harga asli menunggu KD-2). Dicek di browser: tambah/hapus fitur, tonjolkan paket, link `javascript:` ditolak. 344 test hijau |
 | 311 | Daftar halaman | `page_list_items` | `about-us` (list item), `vision-mission`, pricing-benefits | About, Pricing | ✅ 3 Nov 2026: empat daftar pendek (poin about us, visi, misi, keuntungan Pricing) di satu tabel dengan kolom `list_key` (pengganti `page` + `group` di rancangan awal, karena kunci daftar sudah menyebut halamannya); urutan per daftar, `list_key` dikirim lewat field `hidden`, ikon hanya ada di editor keuntungan Pricing (kosong = tanpa ikon). Nilai tunggal di sekitarnya ikut pindah ke setting karena section-nya ditulis ulang: header About, gambar/judul/deskripsi/tombol bulat about us (`about.*`), gambar/judul/deskripsi visi dan misi (`vision.*`, `mission.*`). Breadcrumb About kini di-escape (dulu dicetak mentah). About dan Pricing tidak lagi membaca `sections` lama. `PageListItemSeeder` berisi isi default lama. Dicek di browser: tambah poin misi masuk ke daftar misi saja, hapus, ikon keuntungan. 360 test hijau |
-| 312 | Nilai tunggal sisanya | `page_settings` | hero, header semua halaman, judul section, CTA, `contact`, `contact-map`, `footer`, analytics | Semua | ❌ |
+| 312 | Nilai tunggal sisanya | `page_settings` | hero, header semua halaman, judul section, CTA, `contact`, `contact-map`, `footer`, analytics | Semua | ✅ 3 Nov 2026: hero Home (teks, 5 gambar, video latar; video diedit bersama gambar karena ada di belakang konten), halaman Contact (header, judul, tiga info kontak dengan ikon, form, peta), footer, header Testimonials, dan laporan Looker Studio di admin analytics kini di `page_settings` (header dan judul section halaman lain sudah pindah di PBI sebelumnya). Telepon/email/alamat di footer sekarang **sama dengan halaman Contact** (dulu dua isian terpisah dengan nilai berbeda). Kolom "our services" di footer kini **empat layanan aktif pertama dari tabel `services`** dengan link ke halaman detailnya (dulu empat teks tetap yang semuanya ke `/services`). Data footer diberikan `FooterComposer`, jadi halaman 404 pun punya footer lengkap. Nomor WhatsApp form disaring menjadi angka saja; tinggi laporan analytics dibaca sebagai angka (selain angka = otomatis). Halaman analytics menyimpan lewat API setting dan menampilkan pesan validasi bila gagal. `/contact` memakai `ContactPageController`. `SectionData::legacy()` dan `SectionContentSeeder` dihapus: tidak ada halaman publik yang membaca `sections` lagi. Dicek di browser: edit copyright di Home tampil di Contact, edit telepon di Contact tampil di footer halaman 404, tinggi analytics tersimpan, link `javascript:` ditolak. 375 test hijau |
 | 313 | Controller per halaman + page service; ganti semua route closure | – | – | Semua | ❌ |
 
 ### Epic 4: Pembersihan akhir
@@ -282,3 +282,4 @@ Ringkasan hasil membaca kode di commit `02fa1fd` (isi sama dengan branch `back-e
 | 3 Nov 2026 | PBI-309 selesai: project di tabel `projects` (video YouTube / desain), satu kartu untuk Home/Portfolio/slider, modal aman dari HTML, paginasi + filter Portfolio diperbaiki; 317 test hijau |
 | 3 Nov 2026 | PBI-310 selesai: paket harga di tabel `pricing_plans` + `pricing_features`, bisa dikelola dari mode edit (dulu teks tetap di view); 344 test hijau |
 | 3 Nov 2026 | PBI-311 selesai: daftar About/visi/misi/keuntungan Pricing di tabel `page_list_items`, nilai tunggal About jadi setting; About dan Pricing lepas dari `sections` lama; 360 test hijau |
+| 3 Nov 2026 | PBI-312 selesai: hero, Contact, footer, header Testimonials, dan URL Looker Studio pindah ke `page_settings`; kontak footer = kontak halaman Contact, layanan footer dari tabel `services`; `SectionContentSeeder` dihapus; 375 test hijau |

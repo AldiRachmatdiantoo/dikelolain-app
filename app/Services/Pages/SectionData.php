@@ -2,7 +2,6 @@
 
 namespace App\Services\Pages;
 
-use App\Models\Section;
 use App\Services\AchievementService;
 use App\Services\ClientLogoService;
 use App\Services\CounterService;
@@ -38,16 +37,6 @@ class SectionData
     public function settings(): array
     {
         return ['settings' => $this->settings];
-    }
-
-    /**
-     * Old key-value content for the sections not migrated yet (removed in Epic 4).
-     *
-     * @return array{sections: Collection}
-     */
-    public function legacy(): array
-    {
-        return ['sections' => Section::with('contents.media')->active()->ordered()->get()->keyBy('key')];
     }
 
     /**
