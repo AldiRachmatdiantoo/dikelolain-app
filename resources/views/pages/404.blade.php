@@ -2,6 +2,10 @@
 
 @section('title', 'Dikelolain - Creative Agency')
 
+@push('meta')
+    <meta name="robots" content="noindex">
+@endpush
+
 @section('content')
 
 

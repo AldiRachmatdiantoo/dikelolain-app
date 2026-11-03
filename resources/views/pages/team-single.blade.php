@@ -6,6 +6,7 @@
 @endphp
 
 @section('title', $member->name . ' - Our Team - Dikelolain')
+@section('meta_description', Str::limit(strip_tags($member->about ?: $member->role), 160))
 
 @section('content')
 

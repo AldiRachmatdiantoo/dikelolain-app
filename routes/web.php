@@ -35,6 +35,7 @@ use App\Http\Controllers\Pages\TeamMemberPageController;
 use App\Http\Controllers\Pages\TeamPageController;
 use App\Http\Controllers\Pages\TestimonialPageController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SeoController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -67,6 +68,9 @@ Route::prefix('pages')->name('pages.')->group(function () {
 
     Route::get('/team/{slug}', TeamMemberPageController::class)->name('team.single');
 });
+
+Route::get('/sitemap.xml', [SeoController::class, 'sitemap'])->name('sitemap');
+Route::get('/robots.txt', [SeoController::class, 'robots'])->name('robots');
 
 Route::fallback(NotFoundPageController::class);
 

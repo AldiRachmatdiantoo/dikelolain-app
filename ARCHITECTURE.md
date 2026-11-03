@@ -67,6 +67,7 @@ app/
 │   ├── Pages/                     HomePageService, AboutPageService, ..., SectionData (section bersama)
 │   ├── FaqService.php
 │   ├── SettingService.php         nilai tunggal (page_settings)
+│   ├── SitemapService.php         URL untuk sitemap.xml (halaman utama + detail aktif)
 │   └── ImageUploadService.php
 ├── Repositories/
 │   ├── Contracts/                 FaqRepositoryInterface, PageSettingRepositoryInterface, ...
@@ -79,7 +80,7 @@ app/
 │   ├── FieldSet.php               mengisi definisi field dengan nilai
 │   ├── EditablePages.php          halaman publik yang bisa diedit (tautan di dashboard)
 │   └── Fields/                    definisi field yang bisa diedit per entitas (FaqFields, ...)
-├── View/Composers/FooterComposer.php  data footer (setting + layanan) untuk semua halaman, 404 juga
+├── View/Composers/                FooterComposer (data footer untuk semua halaman, 404 juga), SeoComposer (meta description + og:image)
 └── Providers/                     AppServiceProvider (composer, scoped SettingService), RepositoryServiceProvider
 
 config/page_settings.php           daftar semua nilai tunggal: tipe, label, default
@@ -143,7 +144,9 @@ Tipe, label, dan default **tidak** disimpan di database, tapi di `config/page_se
 - Key memakai titik, jadi dicari di array config (`config('page_settings')[$key]`), bukan lewat dot notation.
 - `SettingService::get()` memuat semua nilai sekali per request.
 
-Dipakai untuk: judul dan deskripsi hero, header setiap halaman, judul section, CTA, info kontak, peta, footer, URL Looker Studio.
+Dipakai untuk: judul dan deskripsi hero, header setiap halaman, judul section, CTA, info kontak, peta, footer, URL Looker Studio, SEO.
+
+**SEO:** setiap halaman utama punya `seo.{nama route}.description`, ditambah satu `seo.image` (gambar pratinjau saat dibagikan). `SeoComposer` mengisi `<meta name="description">`, `og:*`, dan `canonical` di `layouts/app`; halaman tanpa setting sendiri memakai deskripsi Home, dan halaman detail menimpanya lewat `@section('meta_description', ...)`. Dalam mode edit, tombol **SEO** di bilah admin membuka kedua setting itu. `/sitemap.xml` dan `/robots.txt` dibuat oleh `SeoController` (bukan file di `public/`) supaya memakai domain situs.
 
 `rich_text` hanya menerima tag yang diizinkan (`span`, `strong`, `em`, `br`) tanpa atribut, dibersihkan saat disimpan dan saat ditampilkan (`App\Support\RichText`). Semua tipe lain ditampilkan dengan `{{ }}` (di-escape).
 

@@ -168,4 +168,16 @@ return [
     'analytics.looker_url' => ['type' => 'url', 'label' => 'Link embed Looker Studio', 'default' => 'https://lookerstudio.google.com/embed/reporting/c13bd4e0-3d10-48f4-ad69-27e600a65c1a/page/GzLhF'],
     'analytics.looker_height' => ['type' => 'text', 'label' => 'Tinggi laporan (piksel, kosong = otomatis)', 'default' => ''],
 
+    // SEO: search and social previews (edited from the admin bar in edit mode).
+    'seo.image' => ['type' => 'image', 'label' => 'Gambar pratinjau saat dibagikan', 'default' => 'images/logo-dikelolain-full-hitam.png'],
+    'seo.home.description' => ['type' => 'textarea', 'label' => 'Deskripsi halaman Home (Google, maks. ±160 karakter)', 'default' => 'We\'re a full-service design agency specializing in branding, web design, and creative strategies that elevate businesses.'],
+    'seo.about.description' => ['type' => 'textarea', 'label' => 'Deskripsi halaman About (Google, maks. ±160 karakter)', 'default' => 'Get to know Dikelolain: a team of creative thinkers building brands, websites and digital campaigns.'],
+    'seo.services.description' => ['type' => 'textarea', 'label' => 'Deskripsi halaman Services (Google, maks. ±160 karakter)', 'default' => 'Branding, UI/UX design, web development, 3D design and digital marketing services from Dikelolain.'],
+    'seo.portfolio.description' => ['type' => 'textarea', 'label' => 'Deskripsi halaman Portfolio (Google, maks. ±160 karakter)', 'default' => 'Selected video and design projects by Dikelolain.'],
+    'seo.pricing.description' => ['type' => 'textarea', 'label' => 'Deskripsi halaman Pricing (Google, maks. ±160 karakter)', 'default' => 'Simple, transparent pricing plans for design and digital services at Dikelolain.'],
+    'seo.faqs.description' => ['type' => 'textarea', 'label' => 'Deskripsi halaman FAQs (Google, maks. ±160 karakter)', 'default' => 'Answers to common questions about working with Dikelolain.'],
+    'seo.team.description' => ['type' => 'textarea', 'label' => 'Deskripsi halaman Team (Google, maks. ±160 karakter)', 'default' => 'Meet the Dikelolain team behind every project.'],
+    'seo.testimonials.description' => ['type' => 'textarea', 'label' => 'Deskripsi halaman Testimonials (Google, maks. ±160 karakter)', 'default' => 'What clients say about working with Dikelolain.'],
+    'seo.contact.description' => ['type' => 'textarea', 'label' => 'Deskripsi halaman Contact (Google, maks. ±160 karakter)', 'default' => 'Contact Dikelolain by phone, email or WhatsApp to start your project.'],
+
 ];

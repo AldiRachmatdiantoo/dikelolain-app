@@ -8,6 +8,8 @@
     .vcms-bar a, .vcms-bar button { display: inline-block; padding: 9px 14px; border-radius: 999px; border: 0; background: #2a2a2a; color: #eee; text-decoration: none; cursor: pointer; font: inherit; }
     .vcms-bar a:hover, .vcms-bar button:hover { background: #3a3a3a; color: #fff; }
     .vcms-bar .vcms-bar-primary { background: #ffcc01; color: #161616; }
+    .vcms-bar .vcms-bar-seo { outline: none; }
+    .vcms-bar .vcms-bar-seo .vcms-zone-btn { position: static; }
     .vcms-bar .vcms-bar-primary:hover { background: #ffdd33; color: #161616; }
 </style>
 <div class="vcms-bar" role="toolbar" aria-label="Admin">
@@ -18,6 +20,10 @@
             <input type="hidden" name="to" value="{{ '/' . ltrim(request()->path(), '/') }}">
             <button type="submit" class="vcms-bar-primary">Selesai edit</button>
         </form>
+        @if ($seo['keys'] ?? [])
+            {{-- Meta description and preview image are not visible on the page, so they are edited from here. --}}
+            <x-vcms.settings :keys="$seo['keys']" label="SEO" tag="span" class="vcms-bar-seo" />
+        @endif
     @else
         <a href="{{ route('admin.edit-mode.on', ['to' => '/' . ltrim(request()->path(), '/')]) }}" class="vcms-bar-primary">Edit halaman ini</a>
     @endif

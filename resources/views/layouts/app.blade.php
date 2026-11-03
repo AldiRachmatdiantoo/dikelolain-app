@@ -4,8 +4,16 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
-	<meta name="description" content="">
-	<meta name="keywords" content="">
+	{{-- $seo comes from App\View\Composers\SeoComposer; detail pages set meta_description themselves. --}}
+	<meta name="description" content="@yield('meta_description', $seo['description'])">
+	<link rel="canonical" href="{{ url()->current() }}">
+	<meta property="og:type" content="website">
+	<meta property="og:site_name" content="Dikelolain">
+	<meta property="og:title" content="@yield('title')">
+	<meta property="og:description" content="@yield('meta_description', $seo['description'])">
+	<meta property="og:url" content="{{ url()->current() }}">
+	<meta property="og:image" content="{{ $seo['image'] }}">
+	@stack('meta')
 	<meta name="author" content="Awaiken">
 
     <title>@yield('title')</title>

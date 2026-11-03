@@ -14,7 +14,7 @@
 
 **Mode:** eksekusi otomatis atas instruksi pemilik (3 Nov 2026): kerjakan PBI berurutan tanpa bertanya, uji setiap PBI (`php artisan test` + cek browser bila terlihat), commit + push per PBI, kendala dicatat di [kendala_backlog.md](kendala_backlog.md).
 
-**Sedang dikerjakan:** Epic 5, PBI-501 (meta SEO + sitemap; form kontak menunggu keputusan). Selesai: Epic 0–4 (rombak arsitektur tuntas). Tabel dan model konten lama sudah tidak ada; cadangan isi lamanya di `storage/app/private/backups/` (lihat kendala_backlog).
+**Sedang dikerjakan:** Epic 5, PBI-506 (gambar WebP + lazy loading). PBI-501 selesai; form kontak dipisah jadi PBI-509 (menunggu KD-3). Selesai: Epic 0–4 (rombak arsitektur tuntas). Tabel dan model konten lama sudah tidak ada; cadangan isi lamanya di `storage/app/private/backups/` (lihat kendala_backlog).
 
 **Contoh pola entitas = Testimonial** (memakai kerangka daftar bersama, [ARCHITECTURE §7.1](ARCHITECTURE.md#71-kerangka-bersama-untuk-daftar-terurut)). Entitas berikutnya meniru file-file ini:
 - `database/migrations/2026_11_03_000003_create_testimonials_table.php`, `app/Models/Testimonial.php` (scope + accessor `logo_url`/`photo_url`)
@@ -35,10 +35,10 @@
 
 | Status | Jumlah | PBI |
 |---|---|---|
-| ✅ Selesai | 45 | **001–005** (seluruh Epic 0), **101–111** (seluruh Epic 1), **201–210** (seluruh Epic 2), **301–313** (seluruh Epic 3), **401–406** (seluruh Epic 4) |
+| ✅ Selesai | 46 | **001–005** (seluruh Epic 0), **101–111** (seluruh Epic 1), **201–210** (seluruh Epic 2), **301–313** (seluruh Epic 3), **401–406** (seluruh Epic 4), **501** |
 | ⏳ Sedang dikerjakan | 0 | – |
-| ⏸️ Menunggu keputusan | 2 | **504**, **507** (hosting, lihat [kendala_backlog.md](kendala_backlog.md) KD-1) |
-| ❌ Belum | 6 | Epic 5 |
+| ⏸️ Menunggu keputusan | 3 | **504**, **507** (hosting, lihat [kendala_backlog.md](kendala_backlog.md) KD-1), **509** (form kontak, KD-3) |
+| ❌ Belum | 5 | Epic 5 (502, 503, 505, 506, 508) |
 
 Total **53 PBI** dalam 6 epic:
 
@@ -49,7 +49,7 @@ Total **53 PBI** dalam 6 epic:
 | 2 | Fondasi VCMS baru + FAQ | 201–210 | 10/10 ✅ |
 | 3 | Migrasi entitas | 301–313 | 13/13 ✅ |
 | 4 | Pembersihan akhir | 401–406 | 6/6 ✅ |
-| 5 | Setelah rombak (fitur & rilis) | 501–508 | 0/8 |
+| 5 | Setelah rombak (fitur & rilis) | 501–509 | 1/9 |
 
 **Urutan wajib:** Epic 0 → 1 → 2 → 3 → 4. Fitur baru (Epic 5) baru dikerjakan setelah Epic 4, kecuali yang tidak menyentuh model konten (lihat [PBI-501](#epic-5-setelah-rombak-fitur--rilis)).
 
@@ -157,7 +157,8 @@ Belum dirinci. Diisi setelah Epic 4.
 
 | PBI | Judul | Status | Catatan |
 |---|---|---|---|
-| 501 | Fitur yang **tidak** menyentuh model konten (boleh dikerjakan kapan saja): form kontak disimpan ke DB / dikirim email, meta SEO + sitemap | ❌ | |
+| 501 | Meta SEO + sitemap | ✅ | 3 Nov 2026: deskripsi per halaman utama (`seo.{route}.description`) dan gambar pratinjau (`seo.image`) di `page_settings`, diedit lewat tombol **SEO** di bilah admin; `SeoComposer` mengisi `meta description`, `og:*`, `canonical`; detail layanan/anggota tim memakai ringkasannya sendiri; 404 diberi `noindex`; `/sitemap.xml` (halaman utama + layanan dan anggota aktif) dan `/robots.txt` dinamis (file `public/robots.txt` dihapus). Meta `keywords` lama dibuang. Test: `SeoTest` (15). Form kontak dipisah ke PBI-509 |
+| 509 | Form kontak disimpan ke database / dikirim email (dipisah dari PBI-501) | ⏸️ | Menunggu KD-3. Sekarang form membuka WhatsApp dengan isi pesan terisi |
 | 506 | Gambar & video: kompres 103 gambar `public/images` ke WebP, `loading="lazy"` di bawah layar, video hero disimpan sendiri (sekarang dari server demo Awaiken) | ❌ | Dampak kecepatan terbesar; boleh dikerjakan kapan saja |
 | 507 | Optimasi rilis: `php artisan optimize`, OPcache di server | ⏸️ | Menunggu K-3 |
 | 508 | Cache data per halaman (`Cache::rememberForever('page.home')`, dihapus saat admin menyimpan) | ❌ | Hanya bila PBI-313 + 506 + 507 belum cukup; tanpa Redis (K-8) |
@@ -290,3 +291,4 @@ Ringkasan hasil membaca kode di commit `02fa1fd` (isi sama dengan branch `back-e
 | 3 Nov 2026 | PBI-404 selesai: helper `getContent()` sudah habis sejak Epic 3; ditambah test penjaga `ViewHygieneTest`; 363 test hijau |
 | 3 Nov 2026 | PBI-405 selesai: tabel `sections`, `section_contents`, `media` di-drop (cadangan lokal di `storage/app/private/backups/`), model lama dihapus; 365 test hijau |
 | 3 Nov 2026 | PBI-406 selesai, **Epic 4 tuntas**: semua halaman dicek di mode edit dan publik, satu gambar default yang hilang diperbaiki; 366 test hijau |
+| 3 Nov 2026 | PBI-501 selesai: meta description/OG per halaman (diedit lewat tombol SEO di bilah admin), sitemap.xml dan robots.txt dinamis; form kontak dipisah jadi PBI-509 (KD-3); 381 test hijau |

@@ -1,6 +1,7 @@
 @extends('layouts.sidebar')
 
 @section('title', $service->name . ' - Dikelolain')
+@section('meta_description', $service->summary)
 
 @section('page-header')
     <x-page-header :title="e($service->name)">
