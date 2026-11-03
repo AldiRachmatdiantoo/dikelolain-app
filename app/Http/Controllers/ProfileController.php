@@ -6,9 +6,26 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Validation\ValidationException;
+use Illuminate\View\View;
 
 class ProfileController extends Controller
 {
+    /**
+     * Halaman detail profil admin yang sedang login.
+     */
+    public function show(): View
+    {
+        return view('admin.pages.profile-detail');
+    }
+
+    /**
+     * Formulir ganti kata sandi.
+     */
+    public function editPassword(): View
+    {
+        return view('admin.auth.reset-password');
+    }
+
     /**
      * Memproses permintaan untuk mengubah kata sandi pengguna yang sedang login.
      */

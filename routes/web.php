@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AnalyticsController;
 use App\Http\Controllers\Admin\Api\AchievementController;
 use App\Http\Controllers\Admin\Api\ClientLogoController;
 use App\Http\Controllers\Admin\Api\CounterController;
@@ -18,12 +19,14 @@ use App\Http\Controllers\Admin\Api\TeamMemberExpertiseController;
 use App\Http\Controllers\Admin\Api\TeamMemberSkillController;
 use App\Http\Controllers\Admin\Api\TestimonialController;
 use App\Http\Controllers\Admin\Api\ToolController;
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\EditModeController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Pages\AboutPageController;
 use App\Http\Controllers\Pages\ContactPageController;
 use App\Http\Controllers\Pages\FaqPageController;
 use App\Http\Controllers\Pages\HomePageController;
+use App\Http\Controllers\Pages\NotFoundPageController;
 use App\Http\Controllers\Pages\PortfolioPageController;
 use App\Http\Controllers\Pages\PricingPageController;
 use App\Http\Controllers\Pages\ServiceDetailPageController;
@@ -32,7 +35,6 @@ use App\Http\Controllers\Pages\TeamMemberPageController;
 use App\Http\Controllers\Pages\TeamPageController;
 use App\Http\Controllers\Pages\TestimonialPageController;
 use App\Http\Controllers\ProfileController;
-use App\Services\SettingService;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -66,13 +68,7 @@ Route::prefix('pages')->name('pages.')->group(function () {
     Route::get('/team/{slug}', TeamMemberPageController::class)->name('team.single');
 });
 
-// Anda mungkin perlu memperbarui logika 'active' di header.blade.php
-// menjadi: request()->routeIs('pages.*') atau sejenisnya.
-
-// Rute untuk 404
-Route::fallback(function () {
-    return response()->view('pages.404', [], 404);
-});
+Route::fallback(NotFoundPageController::class);
 
 
 
@@ -91,17 +87,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         //change name and email
         Route::patch('/profile', [ProfileController::class, 'updateProfile'])->name('profile.update');
-        //reset password
-        Route::get('/reset-password', function () {
-            return view('admin.auth.reset-password');
-        })->name('reset-password');
-        // 2. Rute untuk MEMPROSES perubahan password (PUT/PATCH)
-        Route::put('/admin/profile/password', [ProfileController::class, 'updatePassword'])
-            ->name('password.update.dashboard');
-        //profile-detail
-        Route::get('/profile-detail', function () {
-            return view('admin.pages.profile-detail');
-        })->name('profile-detail');
+        // Profile and password
+        Route::get('/profile-detail', [ProfileController::class, 'show'])->name('profile-detail');
+        Route::get('/reset-password', [ProfileController::class, 'editPassword'])->name('reset-password');
+        Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('password.update.dashboard');
         // Logout
         Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
@@ -143,23 +132,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
             }
         });
 
-        // Dashboard
-        Route::get('/dashboard', function () {
-            $sections = App\Models\Section::with('contents.media')
-                ->active()
-                ->ordered()
-                ->get()
-                ->keyBy('key');
+        Route::get('/dashboard', DashboardController::class)->name('dashboard');
 
-            return view('admin.pages.home', compact('sections'));
-        })->name('dashboard');
-
-        // Pages Management (VCMS Editor)
         Route::prefix('pages')->name('pages.')->group(function () {
-            Route::get('/analytics', function (SettingService $settings) {
-                return view('admin.pages.analytics', compact('settings'));
-            })->name('analytics');
+            Route::get('/analytics', AnalyticsController::class)->name('analytics');
 
+            // Old editor pages (no longer affect the site): removed with their views in PBI-403.
             Route::get('/home', function () {
                 $sections = App\Models\Section::with('contents.media')
                     ->active()

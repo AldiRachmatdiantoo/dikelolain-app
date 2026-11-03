@@ -13,10 +13,17 @@
     <!-- Sidebar Menu Start (Scrollable) -->
     <nav class="sidebar-menu">
         <ul>
+            <li class="menu-item {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
+                <a href="{{ route('admin.dashboard') }}">
+                    <i class="fa-solid fa-gauge"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+
             <li class="menu-item {{ request()->routeIs('admin.pages.analytics') ? 'active' : '' }}">
                 <a href="{{ route('admin.pages.analytics') }}">
                     <i class="fa-solid fa-chart-line"></i>
-                    <span>Dashboard</span>
+                    <span>Analytics</span>
                 </a>
             </li>
             

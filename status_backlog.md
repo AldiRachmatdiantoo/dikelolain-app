@@ -14,7 +14,7 @@
 
 **Mode:** eksekusi otomatis atas instruksi pemilik (3 Nov 2026): kerjakan PBI berurutan tanpa bertanya, uji setiap PBI (`php artisan test` + cek browser bila terlihat), commit + push per PBI, kendala dicatat di [kendala_backlog.md](kendala_backlog.md).
 
-**Sedang dikerjakan:** Epic 3, PBI-313 (Controller per halaman untuk route closure yang tersisa). Selesai: Epic 0–2, PBI-301–312. Halaman publik tidak lagi membaca `sections` lama; yang masih memakainya hanya editor lama `/admin/pages/*` dan dashboard admin (dihapus di Epic 4).
+**Sedang dikerjakan:** Epic 4, PBI-401 (hapus `ContentController` dan `/admin/api/content/*`). Selesai: Epic 0–3. Tidak ada halaman publik maupun dashboard yang membaca `sections` lama; yang masih memakainya hanya editor lama `/admin/pages/*` (route closure-nya sengaja dibiarkan sampai dihapus di PBI-403).
 
 **Contoh pola entitas = Testimonial** (memakai kerangka daftar bersama, [ARCHITECTURE §7.1](ARCHITECTURE.md#71-kerangka-bersama-untuk-daftar-terurut)). Entitas berikutnya meniru file-file ini:
 - `database/migrations/2026_11_03_000003_create_testimonials_table.php`, `app/Models/Testimonial.php` (scope + accessor `logo_url`/`photo_url`)
@@ -35,10 +35,10 @@
 
 | Status | Jumlah | PBI |
 |---|---|---|
-| ✅ Selesai | 38 | **001–005** (seluruh Epic 0), **101–111** (seluruh Epic 1), **201–210** (seluruh Epic 2), **301–312** |
+| ✅ Selesai | 39 | **001–005** (seluruh Epic 0), **101–111** (seluruh Epic 1), **201–210** (seluruh Epic 2), **301–313** (seluruh Epic 3) |
 | ⏳ Sedang dikerjakan | 0 | – |
 | ⏸️ Menunggu keputusan | 2 | **504**, **507** (hosting, lihat [kendala_backlog.md](kendala_backlog.md) KD-1) |
-| ❌ Belum | 13 | Epic 3–5 |
+| ❌ Belum | 12 | Epic 4–5 |
 
 Total **53 PBI** dalam 6 epic:
 
@@ -47,7 +47,7 @@ Total **53 PBI** dalam 6 epic:
 | 0 | Persiapan | 001–005 | 5/5 ✅ |
 | 1 | Beres-beres tanpa risiko | 101–111 | 11/11 ✅ |
 | 2 | Fondasi VCMS baru + FAQ | 201–210 | 10/10 ✅ |
-| 3 | Migrasi entitas | 301–313 | 12/13 |
+| 3 | Migrasi entitas | 301–313 | 13/13 ✅ |
 | 4 | Pembersihan akhir | 401–406 | 0/6 |
 | 5 | Setelah rombak (fitur & rilis) | 501–508 | 0/8 |
 
@@ -138,7 +138,7 @@ Urutan dari yang paling sederhana. Setiap PBI mengikuti checklist [ARCHITECTURE 
 | 310 | Paket harga | `pricing_plans`, `pricing_features` | `pricing` (pricing-section) | Pricing | ✅ 3 Nov 2026: tiga paket dulu tertulis tetap di view (key `pricing-plans_plan_*` tidak pernah di-seed), kini tabel sendiri dan bisa ditambah, diedit, disembunyikan, digeser, dan dihapus dari mode edit; fitur diurutkan per paket (`pricing_plan_id` lewat field `hidden`), hapus paket ikut menghapus fiturnya. Harga dan periode berupa teks bebas (misalnya "Rp 300 Rb", "/per month"); paket yang ditonjolkan (kotak kuning) diatur dengan toggle; tombol disembunyikan bila teksnya kosong, link divalidasi sama seperti setting link. Judul "What included?" jadi setting `pricing.list_title` (diedit dari kotak pertama), header jadi `pricing.header.*`. Daftar keuntungan (3 ikon) di bawah paket masih data lama sampai PBI-311. `PricingPlanSeeder` berisi tiga paket dari view lama (harga asli menunggu KD-2). Dicek di browser: tambah/hapus fitur, tonjolkan paket, link `javascript:` ditolak. 344 test hijau |
 | 311 | Daftar halaman | `page_list_items` | `about-us` (list item), `vision-mission`, pricing-benefits | About, Pricing | ✅ 3 Nov 2026: empat daftar pendek (poin about us, visi, misi, keuntungan Pricing) di satu tabel dengan kolom `list_key` (pengganti `page` + `group` di rancangan awal, karena kunci daftar sudah menyebut halamannya); urutan per daftar, `list_key` dikirim lewat field `hidden`, ikon hanya ada di editor keuntungan Pricing (kosong = tanpa ikon). Nilai tunggal di sekitarnya ikut pindah ke setting karena section-nya ditulis ulang: header About, gambar/judul/deskripsi/tombol bulat about us (`about.*`), gambar/judul/deskripsi visi dan misi (`vision.*`, `mission.*`). Breadcrumb About kini di-escape (dulu dicetak mentah). About dan Pricing tidak lagi membaca `sections` lama. `PageListItemSeeder` berisi isi default lama. Dicek di browser: tambah poin misi masuk ke daftar misi saja, hapus, ikon keuntungan. 360 test hijau |
 | 312 | Nilai tunggal sisanya | `page_settings` | hero, header semua halaman, judul section, CTA, `contact`, `contact-map`, `footer`, analytics | Semua | ✅ 3 Nov 2026: hero Home (teks, 5 gambar, video latar; video diedit bersama gambar karena ada di belakang konten), halaman Contact (header, judul, tiga info kontak dengan ikon, form, peta), footer, header Testimonials, dan laporan Looker Studio di admin analytics kini di `page_settings` (header dan judul section halaman lain sudah pindah di PBI sebelumnya). Telepon/email/alamat di footer sekarang **sama dengan halaman Contact** (dulu dua isian terpisah dengan nilai berbeda). Kolom "our services" di footer kini **empat layanan aktif pertama dari tabel `services`** dengan link ke halaman detailnya (dulu empat teks tetap yang semuanya ke `/services`). Data footer diberikan `FooterComposer`, jadi halaman 404 pun punya footer lengkap. Nomor WhatsApp form disaring menjadi angka saja; tinggi laporan analytics dibaca sebagai angka (selain angka = otomatis). Halaman analytics menyimpan lewat API setting dan menampilkan pesan validasi bila gagal. `/contact` memakai `ContactPageController`. `SectionData::legacy()` dan `SectionContentSeeder` dihapus: tidak ada halaman publik yang membaca `sections` lagi. Dicek di browser: edit copyright di Home tampil di Contact, edit telepon di Contact tampil di footer halaman 404, tinggi analytics tersimpan, link `javascript:` ditolak. 375 test hijau |
-| 313 | Controller per halaman + page service; ganti semua route closure | – | – | Semua | ❌ |
+| 313 | Controller per halaman + page service; ganti semua route closure | – | – | Semua | ✅ 3 Nov 2026: semua halaman publik sudah ber-controller sejak PBI-301–312; sisanya kini juga: 404 (`NotFoundPageController`), dashboard (`Admin\DashboardController`), analytics (`Admin\AnalyticsController`), detail profil dan formulir ganti password (`ProfileController::show`/`editPassword`). Closure editor lama `/admin/pages/*` **sengaja tidak** dibuatkan controller karena dihapus bersama view-nya di PBI-403 (sejalan dengan K-11); test `AdminPagesTest::test_routes_use_controllers` menjaga agar tidak ada closure baru selain itu. Dashboard dulu menampilkan editor Home lama (memuat semua `sections`), kini halaman baru berisi tautan "Edit halaman" ke sembilan halaman publik (membuka mode edit) + tautan Analytics, daftar halamannya di `App\Vcms\EditablePages`. Sidebar: "Dashboard" kini ke dashboard, analytics jadi menu sendiri. URL simpan password dirapikan dari `/admin/admin/profile/password` menjadi `/admin/profile/password` (nama route tetap). Dicek di browser: login mendarat di dashboard baru, Edit halaman Pricing membuka mode edit, profil/ganti password/analytics tampil, tampilan dashboard di lebar HP (tombol turun ke bawah nama halaman). 381 test hijau |
 
 ### Epic 4: Pembersihan akhir
 
@@ -146,7 +146,7 @@ Urutan dari yang paling sederhana. Setiap PBI mengikuti checklist [ARCHITECTURE 
 |---|---|---|---|
 | 401 | Hapus `Admin/ContentController` (`batchUpdate` dkk) dan route `/admin/api/content/*` | ❌ | Setelah semua entitas pindah |
 | 402 | Hapus `public/js/admin-vcms.js` dan CSS yang tidak dipakai lagi | ❌ | |
-| 403 | Hapus semua `resources/views/admin/pages/*` kecuali analytics dan profil | ❌ | |
+| 403 | Hapus semua `resources/views/admin/pages/*` kecuali analytics dan profil | ❌ | Sekaligus hapus route closure `/admin/pages/*` (kecuali analytics) dan ganti menu "Pages Management" di sidebar dengan tautan mode edit dari `App\Vcms\EditablePages` |
 | 404 | Hapus semua fungsi `getContent()` / `get*Content()` di view | ❌ | |
 | 405 | Migration drop `section_contents`, `sections`, `media`; hapus model dan `SectionContentSeeder` | ❌ | |
 | 406 | Test lengkap hijau + cek manual semua halaman dalam mode edit dan mode publik | ❌ | |
@@ -247,7 +247,7 @@ Ringkasan hasil membaca kode di commit `02fa1fd` (isi sama dengan branch `back-e
 | 3 | **Setiap halaman dibuat dua kali**: versi publik dan versi admin | `resources/views/pages/*` vs `resources/views/admin/pages/*` | Epic 2–4 |
 | 4 | **`admin-vcms.js` 6.000 baris**: satu objek, 103 method, ±50 pembuat form HTML manual, `switch` 52 kasus, `saveChanges` 575 baris, 13 `setTimeout`, 34 `innerHTML`/`.html()` | `public/js/admin-vcms.js` | Epic 2–4 |
 | 5 | **Logika di view**: blok `@php` dengan regex, fungsi global `getContent()` disalin di ±15 file | `resources/views/**` | Epic 2–4 |
-| 6 | **Semua route berupa closure** yang memuat semua section + konten + media di setiap halaman | `routes/web.php` | PBI-313 |
+| 6 | **Semua route berupa closure** yang memuat semua section + konten + media di setiap halaman | `routes/web.php` | PBI-313 ✅ (sisa editor lama: PBI-403) |
 | 7 | Kode mati dan route ke view yang tidak ada | lihat PBI-101–103 | Epic 1 |
 | 8 | Upload tanpa validasi tipe file, password admin seeder lemah, pesan exception bocor ke klien | lihat PBI-104–106 | Epic 1 |
 | 9 | Tidak ada test selain contoh bawaan | `tests/` | PBI-002, setiap entitas |
@@ -283,3 +283,4 @@ Ringkasan hasil membaca kode di commit `02fa1fd` (isi sama dengan branch `back-e
 | 3 Nov 2026 | PBI-310 selesai: paket harga di tabel `pricing_plans` + `pricing_features`, bisa dikelola dari mode edit (dulu teks tetap di view); 344 test hijau |
 | 3 Nov 2026 | PBI-311 selesai: daftar About/visi/misi/keuntungan Pricing di tabel `page_list_items`, nilai tunggal About jadi setting; About dan Pricing lepas dari `sections` lama; 360 test hijau |
 | 3 Nov 2026 | PBI-312 selesai: hero, Contact, footer, header Testimonials, dan URL Looker Studio pindah ke `page_settings`; kontak footer = kontak halaman Contact, layanan footer dari tabel `services`; `SectionContentSeeder` dihapus; 375 test hijau |
+| 3 Nov 2026 | PBI-313 selesai (Epic 3 tuntas): route closure yang tersisa (404, dashboard, analytics, profil) jadi controller; dashboard baru berisi tautan Edit halaman; 381 test hijau |

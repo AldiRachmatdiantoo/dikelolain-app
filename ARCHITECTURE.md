@@ -58,6 +58,7 @@ app/
 │   │   ├── Pages/                 HomePageController, FaqPageController, ...
 │   │   └── Admin/
 │   │       ├── Api/               FaqController, TestimonialController, SettingController, ...
+│   │       ├── DashboardController.php, AnalyticsController.php, EditModeController.php
 │   │       ├── AuthController.php
 │   │       └── ProfileController.php
 │   ├── Requests/Admin/            StoreFaqRequest, UpdateFaqRequest, MoveRequest, UpdateSettingRequest, ...
@@ -76,6 +77,7 @@ app/
 ├── Vcms/
 │   ├── EditMode.php               status mode edit di sesi
 │   ├── FieldSet.php               mengisi definisi field dengan nilai
+│   ├── EditablePages.php          halaman publik yang bisa diedit (tautan di dashboard)
 │   └── Fields/                    definisi field yang bisa diedit per entitas (FaqFields, ...)
 ├── View/Composers/FooterComposer.php  data footer (setting + layanan) untuk semua halaman, 404 juga
 └── Providers/                     AppServiceProvider (composer, scoped SettingService), RepositoryServiceProvider
