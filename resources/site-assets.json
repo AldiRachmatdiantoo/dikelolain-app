@@ -1,5 +1,5 @@
 {
-    "_comment": "Public site CSS/JS, in load order (paths under public/). npm run build:site joins and minifies them into css/site.min.css and js/site.min.js.",
+    "_comment": "Public site CSS/JS, in load order (paths under public/). npm run build:site joins and minifies them into css/site.min.css and js/site.min.js. CSS whose classes appear in neither \"scan\" nor the scripts is left out.",
     "css": [
         "css/bootstrap.min.css",
         "css/slicknav.min.css",
@@ -21,5 +21,9 @@
         "js/SplitText.js",
         "js/ScrollTrigger.min.js",
         "js/function.js"
+    ],
+    "scan": [
+        "resources/views",
+        "resources/js"
     ]
 }
