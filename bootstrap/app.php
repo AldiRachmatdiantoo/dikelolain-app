@@ -26,5 +26,6 @@ return Application::configure(basePath: dirname(__DIR__))
         });
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        //
+        // The admin API always answers in JSON (401, 404, 422, 500), whatever the Accept header.
+        $exceptions->shouldRenderJsonWhen(fn ($request) => $request->is('admin/api/*') || $request->expectsJson());
     })->create();

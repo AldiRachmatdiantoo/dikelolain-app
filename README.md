@@ -23,6 +23,8 @@ php artisan key:generate
 touch database/database.sqlite
 php artisan migrate --seed
 php artisan storage:link
+npm install
+npm run build
 php artisan serve
 ```
 
@@ -35,7 +37,7 @@ Akun admin dibuat oleh seeder dari `ADMIN_NAME`, `ADMIN_EMAIL`, dan `ADMIN_PASSW
 
 Upload di editor hanya menerima JPG, PNG, GIF, WebP (maks 10 MB), dan MP4/WebM (maks 50 MB).
 
-Node/npm **belum diperlukan**: halaman belum memakai Vite. Vite baru dipakai untuk editor VCMS baru (lihat PBI-202 di backlog).
+Node/npm dipakai untuk membundel **editor VCMS** (Alpine.js, lewat Vite). Website publik tidak butuh hasil build, tapi mode edit butuh. Saat mengubah file di `resources/js/vcms` atau `resources/css/vcms.css`, jalankan `npm run dev` (memuat ulang otomatis) atau `npm run build`.
 
 ### Test
 

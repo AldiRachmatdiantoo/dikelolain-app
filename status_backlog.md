@@ -14,7 +14,7 @@
 
 **Mode:** eksekusi otomatis atas instruksi pemilik (3 Nov 2026): kerjakan PBI berurutan tanpa bertanya, uji setiap PBI (`php artisan test` + cek browser bila terlihat), commit + push per PBI, kendala dicatat di [kendala_backlog.md](kendala_backlog.md).
 
-**Sedang dikerjakan:** Epic 2, mulai PBI-201.
+**Sedang dikerjakan:** Epic 2, PBI-203 (mode edit). Selesai: 201, 202.
 
 **Rencana desain Epic 2 (ditulis ke ARCHITECTURE.md begitu diimplementasikan):**
 - Registri setting di `config/page_settings.php` (key → type, label, default). `SettingService::get()` mengambil nilai DB atau default registri; seeder mengisi default.
@@ -103,8 +103,8 @@ Entitas pertama sekaligus pembuktian pola. Setelah epic ini, entitas lain tingga
 
 | PBI | Judul | Status | Catatan |
 |---|---|---|---|
-| 201 | Kerangka lapisan: folder `Services`, `Repositories/{Contracts,Eloquent}`, `RepositoryServiceProvider`, base handler error JSON | ❌ | [ARCHITECTURE §2–3](ARCHITECTURE.md#2-lapisan) |
-| 202 | Aktifkan Vite untuk admin + pasang Alpine.js | ❌ | Vite sudah terpasang tapi belum dipakai |
+| 201 | Kerangka lapisan: folder `Services`, `Repositories/{Contracts,Eloquent}`, `RepositoryServiceProvider`, base handler error JSON | ✅ | 3 Nov 2026: `RepositoryServiceProvider` (daftar `$bindings`) terdaftar; `/admin/api/*` selalu menjawab JSON (test `AdminApiTest`). Bonus: `View::composer('*')` di `AppServiceProvider` dihapus — menjalankan 2 query di **setiap** render view untuk `$currentFont` yang tidak dipakai di mana pun |
+| 202 | Aktifkan Vite untuk admin + pasang Alpine.js | ✅ | 3 Nov 2026: Vite hanya membundel `resources/js/vcms/editor.js` + `resources/css/vcms.css`; Tailwind, axios, dan `resources/{css/app.css,js/app.js,js/bootstrap.js}` dihapus (tidak dipakai, dan reset Tailwind akan merusak CSS template). `npm run build` berhasil; `TestCase` memakai `withoutVite()` |
 | 203 | Mode edit: bilah admin di halaman publik, toggle di sesi, script editor hanya dimuat saat mode edit | ❌ | K-4 diputuskan |
 | 204 | Komponen Blade `<x-vcms.text>`, `<x-vcms.list>`, `<x-vcms.item>`, `<x-vcms.image>` | ❌ | |
 | 205 | Editor JS generik: modal, tipe field (text, textarea, rich_text, select, image, url, number, toggle), tambah, ubah, hapus, urutkan | ❌ | Gaya modal mengikuti `admin-vcms.css` |

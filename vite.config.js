@@ -1,13 +1,13 @@
 import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
-import tailwindcss from '@tailwindcss/vite';
 
+// Only the VCMS editor is bundled. The public site keeps its template CSS/JS in public/,
+// so no Tailwind here: its reset would break the template styling.
 export default defineConfig({
     plugins: [
         laravel({
-            input: ['resources/css/app.css', 'resources/js/app.js'],
+            input: ['resources/css/vcms.css', 'resources/js/vcms/editor.js'],
             refresh: true,
         }),
-        tailwindcss(),
     ],
 });
