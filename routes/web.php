@@ -4,6 +4,8 @@ use App\Http\Controllers\Admin\Api\AchievementController;
 use App\Http\Controllers\Admin\Api\ClientLogoController;
 use App\Http\Controllers\Admin\Api\CounterController;
 use App\Http\Controllers\Admin\Api\FaqController;
+use App\Http\Controllers\Admin\Api\PricingFeatureController;
+use App\Http\Controllers\Admin\Api\PricingPlanController;
 use App\Http\Controllers\Admin\Api\ProcessStepController;
 use App\Http\Controllers\Admin\Api\ProjectController;
 use App\Http\Controllers\Admin\Api\ServiceBenefitController;
@@ -128,6 +130,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
                 'service-benefits' => ServiceBenefitController::class,
                 'service-faqs' => ServiceFaqController::class,
                 'projects' => ProjectController::class,
+                'pricing-plans' => PricingPlanController::class,
+                'pricing-features' => PricingFeatureController::class,
             ];
             foreach ($lists as $uri => $controller) {
                 Route::get("/{$uri}", [$controller, 'index'])->name("{$uri}.index");

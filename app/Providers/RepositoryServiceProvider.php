@@ -7,6 +7,8 @@ use App\Repositories\Contracts\ClientLogoRepositoryInterface;
 use App\Repositories\Contracts\CounterRepositoryInterface;
 use App\Repositories\Contracts\FaqRepositoryInterface;
 use App\Repositories\Contracts\PageSettingRepositoryInterface;
+use App\Repositories\Contracts\PricingFeatureRepositoryInterface;
+use App\Repositories\Contracts\PricingPlanRepositoryInterface;
 use App\Repositories\Contracts\ProcessStepRepositoryInterface;
 use App\Repositories\Contracts\ProjectRepositoryInterface;
 use App\Repositories\Contracts\ServiceBenefitRepositoryInterface;
@@ -22,6 +24,8 @@ use App\Repositories\Eloquent\EloquentClientLogoRepository;
 use App\Repositories\Eloquent\EloquentCounterRepository;
 use App\Repositories\Eloquent\EloquentFaqRepository;
 use App\Repositories\Eloquent\EloquentPageSettingRepository;
+use App\Repositories\Eloquent\EloquentPricingFeatureRepository;
+use App\Repositories\Eloquent\EloquentPricingPlanRepository;
 use App\Repositories\Eloquent\EloquentProcessStepRepository;
 use App\Repositories\Eloquent\EloquentProjectRepository;
 use App\Repositories\Eloquent\EloquentServiceBenefitRepository;
@@ -50,6 +54,8 @@ class RepositoryServiceProvider extends ServiceProvider
         ToolRepositoryInterface::class => EloquentToolRepository::class,
         ProcessStepRepositoryInterface::class => EloquentProcessStepRepository::class,
         ProjectRepositoryInterface::class => EloquentProjectRepository::class,
+        PricingPlanRepositoryInterface::class => EloquentPricingPlanRepository::class,
+        PricingFeatureRepositoryInterface::class => EloquentPricingFeatureRepository::class,
         AchievementRepositoryInterface::class => EloquentAchievementRepository::class,
         CounterRepositoryInterface::class => EloquentCounterRepository::class,
         TeamMemberRepositoryInterface::class => EloquentTeamMemberRepository::class,

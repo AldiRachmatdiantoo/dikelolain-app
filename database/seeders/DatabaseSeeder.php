@@ -42,6 +42,7 @@ class DatabaseSeeder extends Seeder
             TeamMemberSeeder::class,
             ServiceSeeder::class,
             ProjectSeeder::class,
+            PricingPlanSeeder::class,
         ]);
     }
 }

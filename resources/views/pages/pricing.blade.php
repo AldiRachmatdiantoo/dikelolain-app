@@ -15,59 +15,7 @@
         }
     }
 
-    // Page Header data
-    $headerTitle = getPricingContent($sections, 'pricing-header', 'pricing-header-1_title', 'Pricing <span>plan</span>');
-    $headerBreadcrumb = getPricingContent($sections, 'pricing-header', 'pricing-header-1_breadcrumb', 'Pricing');
-
-    // Default plans structure
-    $defaultPlans = [
-        [
-            'id' => 'basic',
-            'name' => 'basic plan',
-            'price' => 'Rp 300 Rb',
-            'period' => '/per month',
-            'highlighted' => false,
-            'btn_text' => "let's get started",
-            'btn_link' => '#',
-            'features' => [
-                'Desain Grafis (Feed, Reels, Story)',
-                'Desain Interaktif',
-                'Strategi Konten & Social Media Management'
-            ]
-        ],
-        [
-            'id' => 'standard',
-            'name' => 'standard plan',
-            'price' => 'Rp 500 Rb',
-            'period' => '/per month',
-            'highlighted' => true,
-            'btn_text' => "let's get started",
-            'btn_link' => '#',
-            'features' => [
-                'Konten Video & Foto untuk Instagram & TikTok',
-                'Desain Grafis (Feed, Reels, Story)',
-                'Strategi Konten & Social Media Management'
-            ]
-        ],
-        [
-            'id' => 'premium',
-            'name' => 'premium plan',
-            'price' => 'Rp 1 Jt',
-            'period' => '/per month',
-            'highlighted' => false,
-            'btn_text' => "let's get started",
-            'btn_link' => '#',
-            'features' => [
-                'Konten Video & Foto untuk Instagram & TikTok',
-                'Desain Grafis (Feed, Reels, Story)',
-                'Strategi Konten & Social Media Management',
-                'Ads kreatif untuk Meta (Instagram & FB Ads)',
-                'Paket manajemen konten full (1 bulan ke depan ready!)'
-            ]
-        ]
-    ];
-
-    // Benefits data
+    // Benefits data (moves to page_list_items in PBI-311)
     $benefits = [];
     for ($i = 1; $i <= 3; $i++) {
         $defaultIcons = ['images/icon-pricing-benefit-1.svg', 'images/icon-pricing-benefit-2.svg', 'images/icon-pricing-benefit-3.svg'];
@@ -82,78 +30,62 @@
 @section('content')
 
     <!-- Page Header -->
-    <x-page-header title="{!! $headerTitle !!}">
-        <li class="breadcrumb-item active" aria-current="page">{{ $headerBreadcrumb }}</li>
-    </x-page-header>
+    <x-vcms.settings :keys="['pricing.header.title', 'pricing.header.breadcrumb']" label="Header">
+        <x-page-header :title="$settings->get('pricing.header.title')">
+            <li class="breadcrumb-item active" aria-current="page">{{ $settings->get('pricing.header.breadcrumb') }}</li>
+        </x-page-header>
+    </x-vcms.settings>
 
     <!-- Page Pricing Start -->
     <div class="page-pricing">
         <div class="container">
             <div class="row">
-                @foreach($defaultPlans as $index => $plan)
-                    @php
-                        $planId = $plan['id'];
-                        $planName = getPricingContent($sections, 'pricing', "pricing-plans_plan_{$planId}_name", $plan['name']);
-                        $planPrice = getPricingContent($sections, 'pricing', "pricing-plans_plan_{$planId}_price", $plan['price']);
-                        $planPeriod = getPricingContent($sections, 'pricing', "pricing-plans_plan_{$planId}_period", $plan['period']);
-                        $planHighlighted = getPricingContent($sections, 'pricing', "pricing-plans_plan_{$planId}_highlighted", $plan['highlighted'] ? '1' : '0');
-                        $planBtnText = getPricingContent($sections, 'pricing', "pricing-plans_plan_{$planId}_btn_text", $plan['btn_text']);
-                        $planBtnLink = getPricingContent($sections, 'pricing', "pricing-plans_plan_{$planId}_btn_link", $plan['btn_link']);
-
-                        // Get features from database
-                        $features = [];
-                        for ($i = 1; $i <= 10; $i++) {
-                            $feature = getPricingContent($sections, 'pricing', "pricing-plans_plan_{$planId}_feature_{$i}", '');
-                            if (!empty($feature)) {
-                                $features[] = $feature;
-                            }
-                        }
-                        // Fallback to default features if empty
-                        if (empty($features)) {
-                            $features = $plan['features'];
-                        }
-
-                        $delayValue = $index * 0.2;
-                    @endphp
+                @foreach ($plans as $plan)
                     <div class="col-lg-4 col-md-6">
                         <!-- Pricing Box Start -->
-                        <div class="pricing-box {{ $planHighlighted == '1' ? 'highlighted-box' : '' }} wow fadeInUp" @if($delayValue > 0) data-wow-delay="{{ $delayValue }}s" @endif>
-                            <!-- Pricing Header Start -->
+                        <x-vcms.item resource="pricing-plans" :item="$plan" :fields="$planFields" label="paket"
+                            class="pricing-box {{ $plan->is_featured ? 'highlighted-box' : '' }} wow fadeInUp {{ $plan->is_active ? '' : 'vcms-hidden' }}" :data-wow-delay="$loop->first ? null : (0.2 * $loop->index) . 's'">
                             <div class="pricing-header">
-                                <h3>{{ $planName }}</h3>
-                                <h2>{{ $planPrice }} <sub>{{ $planPeriod }}</sub></h2>
+                                <h3>{{ $plan->name }}</h3>
+                                <h2>{{ $plan->price }} @if (filled($plan->period))<sub>{{ $plan->period }}</sub>@endif</h2>
                             </div>
-                            <!-- Pricing Header End -->
 
-                            <!-- Pricing Box Body Start -->
                             <div class="pricing-body">
-                                <!-- Pricing List Title Start -->
-                                <div class="pricing-list-title">
-                                    <h3>What included?</h3>
-                                </div>
-                                <!-- Pricing List Title End -->
+                                {{-- One title for every plan: editable on the first box only. --}}
+                                @if ($loop->first)
+                                    <x-vcms.settings :keys="['pricing.list_title']" label="Judul" class="pricing-list-title">
+                                        <h3>{{ $settings->get('pricing.list_title') }}</h3>
+                                    </x-vcms.settings>
+                                @else
+                                    <div class="pricing-list-title">
+                                        <h3>{{ $settings->get('pricing.list_title') }}</h3>
+                                    </div>
+                                @endif
 
-                                <!-- Pricing List Start -->
                                 <div class="pricing-list">
                                     <ul>
-                                        @foreach($features as $feature)
-                                            <li>{{ $feature }}</li>
+                                        @foreach ($plan->features as $feature)
+                                            <x-vcms.item resource="pricing-features" :item="$feature" :fields="$featureFields" label="fitur" tag="li"
+                                                class="{{ $feature->is_active ? '' : 'vcms-hidden' }}">{{ $feature->text }}</x-vcms.item>
                                         @endforeach
                                     </ul>
+                                    <x-vcms.add resource="pricing-features" :fields="$featureFields" label="fitur" :defaults="['pricing_plan_id' => $plan->id]" />
                                 </div>
-                                <!-- Pricing List End -->
                             </div>
-                            <!-- Pricing Box Body End -->
 
-                            <!-- Pricing Button Start -->
-                            <div class="pricing-btn">
-                                <a href="{{ $planBtnLink }}" class="btn-default btn-highlighted">{{ $planBtnText }}</a>
-                            </div>
-                            <!-- Pricing Button End -->
-                        </div>
+                            @if (filled($plan->button_text))
+                                <div class="pricing-btn">
+                                    <a href="{{ $plan->button_link ?: '#' }}" class="btn-default btn-highlighted">{{ $plan->button_text }}</a>
+                                </div>
+                            @endif
+                        </x-vcms.item>
                         <!-- Pricing Box End -->
                     </div>
                 @endforeach
+
+                <div class="col-lg-12">
+                    <x-vcms.add resource="pricing-plans" :fields="$planFields" label="paket" />
+                </div>
 
                 <div class="col-lg-12">
                     <!-- Pricing Benefit List Start -->
