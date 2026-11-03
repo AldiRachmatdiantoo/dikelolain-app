@@ -59,7 +59,7 @@
     <div class="sidebar-footer">
         <div class="admin-user-info">
             <div class="user-avatar">
-                <a href="{{route('admin.profile-detail')}}" style="text-decoration: none;"><img src="{{ asset('images/default-profilee.webp') }}" alt="Admin">
+                <a href="{{route('admin.profile-detail')}}" class="text-decoration-none"><img src="{{ asset('images/default-profilee.webp') }}" alt="Admin">
                 </a>
             </div>
             <div class="user-details">

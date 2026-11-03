@@ -3,7 +3,7 @@
 @section('title', 'Dashboard')
 
 @section('content')
-<div class="container-fluid" style="padding-left: 15px; padding-right: 15px;">
+<div class="container-fluid admin-fluid">
 
     <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
         <div>
@@ -46,60 +46,4 @@
     </div>
 </div>
 
-<style>
-    .dash-yellow { color: #ffcc01 !important; }
-    .dash-muted { color: #c9c9c9; }
-
-    .dash-card {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        gap: 14px;
-        height: 100%;
-        padding: 18px;
-        background-color: #212529;
-        border: 1px solid #333;
-        border-radius: 16px;
-    }
-
-    .dash-card-icon {
-        flex: 0 0 44px;
-        height: 44px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 12px;
-        background-color: rgba(255, 204, 1, 0.12);
-        color: #ffcc01;
-        font-size: 18px;
-    }
-
-    /* The buttons move under the name when the card is too narrow for both. */
-    .dash-card-body { flex: 1 1 110px; min-width: 0; }
-    .dash-card-body h3 { margin: 0 0 2px; font-size: 17px; color: #fff; }
-    .dash-card-body p { margin: 0; font-size: 13px; color: #8f8f8f; }
-
-    .dash-card-actions { display: flex; gap: 6px; margin-left: auto; }
-
-    @media (max-width: 575px) {
-        .dash-card-actions { width: 100%; }
-        .dash-card-actions .dash-btn { flex: 1; }
-    }
-
-    .dash-btn {
-        background-color: #ffcc01;
-        border: 1px solid #ffcc01;
-        color: #000;
-    }
-
-    .dash-btn:hover { background-color: #ffdd33; border-color: #ffdd33; color: #000; }
-
-    .dash-btn-outline {
-        background: transparent;
-        border: 1px solid #ffcc01;
-        color: #ffcc01;
-    }
-
-    .dash-btn-outline:hover { background-color: rgba(255, 204, 1, 0.15); color: #ffcc01; }
-</style>
 @endsection

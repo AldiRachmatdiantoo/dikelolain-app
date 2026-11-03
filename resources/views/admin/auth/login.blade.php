@@ -6,17 +6,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Dikelolain VCMS</title>
     <link rel="icon" type="image/png" href="{{ asset('images/favicon-dikelolain.png') }}">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{{ asset('css/login-form.css') }}">
+    <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('css/login-form.css') }}?v={{ filemtime(public_path('css/login-form.css')) }}">
 </head>
 
 <body>
 
     <div class="login-card">
         <div class="text-center mb-5">
-            <img src="{{ asset('images/logo-dikelolain-potrait.webp') }}" alt="Dikelolain Logo"
-                style="width: 65px; margin-bottom: 20px;">
-            <h1 class="h3 text-uppercase fw-light" style="letter-spacing: 2px;">LOGIN</h1>
+            <img src="{{ asset('images/logo-dikelolain-potrait.webp') }}" alt="Dikelolain Logo" class="login-logo">
+            <h1 class="h3 text-uppercase fw-light login-title">LOGIN</h1>
             <p class="text-muted">Akses ke Panel Admin</p>
         </div>
         @if (session('error'))
@@ -39,8 +38,7 @@
                     required>
             </div>
             <div class="form-check mb-5">
-                <input class="form-check-input" type="checkbox" name="remember" id="remember"
-                    style="background-color: var(--input-bg); border-color: var(--border-color);">
+                <input class="form-check-input" type="checkbox" name="remember" id="remember">
                 <label class="form-check-label text-muted" for="remember">
                     Ingat Saya
                 </label>

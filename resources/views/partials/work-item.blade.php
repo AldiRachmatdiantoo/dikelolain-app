@@ -19,7 +19,7 @@
     class="work-item {{ $project->is_active ? '' : 'vcms-hidden' }}">
     <div class="work-image">
         @if ($project->isVideo())
-            <div class="ratio" style="--bs-aspect-ratio: 76%; border-radius: 30px; overflow: hidden;">
+            <div class="ratio work-media-ratio">
                 @if ($project->embed_url)
                     {{-- Thumbnail only; function.js swaps in the (heavy) YouTube player on click. --}}
                     <button type="button" class="video-facade" data-embed="{{ $project->embed_url }}?autoplay=1" data-title="{{ $project->title }}" aria-label="Putar video {{ $project->title }}">
@@ -29,7 +29,7 @@
                 @endif
             </div>
         @elseif ($ratioImage)
-            <div class="ratio" style="--bs-aspect-ratio: 76%; border-radius: 30px; overflow: hidden;">
+            <div class="ratio work-media-ratio">
                 <figure class="image-anime">
                     <img src="{{ $project->image_url }}" alt="{{ $project->title }}" loading="lazy">
                 </figure>

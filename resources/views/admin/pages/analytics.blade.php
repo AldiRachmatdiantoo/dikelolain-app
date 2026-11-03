@@ -9,12 +9,12 @@
     $iframeHeight = max(0, (int) $settings->get('analytics.looker_height'));
 @endphp
 
-<div class="container-fluid" style="padding-left: 15px; padding-right: 15px;">
+<div class="container-fluid admin-fluid">
 
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <h2 class="mb-1 fw-bold text-custom-yellow">Dashboard Analytics</h2>
-            <p class="mb-0 text-custom-yellow" style="opacity: 0.9;">Monitoring performa website secara real-time.</p>
+            <p class="mb-0 text-custom-yellow analytics-subtitle">Monitoring performa website secara real-time.</p>
         </div>
         <div class="d-flex gap-2">
             <button class="btn btn-custom-yellow-outline btn-sm fw-bold" onclick="openEditIframeModal()">
@@ -26,7 +26,7 @@
         </div>
     </div>
 
-    <div class="card border-0 shadow-sm rounded-4" style="overflow: hidden; background-color: #212529;">
+    <div class="card border-0 shadow-sm rounded-4 analytics-card">
         <div class="card-body p-0">
             <div class="looker-wrapper" id="looker-wrapper">
                 <iframe
@@ -42,50 +42,48 @@
 </div>
 
 <!-- Edit Iframe Modal -->
-<div class="modal fade" id="editIframeModal" tabindex="-1" aria-labelledby="editIframeModalLabel" aria-hidden="true">
+<div class="modal fade analytics-modal" id="editIframeModal" tabindex="-1" aria-labelledby="editIframeModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content" style="background-color: #1a1a1a; border: 1px solid #3a3a3a;">
-            <div class="modal-header border-0" style="border-bottom: 1px solid #3a3a3a !important;">
-                <h5 class="modal-title fw-bold" id="editIframeModalLabel" style="color: #ffcc01;">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <h5 class="modal-title fw-bold" id="editIframeModalLabel">
                     <i class="fa-solid fa-code me-2"></i>Edit Looker Studio Iframe
                 </h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <div class="mb-3">
-                    <label for="iframeUrl" class="form-label" style="color: #e0e0e0;">Looker Studio Embed URL</label>
+                    <label for="iframeUrl" class="form-label">Looker Studio Embed URL</label>
                     <input type="url" class="form-control" id="iframeUrl"
                            value="{{ $iframeUrl }}"
-                           placeholder="https://lookerstudio.google.com/embed/reporting/..."
-                           style="background-color: #252525; border: 1px solid #3a3a3a; color: #fff;">
-                    <div class="form-text" style="color: #888;">
+                           placeholder="https://lookerstudio.google.com/embed/reporting/...">
+                    <div class="form-text">
                         <i class="fa-solid fa-info-circle me-1"></i>
                         Paste URL embed dari Google Looker Studio. Pastikan URL mengandung "/embed/" untuk tampilan embedded.
                     </div>
                 </div>
                 
                 <div class="mb-3">
-                    <label for="iframeHeight" class="form-label" style="color: #e0e0e0;">
+                    <label for="iframeHeight" class="form-label">
                         <i class="fa-solid fa-arrows-up-down me-1"></i> Tinggi Iframe (opsional)
                     </label>
                     <div class="input-group">
                         <input type="number" class="form-control" id="iframeHeight"
                                placeholder="Auto"
-                               min="400" max="5000" step="50"
-                               style="background-color: #252525; border: 1px solid #3a3a3a; color: #fff;">
-                        <span class="input-group-text" style="background-color: #3a3a3a; border: 1px solid #3a3a3a; color: #888;">px</span>
+                               min="400" max="5000" step="50">
+                        <span class="input-group-text">px</span>
                         <button type="button" class="btn btn-outline-secondary" onclick="resetIframeHeight()" title="Reset ke Auto">
                             <i class="fa-solid fa-rotate-left"></i>
                         </button>
                     </div>
-                    <div class="form-text" style="color: #888;">
+                    <div class="form-text">
                         Kosongkan untuk auto-height berdasarkan viewport. Set manual jika report terlalu panjang.
                     </div>
                 </div>
                 
-                <div class="alert" style="background-color: #252525; border: 1px solid #3a3a3a; color: #ffcc01;">
+                <div class="alert analytics-tips">
                     <strong><i class="fa-solid fa-lightbulb me-1"></i> Tips:</strong>
-                    <ul class="mb-0 mt-2" style="color: #e0e0e0;">
+                    <ul class="mb-0 mt-2">
                         <li>Buka report di Looker Studio</li>
                         <li>Klik File → Embed report</li>
                         <li>Copy URL dari kolom "Embed URL"</li>
@@ -93,68 +91,15 @@
                     </ul>
                 </div>
             </div>
-            <div class="modal-footer border-0" style="border-top: 1px solid #3a3a3a !important;">
+            <div class="modal-footer border-0">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn fw-bold" id="saveIframeBtn" onclick="saveIframeUrl()" style="background-color: #ffcc01; color: #000;">
+                <button type="button" class="btn fw-bold analytics-save-btn" id="saveIframeBtn" onclick="saveIframeUrl()">
                     <i class="fa-solid fa-save me-1"></i> Save Changes
                 </button>
             </div>
         </div>
     </div>
 </div>
-
-<style>
-    /* === Styling Warna Khusus #ffcc01 === */
-    .text-custom-yellow {
-        color: #ffcc01 !important;
-    }
-
-    .btn-custom-yellow {
-        color: #ffcc01;
-        border: 1px solid #ffcc01;
-        background: transparent;
-        transition: all 0.3s ease;
-    }
-
-    .btn-custom-yellow:hover {
-        background-color: #ffcc01;
-        color: #000000;
-    }
-
-    .btn-custom-yellow-outline {
-        color: #ffcc01;
-        border: 1px solid #ffcc01;
-        background: transparent;
-        transition: all 0.3s ease;
-    }
-
-    .btn-custom-yellow-outline:hover {
-        background-color: rgba(255, 204, 1, 0.15);
-        color: #ffcc01;
-        border-color: #ffcc01;
-    }
-
-    /* === Styling Layout Iframe === */
-    .looker-wrapper {
-        position: relative;
-        width: 100%;
-        background-color: #f8f9fa;
-        overflow: hidden;
-    }
-
-    #looker-iframe {
-        width: 100%;
-        border: 0;
-        display: block;
-    }
-
-    #iframeUrl:focus {
-        background-color: #252525;
-        border-color: #ffcc01;
-        color: #fff;
-        box-shadow: 0 0 0 0.2rem rgba(255, 204, 1, 0.25);
-    }
-</style>
 
 <script>
     let editIframeModal;
@@ -297,23 +242,16 @@
     }
 
     function showToast(message, type = 'success') {
-        const toastContainer = document.createElement('div');
-        toastContainer.style.cssText = 'position: fixed; top: 20px; right: 20px; z-index: 9999;';
+        const toast = document.createElement('div');
+        toast.className = `analytics-toast analytics-toast-${type === 'success' ? 'success' : 'error'}`;
+        toast.innerHTML = `<i class="fa-solid ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i><span></span>`;
+        toast.querySelector('span').textContent = message;
 
-        const bgColor = type === 'success' ? '#28a745' : '#dc3545';
-        toastContainer.innerHTML = `
-            <div style="background: ${bgColor}; color: white; padding: 15px 25px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); display: flex; align-items: center; gap: 10px;">
-                <i class="fa-solid ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i>
-                <span>${message}</span>
-            </div>
-        `;
-
-        document.body.appendChild(toastContainer);
+        document.body.appendChild(toast);
 
         setTimeout(() => {
-            toastContainer.style.transition = 'opacity 0.5s';
-            toastContainer.style.opacity = '0';
-            setTimeout(() => toastContainer.remove(), 500);
+            toast.classList.add('analytics-toast-hidden');
+            setTimeout(() => toast.remove(), 500);
         }, 3000);
     }
 </script>

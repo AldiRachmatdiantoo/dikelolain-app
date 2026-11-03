@@ -339,6 +339,7 @@ Hampir semua entitas berupa daftar dengan `sort_order` dan `is_active`. Logika y
 - Pesan untuk admin berbahasa Indonesia. Nama kode berbahasa Inggris.
 - Tidak ada fungsi global di view. Helper tampilan ditaruh di komponen Blade atau accessor model.
 - Semua output Blade memakai `{{ }}`, kecuali `rich_text` yang sudah dibersihkan.
+- Tidak ada CSS di view (`<style>`, `style="..."`) dan tidak ada aset dari CDN; `ViewHygieneTest` menjaganya. CSS halaman publik di `public/css/frontend-override.css`, halaman admin di `public/css/admin.css`, login di `public/css/login-form.css`. CSS khusus satu halaman diberi awalan kelas halamannya supaya tidak bocor ke halaman lain.
 
 ---
 

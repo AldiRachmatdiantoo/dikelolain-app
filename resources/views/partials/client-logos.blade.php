@@ -21,7 +21,7 @@
                             <div class="swiper-wrapper">
                                 @foreach ($clientLogos->chunk(2) as $pair)
                                     <div class="swiper-slide">
-                                        <div class="d-flex flex-column justify-content-between align-items-center" style="height: 100%; gap: 40px;">
+                                        <div class="d-flex flex-column justify-content-between align-items-center client-logo-stack">
                                             @foreach ($pair as $logo)
                                                 <x-vcms.item resource="client-logos" :item="$logo" :fields="$clientLogoFields" label="logo"
                                                     class="trusted-client-logo {{ $logo->is_active ? '' : 'vcms-hidden' }}">

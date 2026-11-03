@@ -24,7 +24,7 @@
                             @for ($page = 1; $page <= $totalPages; $page++)
                                 <button type="button" class="btn service-page-btn {{ $page == 1 ? 'active' : '' }}" data-page="{{ $page }}">{{ $page }}</button>
                             @endfor
-                            <span style="color: #888; font-size: 13px; margin-left: 10px;">
+                            <span class="services-pagination-count">
                                 ({{ $services->count() }} services)
                             </span>
                         </div>
@@ -32,7 +32,7 @@
                 </div>
             @endif
 
-            <div class="row service-items-row" style="min-height: 400px;">
+            <div class="row service-items-row">
                 @foreach ($services as $service)
                     @php
                         $serviceLink = route('pages.service.single', $service->slug);
@@ -71,26 +71,6 @@
     <!-- Creative Tools Section End -->
 
 @endsection
-
-@push('styles')
-<style>
-.services-pagination .service-page-btn,
-.services-pagination .service-page-btn:hover {
-    min-width: 45px;
-    padding: 8px 16px;
-    border: 1px solid #3a3a3a;
-    border-radius: 8px;
-    background: #252525;
-    color: #e0e0e0;
-    font-weight: 600;
-}
-.services-pagination .service-page-btn.active {
-    border-color: transparent;
-    background: linear-gradient(135deg, #ffcc01 0%, #ffdd33 100%);
-    color: #161616;
-}
-</style>
-@endpush
 
 @push('scripts')
 <script>

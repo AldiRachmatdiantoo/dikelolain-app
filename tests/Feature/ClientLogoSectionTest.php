@@ -31,7 +31,7 @@ class ClientLogoSectionTest extends TestCase
         $html = $this->get($page)->assertOk()->assertSee(asset('images/client-logo-5.svg'), false)->getContent();
 
         $this->assertSame(10, substr_count($html, 'class="trusted-client-logo'));
-        $this->assertSame(5, substr_count($html, 'gap: 40px;'));
+        $this->assertSame(5, substr_count($html, 'client-logo-stack'));
     }
 
     #[DataProvider('pages')]

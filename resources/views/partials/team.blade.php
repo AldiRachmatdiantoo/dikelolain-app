@@ -20,7 +20,7 @@
                 @include('partials.team-card')
             @empty
                 <div class="col-12 text-center py-5">
-                    <p style="color: #888;">No team members yet.</p>
+                    <p class="text-dim">No team members yet.</p>
                 </div>
             @endforelse
         </div>

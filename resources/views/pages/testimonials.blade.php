@@ -28,7 +28,7 @@
                                 </div>
                                 <div class="testimonial-rating">
                                     @for ($i = 1; $i <= 5; $i++)
-                                        <i class="fa-solid fa-star" @if ($i > $testimonial->rating) style="opacity: 0.3;" @endif></i>
+                                        <i class="fa-solid fa-star {{ $i > $testimonial->rating ? 'star-empty' : '' }}"></i>
                                     @endfor
                                 </div>
                             </div>

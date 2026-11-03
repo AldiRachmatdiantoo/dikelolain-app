@@ -75,3 +75,17 @@
         a:hover {
             color: #00e5ff;
         }
+
+.login-logo {
+    width: 65px;
+    margin-bottom: 20px;
+}
+
+.login-title {
+    letter-spacing: 2px;
+}
+
+.login-card .form-check-input {
+    background-color: var(--input-bg);
+    border-color: var(--border-color);
+}

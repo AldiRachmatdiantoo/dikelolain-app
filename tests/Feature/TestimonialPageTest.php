@@ -46,7 +46,7 @@ class TestimonialPageTest extends TestCase
         $response = $this->get('/testimonials')->assertOk()->assertSee('&lt;b&gt;isi&lt;/b&gt;', false);
 
         // 3 of 5 stars lit, no empty <img src="">.
-        $this->assertSame(2, preg_match_all('/fa-star"\s+style="opacity: 0.3;"/', $response->getContent()));
+        $this->assertSame(2, substr_count($response->getContent(), 'fa-star star-empty'));
         $this->assertStringNotContainsString('src=""', $response->getContent());
     }
 }

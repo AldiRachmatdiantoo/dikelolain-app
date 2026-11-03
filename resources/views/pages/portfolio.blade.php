@@ -25,14 +25,14 @@
             <!-- Experiment Link Banner -->
             <div class="row mb-4">
                 <div class="col-lg-12">
-                    <div class="alert alert-warning d-flex justify-content-between align-items-center" style="background: linear-gradient(135deg, #ffcc01 0%, #ffa500 100%); border: none; border-radius: 15px; padding: 20px 30px;">
+                    <div class="alert alert-warning d-flex justify-content-between align-items-center portfolio-banner">
                         <div>
-                            <h5 class="mb-1" style="color: #1a1a1a; font-weight: 700;">
+                            <h5 class="mb-1">
                                 <i class="fa-solid fa-flask me-2"></i>Try Our New Horizontal Slider!
                             </h5>
-                            <p class="mb-0" style="color: #333; font-size: 14px;">Experience portfolio items sliding horizontally instead of vertically scrolling</p>
+                            <p class="mb-0">Experience portfolio items sliding horizontally instead of vertically scrolling</p>
                         </div>
-                        <a href="{{ route('portfolio.experiment') }}" class="btn btn-dark btn-lg" style="background: #1a1a1a; border: none; padding: 12px 30px; font-weight: 600;">
+                        <a href="{{ route('portfolio.experiment') }}" class="btn btn-dark btn-lg">
                             View Experiment <i class="fa-solid fa-arrow-right ms-2"></i>
                         </a>
                     </div>
@@ -57,7 +57,7 @@
                                 @include('partials.work-item')
                             </div>
                         @empty
-                            <div class="col-12 text-center py-5" style="color: #888;">
+                            <div class="col-12 text-center py-5 text-dim">
                                 <p>No projects yet.</p>
                             </div>
                         @endforelse
@@ -82,7 +82,7 @@
                                     <a class="page-link" href="#" data-goto="next" aria-label="Berikutnya"><i class="fa-solid fa-chevron-right"></i></a>
                                 </li>
                             </ul>
-                            <div class="text-center mt-2" style="color: #888; font-size: 14px;">
+                            <div class="text-center mt-2 text-note">
                                 Showing <span id="portfolio-showing-start">1</span>-<span id="portfolio-showing-end">{{ min($projectsPerPage, $totalProjects) }}</span> of <span id="portfolio-total-projects">{{ $totalProjects }}</span> projects
                             </div>
                         </nav>
@@ -93,111 +93,6 @@
     </div>
 
 @endsection
-
-@push('styles')
-<style>
-/* Filter Tabs */
-.our-work-nav {
-    margin-bottom: 50px;
-}
-.our-work-nav ul {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    flex-wrap: wrap;
-}
-.our-work-nav ul li a {
-    display: inline-flex;
-    align-items: center;
-    padding: 12px 28px;
-    background: transparent;
-    border: 2px solid #555;
-    border-radius: 50px;
-    color: #fff;
-    font-weight: 600;
-    font-size: 14px;
-    text-decoration: none;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    transition: all 0.3s ease;
-}
-.our-work-nav ul li a:hover {
-    background: #ffcc01;
-    border-color: #ffcc01;
-    color: #1a1a1a;
-    transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(255, 204, 1, 0.4);
-}
-.our-work-nav ul li a.active-btn {
-    background: #ffcc01;
-    border-color: #ffcc01;
-    color: #1a1a1a;
-    box-shadow: 0 4px 15px rgba(255, 204, 1, 0.5);
-}
-.count-badge {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(255, 255, 255, 0.2);
-    color: inherit;
-    font-size: 11px;
-    font-weight: 700;
-    min-width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    margin-left: 10px;
-    padding: 0 6px;
-}
-.our-work-nav ul li a.active-btn .count-badge,
-.our-work-nav ul li a:hover .count-badge {
-    background: rgba(0, 0, 0, 0.2);
-}
-
-/* Pagination */
-.portfolio-pagination .pagination {
-    gap: 8px;
-}
-.portfolio-pagination .page-item .page-link {
-    background: #252525;
-    border: 1px solid #3a3a3a;
-    color: #fff;
-    padding: 10px 16px;
-    border-radius: 8px;
-    transition: all 0.3s ease;
-}
-.portfolio-pagination .page-item .page-link:hover {
-    background: #FFD700;
-    border-color: #FFD700;
-    color: #161616;
-}
-.portfolio-pagination .page-item.active .page-link {
-    background: #FFD700;
-    border-color: #FFD700;
-    color: #161616;
-    font-weight: 700;
-}
-.portfolio-pagination .page-item.disabled .page-link {
-    background: #1a1a1a;
-    border-color: #2a2a2a;
-    color: #555;
-    cursor: not-allowed;
-}
-.portfolio-item {
-    animation: portfolio-item-in 0.4s ease;
-}
-@keyframes portfolio-item-in {
-    from { opacity: 0; transform: translateY(20px); }
-}
-
-/* Prevent layout shift on pagination */
-.work-item-boxes {
-    min-height: 600px;
-}
-</style>
-@endpush
 
 @push('scripts')
 <script>

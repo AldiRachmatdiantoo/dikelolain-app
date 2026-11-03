@@ -18,9 +18,8 @@
 	<link href="{{ asset('css/custom.css') }}" rel="stylesheet" media="screen">
 
     <!-- Admin panel layout (sidebar, topbar) -->
-    <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/admin.css') }}?v={{ filemtime(public_path('css/admin.css')) }}">
 
-    @stack('styles')
 </head>
 
 <body class="admin-body">

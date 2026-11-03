@@ -135,7 +135,7 @@
                         @include('partials.work-item', ['movable' => false, 'ratioImage' => true])
                     </div>
                 @empty
-                    <div class="col-12 text-center py-5" style="color: #888;">
+                    <div class="col-12 text-center py-5 text-dim">
                         <p>No projects yet.</p>
                     </div>
                 @endforelse
@@ -144,7 +144,7 @@
     </div>
     <!-- Our Work Section End -->
 
-    <div style="height: 70px;"></div>
+    <div class="spacer-70"></div>
 
     <!-- How It Work Section Start-->
     <div class="how-it-work bg-section">
@@ -224,10 +224,10 @@
     <!-- CTA Section Start -->
     @include('partials.cta')
     <!-- CTA Section End -->
-    <div style="height: 80px;"></div>
+    <div class="spacer-80"></div>
     <!-- Client Logos Section Start -->
     @include('partials.client-logos')
-    <div style="height: 80px;"></div>
+    <div class="spacer-80"></div>
 
     <!-- Testimonials Section End -->
 

@@ -98,7 +98,7 @@
     </div>
     <!-- Our Vision Mission Section End -->
 
-    <div style="height: 70px;"></div>
+    <div class="spacer-70"></div>
     <!-- Client Logos Section Start -->
     @include('partials.client-logos')
     <!-- Our Testimonial Section End -->

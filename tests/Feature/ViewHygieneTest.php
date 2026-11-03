@@ -37,4 +37,24 @@ class ViewHygieneTest extends TestCase
 
         $this->assertSame([], $found);
     }
+
+    public function test_views_keep_css_in_the_stylesheets(): void
+    {
+        $patterns = [
+            'style block' => '/<style\b/i',
+            'style attribute' => '/\sstyle="/',
+            'asset from a CDN' => '#https://(?:cdn\.|cdnjs\.|unpkg\.)#',
+        ];
+
+        $found = [];
+        foreach (File::allFiles(resource_path('views')) as $file) {
+            foreach ($patterns as $label => $pattern) {
+                if (preg_match($pattern, $file->getContents())) {
+                    $found[] = "{$file->getRelativePathname()}: {$label}";
+                }
+            }
+        }
+
+        $this->assertSame([], $found);
+    }
 }

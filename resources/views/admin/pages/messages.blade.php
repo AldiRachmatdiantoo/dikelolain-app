@@ -4,7 +4,7 @@
 @section('page-title', 'Pesan Masuk')
 
 @section('content')
-<div class="container-fluid" style="padding-left: 15px; padding-right: 15px;">
+<div class="container-fluid admin-fluid">
 
     <div class="mb-4">
         <h2 class="mb-1 fw-bold msg-yellow">Pesan Masuk</h2>
@@ -76,67 +76,4 @@
     </div>
 </div>
 
-<style>
-    .msg-yellow { color: #ffcc01 !important; }
-    .msg-muted { color: #c9c9c9; }
-
-    .msg-card {
-        margin-bottom: 14px;
-        padding: 18px;
-        background-color: #212529;
-        border: 1px solid #333;
-        border-left: 4px solid #333;
-        border-radius: 16px;
-        color: #fff;
-    }
-
-    .msg-card.msg-unread { border-left-color: #ffcc01; }
-
-    .msg-head {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between;
-        gap: 6px 14px;
-        margin-bottom: 10px;
-    }
-
-    .msg-sender { min-width: 0; }
-    .msg-sender h3 { margin: 0 0 2px; font-size: 17px; }
-    .msg-sender p { margin: 0; font-size: 13px; word-break: break-word; }
-    .msg-sender a { color: #ffcc01; text-decoration: none; }
-    .msg-sender a:hover { text-decoration: underline; }
-    .msg-sep { color: #8f8f8f; margin: 0 4px; }
-
-    .msg-badge {
-        display: inline-block;
-        margin-left: 6px;
-        padding: 2px 8px;
-        border-radius: 999px;
-        background-color: #ffcc01;
-        color: #000;
-        font-size: 11px;
-        font-weight: 700;
-        vertical-align: middle;
-    }
-
-    .msg-time { font-size: 13px; color: #8f8f8f; white-space: nowrap; }
-
-    /* Keeps the visitor's line breaks; the text itself is escaped. */
-    .msg-body { margin: 0 0 14px; white-space: pre-line; word-break: break-word; color: #e6e6e6; }
-
-    .msg-actions { display: flex; flex-wrap: wrap; gap: 6px; }
-    .msg-actions form { margin: 0; }
-
-    .msg-btn { background-color: #ffcc01; border: 1px solid #ffcc01; color: #000; }
-    .msg-btn:hover { background-color: #ffdd33; border-color: #ffdd33; color: #000; }
-
-    .msg-btn-outline { background: transparent; border: 1px solid #ffcc01; color: #ffcc01; }
-    .msg-btn-outline:hover { background-color: rgba(255, 204, 1, 0.15); color: #ffcc01; }
-
-    .msg-btn-danger { background: transparent; border: 1px solid #dc3545; color: #ff6b6b; }
-    .msg-btn-danger:hover { background-color: rgba(220, 53, 69, 0.15); color: #ff6b6b; }
-
-    .msg-empty { text-align: center; color: #8f8f8f; padding: 40px 18px; }
-    .msg-empty i { font-size: 32px; margin-bottom: 10px; }
-</style>
 @endsection

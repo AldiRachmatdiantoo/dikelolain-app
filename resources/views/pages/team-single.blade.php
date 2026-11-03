@@ -145,10 +145,3 @@
 
 @endsection
 
-@push('styles')
-<style>
-    .team-contact-content p {
-        word-break: break-all;
-    }
-</style>
-@endpush

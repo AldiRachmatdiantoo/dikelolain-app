@@ -27,7 +27,6 @@
     {{-- Template CSS joined and minified (resources/site-assets.json, npm run build:site). --}}
     <link href="{{ asset('css/site.min.css') }}?v={{ filemtime(public_path('css/site.min.css')) }}" rel="stylesheet">
 
-    @stack('styles')
 </head>
 <body>
 
