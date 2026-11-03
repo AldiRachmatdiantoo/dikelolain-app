@@ -26,7 +26,7 @@
                         <div class="contact-info-list">
                             @foreach (['phone' => 'Telepon', 'email' => 'Email', 'address' => 'Alamat'] as $item => $label)
                                 <x-vcms.settings :keys="['contact.' . $item . '_icon', 'contact.' . $item . '_label', 'contact.' . $item]" :label="$label"
-                                    class="contact-info-item wow fadeInUp" :data-wow-delay="$loop->first ? null : (0.25 * $loop->index) . 's'">
+                                    class="contact-info-item">
                                     <div class="icon-box">
                                         <img src="{{ $settings->url('contact.' . $item . '_icon') }}" alt="">
                                     </div>
@@ -52,7 +52,7 @@
                         <!-- Contact Form Start -->
                         <div class="contact-form">
                             {{-- The form saves the message (admin inbox), then opens WhatsApp with it; the number keeps digits only. --}}
-                            <form id="contactForm" action="{{ route('contact.send') }}" method="POST" class="wow fadeInUp" data-wow-delay="0.25s" data-whatsapp="{{ preg_replace('/\D+/', '', $settings->get('contact.whatsapp')) }}">
+                            <form id="contactForm" action="{{ route('contact.send') }}" method="POST" data-whatsapp="{{ preg_replace('/\D+/', '', $settings->get('contact.whatsapp')) }}">
                                 @csrf
                                 {{-- Honeypot: hidden from people, bots fill it in. --}}
                                 <div class="d-none" aria-hidden="true"><input type="text" name="website" tabindex="-1" autocomplete="off"></div>

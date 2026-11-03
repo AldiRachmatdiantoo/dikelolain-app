@@ -15,7 +15,7 @@
     <div class="container">
         <div class="row">
             @forelse ($teamMembers as $member)
-                @include('partials.team-card', ['delay' => 0.2 * $loop->index])
+                @include('partials.team-card')
             @empty
                 <div class="col-12 text-center py-5">
                     <p style="color: #888;">No team members yet.</p>

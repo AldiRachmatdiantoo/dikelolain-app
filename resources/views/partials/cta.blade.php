@@ -5,7 +5,7 @@
             <div class="col-lg-12">
                 <div class="cta-box">
                     <div class="cta-counter-content-box">
-                        <x-vcms.settings :keys="['cta.text']" label="Teks" class="cta-box-content wow fadeInUp">
+                        <x-vcms.settings :keys="['cta.text']" label="Teks" class="cta-box-content">
                             <p>{{ $settings->get('cta.text') }}</p>
                         </x-vcms.settings>
                         <div class="cta-counter-box">

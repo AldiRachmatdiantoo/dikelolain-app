@@ -92,7 +92,8 @@ resources/
 │   ├── vcms/admin-bar.blade.php   bilah admin + modal editor
 │   └── admin/                     hanya login, dashboard, analytics, profil
 ├── css/vcms.css                   gaya editor
-└── js/vcms/editor.js              editor generik (Alpine.js); Vite hanya membundel editor ini
+├── js/vcms/editor.js              editor generik (Alpine.js); Vite hanya membundel editor ini
+└── site-assets.json               CSS/JS website publik yang digabung `npm run build:site` (scripts/build-site.mjs)
 ```
 
 ---
@@ -285,7 +286,7 @@ class FaqFields
 - Klik tombol editor ditangkap di fase capture, jadi tidak ikut membuka accordion, slider, atau link template.
 - Tidak ada pengetahuan khusus per entitas di JS. Menambah entitas baru = definisi field + endpoint, tanpa mengubah JS.
 - Tampilan modal mengikuti warna panel admin (`public/css/admin.css`, dulu `admin-vcms.css`) supaya terasa sama bagi admin.
-- Website publik tetap memakai jQuery dan plugin template. Editor baru tidak memakai jQuery.
+- Website publik tetap memakai jQuery dan plugin template, digabung jadi satu bundle (lihat [§10](#10-performa--cache)). Editor baru tidak memakai jQuery.
 
 ---
 
@@ -346,8 +347,12 @@ Urutan prioritas bila website terasa lambat:
 
 1. **Query per halaman:** setiap halaman hanya mengambil data yang dipakainya, dengan eager loading (`with()`) untuk relasi. Tidak ada lagi "muat semua section".
 2. **Gambar & video:** WebP, ukuran sesuai tampilan, `loading="lazy"` untuk gambar di bawah layar, video disimpan sendiri. Sudah diterapkan (PBI-506): gambar template dalam WebP, dan `ImageUploadService` memperkecil setiap upload JPG/PNG/WebP ke sisi terpanjang 2000 px lalu menyimpannya sebagai WebP (kecuali setting dengan `'original' => true`). Gambar di bagian pertama halaman (hero, logo header) dan di slider Swiper tidak diberi `loading="lazy"`.
-3. **Optimasi rilis:** `php artisan optimize` dan OPcache.
-4. **Cache data halaman** bila 1–3 belum cukup.
+3. **CSS/JS publik** (PBI-511): setiap halaman memuat satu `public/css/site.min.css` dan satu `public/js/site.min.js`, hasil esbuild dari daftar sumber di `resources/site-assets.json`. Setelah mengubah sumbernya (misalnya `public/js/function.js` atau `public/css/frontend-override.css`) jalankan `npm run build:site`; `SiteAssetsTest` gagal bila lupa (baris pertama bundle berisi hash sumbernya). Aturannya:
+   - Plugin baru masuk lewat `site-assets.json`, bukan `<script>`/`<link>` sendiri di layout. Plugin yang tidak dipakai dibuang (sudah: WOW, animate.css, magnific-popup, parallaxie, YTPlayer, SmoothScroll, isotope).
+   - `function.js` berbentuk IIFE dengan satu fungsi `init*` per fitur. Script khusus satu halaman (filter dan paginasi Portfolio/Services, slider eksperimen) tetap di `@push('scripts')` halaman itu, juga IIFE, tanpa fungsi global, `onclick`, atau gaya lewat `.css()`: tampilan diatur dengan kelas dan atribut `hidden`.
+   - Video YouTube tampil sebagai thumbnail (`.video-facade`); pemutarnya baru dimuat saat diklik.
+4. **Optimasi rilis:** `php artisan optimize`, OPcache, kompresi gzip dan header cache untuk `css/`, `js/`, `images/` (PBI-507).
+5. **Cache data halaman** bila 1–4 belum cukup.
 
 Aturan cache:
 

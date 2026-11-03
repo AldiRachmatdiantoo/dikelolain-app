@@ -37,14 +37,14 @@
                                 <!-- Section Title Start -->
                                 <div class="section-title">
                                     <h2 class="text-anime-style-2" data-cursor="-opaque">About <span>me</span></h2>
-                                    <p class="wow fadeInUp">{{ $member->about }}</p>
+                                    <p>{{ $member->about }}</p>
                                 </div>
                                 <!-- Section Title End -->
 
                                 <!-- Team Contact List Start -->
                                 <div class="team-contact-list">
                                     <!-- Team Member Box Start -->
-                                    <div class="team-contact-box wow fadeInUp" data-wow-delay="0.2s">
+                                    <div class="team-contact-box">
                                         <div class="icon-box">
                                             <img src="{{ asset('images/icon-team-contact-1.svg') }}" alt="">
                                         </div>
@@ -58,7 +58,7 @@
 
                                     @if ($member->experience)
                                         <!-- Team Member Box Start -->
-                                        <div class="team-contact-box wow fadeInUp" data-wow-delay="0.6s">
+                                        <div class="team-contact-box">
                                             <div class="icon-box">
                                                 <img src="{{ asset('images/icon-team-contact-3.svg') }}" alt="">
                                             </div>
@@ -84,12 +84,12 @@
                                 <!-- Section Title Start -->
                                 <div class="section-title">
                                     <h2 class="text-anime-style-2" data-cursor="-opaque">My <span>expertise</span></h2>
-                                    <p class="wow fadeInUp">{{ $member->expertise_intro }}</p>
+                                    <p>{{ $member->expertise_intro }}</p>
                                 </div>
                                 <!-- Section Title End -->
 
                                 <!-- Team Expertise List Start -->
-                                <div class="team-expertise-list wow fadeInUp" data-wow-delay="0.2s">
+                                <div class="team-expertise-list">
                                     <ul>
                                         @foreach ($member->expertises as $expertise)
                                             <x-vcms.item tag="li" resource="team-member-expertises" :item="$expertise" :fields="$expertiseFields" label="keahlian"
@@ -108,7 +108,7 @@
                                 <!-- Section Title Start -->
                                 <div class="section-title">
                                     <h2 class="text-anime-style-2" data-cursor="-opaque">My <span>skills</span></h2>
-                                    <p class="wow fadeInUp">{{ $member->skills_intro }}</p>
+                                    <p>{{ $member->skills_intro }}</p>
                                 </div>
                                 <!-- Section Title End -->
 

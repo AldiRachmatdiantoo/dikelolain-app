@@ -14,7 +14,7 @@
 
 **Mode:** eksekusi otomatis atas instruksi pemilik (3 Nov 2026): kerjakan PBI berurutan tanpa bertanya, uji setiap PBI (`php artisan test` + cek browser bila terlihat), commit + push per PBI, kendala dicatat di [kendala_backlog.md](kendala_backlog.md).
 
-**Sedang dikerjakan:** tidak ada. **Semua PBI yang bisa dikerjakan tanpa pemilik sudah selesai** (Epic 0–4, lalu 501, 503, 506, 509). Sisanya menunggu pemilik: 502 konten asli (KD-2), 504 dan 507 hosting (KD-1). PBI-510 (akun admin berlapis) dan 511 (frontend lebih ringan) sudah dicatat, belum dikerjakan: tunggu aba-aba pemilik. PBI-508 (cache) belum perlu, 505 belum diisi. Lanjutkan begitu salah satu kendala di [kendala_backlog.md](kendala_backlog.md) terjawab. Selesai: Epic 0–4 (rombak arsitektur tuntas). Tabel dan model konten lama sudah tidak ada; cadangan isi lamanya di `storage/app/private/backups/` (lihat kendala_backlog).
+**Sedang dikerjakan:** PBI-510 (akun admin berlapis), atas aba-aba pemilik 4 Nov 2026 untuk menuntaskan semua yang bisa dikerjakan. Sudah selesai: Epic 0–4, lalu 501, 503, 506, 509, 511. Sisanya menunggu pemilik: 502 konten asli (KD-2), 504 dan 507 hosting (KD-1). PBI-508 (cache) belum perlu, 505 belum diisi. Lanjutkan begitu salah satu kendala di [kendala_backlog.md](kendala_backlog.md) terjawab. Selesai: Epic 0–4 (rombak arsitektur tuntas). Tabel dan model konten lama sudah tidak ada; cadangan isi lamanya di `storage/app/private/backups/` (lihat kendala_backlog).
 
 **Contoh pola entitas = Testimonial** (memakai kerangka daftar bersama, [ARCHITECTURE §7.1](ARCHITECTURE.md#71-kerangka-bersama-untuk-daftar-terurut)). Entitas berikutnya meniru file-file ini:
 - `database/migrations/2026_11_03_000003_create_testimonials_table.php`, `app/Models/Testimonial.php` (scope + accessor `logo_url`/`photo_url`)
@@ -35,10 +35,10 @@
 
 | Status | Jumlah | PBI |
 |---|---|---|
-| ✅ Selesai | 49 | **001–005** (seluruh Epic 0), **101–111** (seluruh Epic 1), **201–210** (seluruh Epic 2), **301–313** (seluruh Epic 3), **401–406** (seluruh Epic 4), **501**, **503**, **506**, **509** |
+| ✅ Selesai | 50 | **001–005** (seluruh Epic 0), **101–111** (seluruh Epic 1), **201–210** (seluruh Epic 2), **301–313** (seluruh Epic 3), **401–406** (seluruh Epic 4), **501**, **503**, **506**, **509**, **511** |
 | ⏳ Sedang dikerjakan | 0 | – |
 | ⏸️ Menunggu pemilik | 3 | **502** (konten asli, KD-2), **504**, **507** (hosting, lihat [kendala_backlog.md](kendala_backlog.md) KD-1) |
-| ❌ Belum | 4 | **505** (belum diisi), **508** (cache, hanya bila perlu), **510** (akun admin berlapis), **511** (frontend lebih ringan) |
+| ❌ Belum | 3 | **505** (belum diisi), **508** (cache, hanya bila perlu), **510** (akun admin berlapis) |
 
 Total **53 PBI** dalam 6 epic:
 
@@ -49,7 +49,7 @@ Total **53 PBI** dalam 6 epic:
 | 2 | Fondasi VCMS baru + FAQ | 201–210 | 10/10 ✅ |
 | 3 | Migrasi entitas | 301–313 | 13/13 ✅ |
 | 4 | Pembersihan akhir | 401–406 | 6/6 ✅ |
-| 5 | Setelah rombak (fitur & rilis) | 501–511 | 4/11 |
+| 5 | Setelah rombak (fitur & rilis) | 501–511 | 5/11 |
 
 **Urutan wajib:** Epic 0 → 1 → 2 → 3 → 4. Fitur baru (Epic 5) baru dikerjakan setelah Epic 4, kecuali yang tidak menyentuh model konten (lihat [PBI-501](#epic-5-setelah-rombak-fitur--rilis)).
 
@@ -167,7 +167,7 @@ Fitur dan persiapan rilis setelah rombak arsitektur. PBI-509 sampai 511 ditambah
 | 504 | Deploy | ⏸️ | Menunggu K-3 |
 | 505 | Fitur baru (diisi kemudian) | ❌ | |
 | 510 | Akun admin mengikuti pola berlapis: `ProfileController` (ubah profil, ubah password) dan `AuthController` (login) | ❌ | Dicatat 3 Nov 2026 atas permintaan pemilik, dikerjakan nanti. Sekarang validasi masih `$request->validate()` di controller dan user disimpan langsung (`$request->user()->update()`). Target: FormRequest (`UpdateProfileRequest`, `UpdatePasswordRequest`, `LoginRequest`), `AccountService`, `UserRepositoryInterface` + implementasi Eloquent, plus test. Bagian konten lain sudah berlapis semua |
-| 511 | Frontend lebih ringan | ❌ | Hasil ukur Home 3 Nov 2026 (pengunjung baru, tanpa cache): 59 request, ±1,75 MB aset lokal belum dikompres (17 file JS, 10 file CSS), **ditambah** 6 video YouTube yang langsung dimuat dan video hero 12,3 MB dari server demo. Rencana: (1) video YouTube di Home/Portfolio jadi thumbnail, pemutar baru dimuat saat diklik; (2) hapus plugin yang tidak dipakai: `jquery.mb.YTPlayer` (63 KB), `parallaxie`, `magnific-popup` (+ CSS); (3) `isotope` hanya dimuat di Portfolio; (4) satukan dan perkecil CSS/JS template. Yang sudah ringan: gambar WebP + lazy (506), query per halaman (Epic 3), aset editor hanya untuk admin (202), `validator.js` dihapus (509). Kompresi gzip dan header cache ada di PBI-507 (bergantung hosting) |
+| 511 | Frontend lebih ringan | ✅ 4 Nov 2026 | Home kini **30 request** (dulu 59): satu CSS (`css/site.min.css`, 409 KB sebelum gzip) + Google Font, satu JS (`js/site.min.js`, 411 KB), **0 iframe** (dulu 6 pemutar YouTube langsung dimuat); Portfolio 14 request. (1) Kartu video Home/Portfolio/slider jadi tombol thumbnail (`i.ytimg.com`, accessor `Project::thumbnail_url`) yang diganti iframe `?autoplay=1` saat diklik. (2) Dibuang: `wow.min.js` + `animate.css` (animasinya sudah dimatikan; 49 kelas `wow fadeInUp` dan atribut `data-wow-delay` di 20 view ikut dihapus), `magnific-popup` (+ CSS), `parallaxie`, `jquery.mb.YTPlayer`, `SmoothScroll`, dan `isotope` (filter + paginasi Portfolio kini show/hide biasa karena grid sudah kolom Bootstrap); Swiper kedua dari CDN di slider eksperimen juga dibuang karena sudah ada di bundle. (3) Sisa 7 CSS dan 11 JS template digabung dan diperkecil esbuild dari `resources/site-assets.json` (`npm run build:site`); `SiteAssetsTest` gagal bila sumber berubah tanpa build ulang. (4) jQuery dirapikan: `function.js` jadi IIFE dengan satu fungsi per fitur (preloader, menu HP, slider logo, skillbar, counter, reveal gambar, animasi judul, tools, thumbnail video, modal project yang dipindah dari script inline layout); script inline Portfolio, Services, dan slider eksperimen ditulis ulang tanpa fungsi global, `onclick`, atau gaya lewat `.css()` (gaya tombol paginasi Services pindah ke CSS). Dicek di browser: Home, Portfolio (filter, paginasi, thumbnail → pemutar, modal + Escape), slider eksperimen (navigasi, filter, penghitung), accordion FAQ, counter About, paginasi Services (DOM tiruan karena seed hanya 5 layanan; markup dijaga test), tanpa error console. 428 test hijau |
 
 ---
 
@@ -298,3 +298,4 @@ Ringkasan hasil membaca kode di commit `02fa1fd` (isi sama dengan branch `back-e
 | 3 Nov 2026 | PBI-503 selesai: `lang`, author, dan judul halaman berlabel Dikelolain; semua PBI yang tidak menunggu pemilik selesai; 407 test hijau |
 | 3 Nov 2026 | PBI-509 selesai (KD-3: database + WhatsApp): pesan form kontak tersimpan dan dibaca di menu Pesan Masuk, pengunjung tetap diarahkan ke WhatsApp; 423 test hijau |
 | 3 Nov 2026 | PBI-510 (akun admin berlapis) dan 511 (frontend lebih ringan, dari hasil ukur Home) dicatat; PBI-507 diperluas dengan gzip dan header cache |
+| 4 Nov 2026 | PBI-511 selesai: satu CSS + satu JS per halaman (esbuild), YouTube jadi thumbnail, 7 plugin dibuang, jQuery dirapikan; Home 59 → 30 request; 428 test hijau |

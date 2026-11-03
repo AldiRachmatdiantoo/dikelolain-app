@@ -19,7 +19,7 @@
                     <div class="col-lg-4 col-md-6">
                         <!-- Pricing Box Start -->
                         <x-vcms.item resource="pricing-plans" :item="$plan" :fields="$planFields" label="paket"
-                            class="pricing-box {{ $plan->is_featured ? 'highlighted-box' : '' }} wow fadeInUp {{ $plan->is_active ? '' : 'vcms-hidden' }}" :data-wow-delay="$loop->first ? null : (0.2 * $loop->index) . 's'">
+                            class="pricing-box {{ $plan->is_featured ? 'highlighted-box' : '' }} {{ $plan->is_active ? '' : 'vcms-hidden' }}">
                             <div class="pricing-header">
                                 <h3>{{ $plan->name }}</h3>
                                 <h2>{{ $plan->price }} @if (filled($plan->period))<sub>{{ $plan->period }}</sub>@endif</h2>
@@ -64,7 +64,7 @@
 
                 <div class="col-lg-12">
                     <!-- Pricing Benefit List Start -->
-                    <div class="pricing-benefit-list wow fadeInUp" data-wow-delay="0.6s">
+                    <div class="pricing-benefit-list">
                         <ul>
                             @foreach ($benefits as $benefit)
                                 <x-vcms.item resource="page-list-items" :item="$benefit" :fields="$benefitFields" label="keuntungan" tag="li"

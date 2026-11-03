@@ -70,6 +70,19 @@ class ServicePagesTest extends TestCase
             ->assertSee('+ Tambah layanan');
     }
 
+    public function test_services_page_shows_twelve_services_per_page(): void
+    {
+        foreach (range(1, 13) as $sortOrder) {
+            $this->service($sortOrder);
+        }
+
+        $html = $this->get('/services')->assertOk()->getContent();
+
+        $this->assertSame(2, substr_count($html, 'class="btn service-page-btn'));
+        $this->assertSame(12, substr_count($html, 'service-item-col" data-page="1" >'));
+        $this->assertSame(1, substr_count($html, 'service-item-col" data-page="2" hidden>'));
+    }
+
     public function test_detail_page_shows_paragraphs_benefits_and_faqs(): void
     {
         $service = $this->service(1, [
@@ -85,7 +98,7 @@ class ServicePagesTest extends TestCase
 
         $this->get('/pages/service/layanan-1')
             ->assertOk()
-            ->assertSeeInOrder(['<p class="wow fadeInUp" >Paragraf satu.</p>', 'Paragraf dua.</p>'], false)
+            ->assertSeeInOrder(['<p>Paragraf satu.</p>', 'Paragraf dua.</p>'], false)
             ->assertSee('Manfaat <span>servis</span>', false)
             ->assertDontSee('<script>x</script>', false)
             ->assertSee(asset('images/service-benefit-img-1.jpg'), false)

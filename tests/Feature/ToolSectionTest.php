@@ -42,7 +42,7 @@ class ToolSectionTest extends TestCase
             ->assertSeeInOrder(['figma', 'framer', 'incopy'])
             ->getContent();
 
-        $this->assertSame(8, substr_count($html, 'class="creative-tool-item wow'));
+        $this->assertSame(8, substr_count($html, 'class="creative-tool-item"'));
     }
 
     #[DataProvider('pages')]

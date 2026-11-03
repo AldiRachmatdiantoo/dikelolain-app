@@ -57,6 +57,16 @@ class Project extends Model
         });
     }
 
+    /** YouTube's own thumbnail of the video (shown until the visitor clicks play), or ''. */
+    protected function thumbnailUrl(): Attribute
+    {
+        return Attribute::get(function () {
+            $id = self::youtubeId($this->video_url);
+
+            return $id ? "https://i.ytimg.com/vi/{$id}/hqdefault.jpg" : '';
+        });
+    }
+
     protected function imageUrl(): Attribute
     {
         return Attribute::get(fn () => Media::url($this->image));

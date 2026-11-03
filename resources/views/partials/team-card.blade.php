@@ -1,7 +1,7 @@
-{{-- One team member card (team section, Team page). Needs $member, $teamMemberFields and $delay. --}}
+{{-- One team member card (team section, Team page). Needs $member and $teamMemberFields. --}}
 <div class="col-lg-3 col-md-6">
     <x-vcms.item resource="team-members" :item="$member" :fields="$teamMemberFields" label="anggota tim"
-        class="team-item wow fadeInUp {{ $member->is_active ? '' : 'vcms-hidden' }}" data-wow-delay="{{ $delay }}s">
+        class="team-item {{ $member->is_active ? '' : 'vcms-hidden' }}">
         <div class="team-image">
             <a href="{{ route('pages.team.single', $member->slug) }}" data-cursor-text="View">
                 <figure class="image-anime">

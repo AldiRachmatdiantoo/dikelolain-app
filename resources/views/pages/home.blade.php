@@ -17,9 +17,9 @@
                     <x-vcms.settings :keys="['hero.title', 'hero.description', 'hero.button_text', 'hero.button_link']" label="Teks" class="hero-content">
                         <div class="section-title">
                             <h1 class="text-anime-style-2" data-cursor="-opaque">{!! $settings->get('hero.title') !!}</h1>
-                            <p class="wow fadeInUp" data-wow-delay="0.2s">{{ $settings->get('hero.description') }}</p>
+                            <p>{{ $settings->get('hero.description') }}</p>
                         </div>
-                        <div class="hero-btn wow fadeInUp" data-wow-delay="0.4s">
+                        <div class="hero-btn">
                             <a href="{{ $settings->get('hero.button_link') }}" class="btn-default">{{ $settings->get('hero.button_text') }}</a>
                         </div>
                     </x-vcms.settings>
@@ -57,7 +57,7 @@
                     </x-vcms.settings>
                 </div>
                 <div class="col-lg-6">
-                    <x-vcms.settings :keys="['services.button_text', 'services.button_link']" label="Tombol" class="section-btn wow fadeInUp" data-wow-delay="0.2s">
+                    <x-vcms.settings :keys="['services.button_text', 'services.button_link']" label="Tombol" class="section-btn">
                         <a href="{{ $settings->get('services.button_link') }}" class="btn-default">{{ $settings->get('services.button_text') }}</a>
                     </x-vcms.settings>
                 </div>
@@ -65,7 +65,7 @@
 
             <div class="row">
                 <div class="col-lg-12">
-                    <div class="our-services-boxes tab-content wow fadeInUp" data-wow-delay="0.25s" id="servicesbox">
+                    <div class="our-services-boxes tab-content" id="servicesbox">
                         <div class="our-services-nav">
                             <ul class="nav nav-tabs" id="servicestab" role="tablist">
                                 @foreach ($services as $service)
@@ -117,12 +117,12 @@
             <div class="row section-row align-items-center">
                 <div class="col-lg-7">
                     <x-vcms.settings :keys="['work.sub_title', 'work.title']" label="Judul" class="section-title">
-                        <h3 class="wow fadeInUp">{{ $settings->get('work.sub_title') }}</h3>
+                        <h3>{{ $settings->get('work.sub_title') }}</h3>
                         <h2 class="text-anime-style-2" data-cursor="-opaque">{!! $settings->get('work.title') !!}</h2>
                     </x-vcms.settings>
                 </div>
                 <div class="col-lg-5">
-                    <x-vcms.settings :keys="['work.button_text', 'work.button_link']" label="Tombol" class="section-btn wow fadeInUp" data-wow-delay="0.2s">
+                    <x-vcms.settings :keys="['work.button_text', 'work.button_link']" label="Tombol" class="section-btn">
                         <a href="{{ $settings->get('work.button_link') }}" class="btn-default">{{ $settings->get('work.button_text') }}</a>
                     </x-vcms.settings>
                 </div>
@@ -132,7 +132,7 @@
             <div class="row">
                 @forelse ($projects as $project)
                     <div class="col-lg-4 col-md-6">
-                        @include('partials.work-item', ['delay' => 0.2 * ($loop->index % 3), 'movable' => false, 'ratioImage' => true])
+                        @include('partials.work-item', ['movable' => false, 'ratioImage' => true])
                     </div>
                 @empty
                     <div class="col-12 text-center py-5" style="color: #888;">
@@ -152,7 +152,7 @@
             <div class="row section-row align-items-center">
                 <div class="col-lg-8">
                     <x-vcms.settings :keys="['process.sub_title', 'process.title']" label="Judul" class="section-title">
-                        <h3 class="wow fadeInUp">{{ $settings->get('process.sub_title') }}</h3>
+                        <h3>{{ $settings->get('process.sub_title') }}</h3>
                         <h2 class="text-anime-style-2" data-cursor="-opaque">{!! $settings->get('process.title') !!}</h2>
                     </x-vcms.settings>
                 </div>
@@ -181,7 +181,7 @@
                     <div class="work-faq-accordion" id="workaccordion">
                         @foreach ($processSteps as $step)
                             <x-vcms.item resource="process-steps" :item="$step" :fields="$processStepFields" label="langkah"
-                                class="work-accordion-item wow fadeInUp {{ $step->is_active ? '' : 'vcms-hidden' }}" data-wow-delay="{{ 0.2 * $loop->index }}s">
+                                class="work-accordion-item {{ $step->is_active ? '' : 'vcms-hidden' }}">
                                 <h2 class="accordion-header" id="process-heading-{{ $step->id }}">
                                     <button class="accordion-button {{ $loop->first ? '' : 'collapsed' }}"
                                         type="button" data-bs-toggle="collapse"

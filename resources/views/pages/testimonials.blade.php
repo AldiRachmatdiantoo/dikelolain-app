@@ -19,8 +19,7 @@
                     <div class="col-lg-4 col-md-6">
                         <!-- Testimonial Item Start -->
                         <x-vcms.item resource="testimonials" :item="$testimonial" :fields="$testimonialFields" label="testimoni"
-                            class="testimonial-item wow fadeInUp {{ $testimonial->is_active ? '' : 'vcms-hidden' }}"
-                            :data-wow-delay="$loop->index ? ($loop->index * 0.2) . 's' : null">
+                            class="testimonial-item {{ $testimonial->is_active ? '' : 'vcms-hidden' }}">
                             <div class="testimonial-header">
                                 <div class="testimonial-logo-img">
                                     @if ($testimonial->logo)

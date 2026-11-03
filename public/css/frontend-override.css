@@ -1,20 +1,51 @@
 /* =========================================
-   FRONTEND OVERRIDE - SIMPLE APPROACH
+   Project additions on top of the template CSS (custom.css).
+   Bundled into css/site.min.css: run `npm run build:site` after editing.
    ========================================= */
 
-/* Just disable animations, keep everything else */
-
-/* Kill WOW animations */
-.wow {
-    animation: none !important;
-    visibility: visible !important;
-    animation-name: none !important;
+/* YouTube thumbnail that turns into the player when clicked (partials/work-item). */
+.video-facade {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    border: 0;
+    background: #000;
+    cursor: pointer;
 }
 
-/* Kill text anime */
-.text-anime-style-2,
-.text-anime-style-3 {
-    /* Keep the element, just remove animation */
+.video-facade img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
+.video-facade-play {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 72px;
+    height: 72px;
+    margin: -36px 0 0 -36px;
+    border-radius: 50%;
+    background: var(--accent-color);
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+    transition: transform 0.2s ease;
+}
 
+.video-facade-play::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 54%;
+    transform: translate(-50%, -50%);
+    border-style: solid;
+    border-width: 12px 0 12px 20px;
+    border-color: transparent transparent transparent #000;
+}
+
+.video-facade:hover .video-facade-play,
+.video-facade:focus-visible .video-facade-play {
+    transform: scale(1.1);
+}

@@ -22,13 +22,7 @@
                     <div class="col-12">
                         <div class="services-pagination d-flex justify-content-center align-items-center gap-2 flex-wrap">
                             @for ($page = 1; $page <= $totalPages; $page++)
-                                <button type="button"
-                                    class="btn service-page-btn {{ $page == 1 ? 'active' : '' }}"
-                                    data-page="{{ $page }}"
-                                    style="min-width: 45px; padding: 8px 16px; border-radius: 8px; font-weight: 600;
-                                           {{ $page == 1 ? 'background: linear-gradient(135deg, #ffcc01 0%, #ffdd33 100%); color: #161616; border: none;' : 'background: #252525; color: #e0e0e0; border: 1px solid #3a3a3a;' }}">
-                                    {{ $page }}
-                                </button>
+                                <button type="button" class="btn service-page-btn {{ $page == 1 ? 'active' : '' }}" data-page="{{ $page }}">{{ $page }}</button>
                             @endfor
                             <span style="color: #888; font-size: 13px; margin-left: 10px;">
                                 ({{ $services->count() }} services)
@@ -42,12 +36,11 @@
                 @foreach ($services as $service)
                     @php
                         $serviceLink = route('pages.service.single', $service->slug);
-                        $delay = ($loop->index % 3) * 0.2;
                         $pageNum = intdiv($loop->index, $servicesPerPage) + 1;
                     @endphp
-                    <div class="col-lg-4 col-md-6 service-item-col" data-page="{{ $pageNum }}" style="{{ $pageNum > 1 ? 'display: none;' : '' }}">
+                    <div class="col-lg-4 col-md-6 service-item-col" data-page="{{ $pageNum }}" {{ $pageNum > 1 ? 'hidden' : '' }}>
                         <x-vcms.item resource="services" :item="$service" :fields="$serviceFields" label="layanan"
-                            class="service-item wow fadeInUp {{ $service->is_active ? '' : 'vcms-hidden' }}" :data-wow-delay="$delay > 0 ? $delay . 's' : null">
+                            class="service-item {{ $service->is_active ? '' : 'vcms-hidden' }}">
                             <div class="service-image">
                                 <a href="{{ $serviceLink }}" data-cursor-text="View">
                                     <figure class="image-anime">
@@ -79,36 +72,43 @@
 
 @endsection
 
+@push('styles')
+<style>
+.services-pagination .service-page-btn,
+.services-pagination .service-page-btn:hover {
+    min-width: 45px;
+    padding: 8px 16px;
+    border: 1px solid #3a3a3a;
+    border-radius: 8px;
+    background: #252525;
+    color: #e0e0e0;
+    font-weight: 600;
+}
+.services-pagination .service-page-btn.active {
+    border-color: transparent;
+    background: linear-gradient(135deg, #ffcc01 0%, #ffdd33 100%);
+    color: #161616;
+}
+</style>
+@endpush
 
 @push('scripts')
-    <script>
-        $(document).ready(function() {
-            // Services page pagination
-            $('.service-page-btn').on('click', function() {
-                const page = $(this).data('page');
+<script>
+// Pagination of the services grid: 12 services per page.
+(function ($) {
+    'use strict';
 
-                // Update active button
-                $('.service-page-btn').css({
-                    'background': '#252525',
-                    'color': '#e0e0e0',
-                    'border': '1px solid #3a3a3a'
-                }).removeClass('active');
+    var $buttons = $('.service-page-btn');
+    var $items = $('.service-item-col');
 
-                $(this).css({
-                    'background': 'linear-gradient(135deg, #ffcc01 0%, #ffdd33 100%)',
-                    'color': '#161616',
-                    'border': 'none'
-                }).addClass('active');
+    $buttons.on('click', function () {
+        var page = $(this).attr('data-page');
 
-                // Show/hide service items
-                $('.service-item-col').hide();
-                $('.service-item-col[data-page="' + page + '"]').show();
-
-                // Scroll to top of services section
-                $('html, body').animate({
-                    scrollTop: $('.page-services').offset().top - 100
-                }, 300);
-            });
-        });
-    </script>
+        $buttons.removeClass('active');
+        $(this).addClass('active');
+        $items.prop('hidden', true).filter('[data-page="' + page + '"]').prop('hidden', false);
+        $('html, body').animate({ scrollTop: $('.page-services').offset().top - 100 }, 300);
+    });
+})(jQuery);
+</script>
 @endpush

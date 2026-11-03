@@ -1,0 +1,25 @@
+{
+    "_comment": "Public site CSS/JS, in load order (paths under public/). npm run build:site joins and minifies them into css/site.min.css and js/site.min.js.",
+    "css": [
+        "css/bootstrap.min.css",
+        "css/slicknav.min.css",
+        "css/swiper-bundle.min.css",
+        "css/all.min.css",
+        "css/mousecursor.css",
+        "css/custom.css",
+        "css/frontend-override.css"
+    ],
+    "js": [
+        "js/jquery-3.7.1.min.js",
+        "js/bootstrap.min.js",
+        "js/jquery.slicknav.js",
+        "js/swiper-bundle.min.js",
+        "js/jquery.waypoints.min.js",
+        "js/jquery.counterup.min.js",
+        "js/gsap.min.js",
+        "js/magiccursor.js",
+        "js/SplitText.js",
+        "js/ScrollTrigger.min.js",
+        "js/function.js"
+    ]
+}

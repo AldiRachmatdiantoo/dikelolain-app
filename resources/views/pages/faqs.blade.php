@@ -14,7 +14,7 @@
 @section('sidebar')
     <div class="faq-sidebar">
         <!-- Faq Category List Start -->
-        <x-vcms.settings :keys="['faqs.category.general', 'faqs.category.technical', 'faqs.category.project', 'faqs.category.support']" label="Judul kategori" class="faq-catagery-list wow fadeInUp">
+        <x-vcms.settings :keys="['faqs.category.general', 'faqs.category.technical', 'faqs.category.project', 'faqs.category.support']" label="Judul kategori" class="faq-catagery-list">
             <ul>
                 @foreach ($categories as $category)
                     <li><a href="#{{ $category['anchor'] }}">{{ $category['title'] }}</a></li>
@@ -24,7 +24,7 @@
         <!-- Faq Category List End -->
 
         <!-- Sidebar Cta Box Start -->
-        <x-vcms.settings :keys="['faqs.cta.text', 'faqs.cta.email', 'faqs.cta.button_text']" label="Kotak kontak" class="sidebar-cta-box wow fadeInUp" data-wow-delay="0.25s">
+        <x-vcms.settings :keys="['faqs.cta.text', 'faqs.cta.email', 'faqs.cta.button_text']" label="Kotak kontak" class="sidebar-cta-box">
             <div class="icon-box">
                 <img src="{{ asset('images/icon-sidebar-cta.svg') }}" alt="">
             </div>
@@ -57,8 +57,7 @@
                     @foreach ($category['faqs'] as $faq)
                         <!-- FAQ Item Start -->
                         <x-vcms.item resource="faqs" :item="$faq" :fields="$faqFields" label="FAQ"
-                            class="accordion-item wow fadeInUp {{ $faq->is_active ? '' : 'vcms-hidden' }}"
-                            :data-wow-delay="$loop->index ? ($loop->index * 0.2) . 's' : null">
+                            class="accordion-item {{ $faq->is_active ? '' : 'vcms-hidden' }}">
                             <h2 class="accordion-header" id="heading-faq-{{ $faq->id }}">
                                 <button class="accordion-button {{ $loop->first ? '' : 'collapsed' }}" type="button"
                                     data-bs-toggle="collapse"

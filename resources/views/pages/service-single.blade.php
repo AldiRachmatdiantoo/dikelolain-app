@@ -15,7 +15,7 @@
 
 <div class="service-sidebar">
     <!-- Service Category List Start -->
-    <div class="service-catagery-list wow fadeInUp">
+    <div class="service-catagery-list">
         <x-vcms.settings :keys="['services.sidebar_title']" label="Judul" tag="h3">{{ $settings->get('services.sidebar_title') }}</x-vcms.settings>
         <ul>
             @foreach ($allServices as $item)
@@ -28,7 +28,7 @@
     <!-- Service Category List End -->
 
     <!-- Sidebar Cta Box Start -->
-    <x-vcms.settings :keys="['services.cta.text', 'services.cta.email', 'services.cta.button_text']" label="Kotak kontak" class="sidebar-cta-box wow fadeInUp" data-wow-delay="0.25s">
+    <x-vcms.settings :keys="['services.cta.text', 'services.cta.email', 'services.cta.button_text']" label="Kotak kontak" class="sidebar-cta-box">
         <div class="icon-box">
             <img src="{{ asset('images/icon-sidebar-cta.svg') }}" alt="">
         </div>
@@ -60,16 +60,16 @@
     <!-- Service Entry Start -->
     <div class="service-entry">
         @foreach ($service->paragraphs() as $paragraph)
-            <p class="wow fadeInUp" @if (!$loop->first) data-wow-delay="0.2s" @endif>{{ $paragraph }}</p>
+            <p>{{ $paragraph }}</p>
         @endforeach
 
         <!-- Service Benefits Start -->
         <div class="service-benefits">
             <h2 class="text-anime-style-2">{!! \App\Support\RichText::clean((string) $service->benefits_title) !!}</h2>
-            <p class="wow fadeInUp">{{ $service->benefits_intro }}</p>
+            <p>{{ $service->benefits_intro }}</p>
 
             <!-- Service Benefit List Start -->
-            <div class="service-benefit-list wow fadeInUp" data-wow-delay="0.2s">
+            <div class="service-benefit-list">
                 <ul>
                     @foreach ($service->benefits as $benefit)
                         <x-vcms.item tag="li" resource="service-benefits" :item="$benefit" :fields="$benefitFields" label="manfaat"
@@ -88,14 +88,14 @@
     <!-- Page Single Faqs Start -->
     <div class="page-single-faqs">
         <x-vcms.settings :keys="['services.faq.sub_title', 'services.faq.title']" label="Judul FAQ" class="section-title">
-            <h3 class="wow fadeInUp">{{ $settings->get('services.faq.sub_title') }}</h3>
+            <h3>{{ $settings->get('services.faq.sub_title') }}</h3>
             <h2 class="text-anime-style-2" data-cursor="-opaque">{!! $settings->get('services.faq.title') !!}</h2>
         </x-vcms.settings>
 
         <div class="faq-accordion" id="accordion">
             @foreach ($service->faqs as $faq)
                 <x-vcms.item resource="service-faqs" :item="$faq" :fields="$faqFields" label="FAQ"
-                    class="accordion-item wow fadeInUp {{ $faq->is_active ? '' : 'vcms-hidden' }}" :data-wow-delay="$loop->first ? null : (0.2 * $loop->index) . 's'">
+                    class="accordion-item {{ $faq->is_active ? '' : 'vcms-hidden' }}">
                     <h2 class="accordion-header" id="service-faq-heading-{{ $faq->id }}">
                         <button class="accordion-button {{ $loop->first ? '' : 'collapsed' }}" type="button" data-bs-toggle="collapse" data-bs-target="#service-faq-{{ $faq->id }}" aria-expanded="{{ $loop->first ? 'true' : 'false' }}" aria-controls="service-faq-{{ $faq->id }}">
                             {{ $faq->question }}

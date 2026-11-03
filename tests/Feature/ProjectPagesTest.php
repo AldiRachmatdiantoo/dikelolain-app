@@ -66,7 +66,7 @@ class ProjectPagesTest extends TestCase
             ->assertSee('https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ', false)
             ->getContent();
 
-        $this->assertSame(12, substr_count($html, 'class="work-item wow fadeInUp'));
+        $this->assertSame(12, substr_count($html, 'class="work-item"'));
     }
 
     public function test_portfolio_lists_projects_with_filter_counts_and_edit_mode_shows_hidden_ones(): void
@@ -82,8 +82,8 @@ class ProjectPagesTest extends TestCase
             ->assertSee('Design <span class="count-badge">6</span>', false)
             ->assertDontSee('Desain Rahasia')
             ->getContent();
-        $this->assertSame(12, substr_count($html, 'portfolio-item" data-page="1"'));
-        $this->assertSame(6, substr_count($html, 'portfolio-item" data-page="2"'));
+        $this->assertSame(18, substr_count($html, 'portfolio-item"'));
+        $this->assertSame(6, substr_count($html, 'portfolio-item" hidden>'), 'page 2 starts hidden');
         $this->assertSame(6, substr_count($html, 'work-item-box image portfolio-item'));
 
         $this->editor()->get('/portfolio')

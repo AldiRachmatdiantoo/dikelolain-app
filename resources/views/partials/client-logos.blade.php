@@ -4,7 +4,7 @@
         <div class="row section-row align-items-center">
             <div class="col-lg-12">
                 <x-vcms.settings :keys="['clients.sub_title', 'clients.title']" label="Judul" class="section-title">
-                    <h3 class="wow fadeInUp">{{ $settings->get('clients.sub_title') }}</h3>
+                    <h3>{{ $settings->get('clients.sub_title') }}</h3>
                     <h2 class="text-anime-style-2" data-cursor="-opaque">{!! $settings->get('clients.title') !!}</h2>
                 </x-vcms.settings>
             </div>

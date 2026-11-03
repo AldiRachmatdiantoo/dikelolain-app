@@ -23,14 +23,14 @@
                 <div class="col-lg-6">
                     <div class="about-us-content">
                         <x-vcms.settings :keys="['about.sub_title', 'about.title', 'about.description']" label="Judul" class="section-title">
-                            <h3 class="wow fadeInUp">{{ $settings->get('about.sub_title') }}</h3>
+                            <h3>{{ $settings->get('about.sub_title') }}</h3>
                             <h2 class="text-anime-style-2" data-cursor="-opaque">{!! $settings->get('about.title') !!}</h2>
-                            <p class="wow fadeInUp" data-wow-delay="0.2s">{{ $settings->get('about.description') }}</p>
+                            <p>{{ $settings->get('about.description') }}</p>
                         </x-vcms.settings>
 
                         <div class="row align-items-center">
                             <div class="col-md-6">
-                                <div class="about-us-info-list wow fadeInUp" data-wow-delay="0.4s">
+                                <div class="about-us-info-list">
                                     @include('partials.page-list', ['list' => 'about'])
                                 </div>
                             </div>
@@ -78,12 +78,12 @@
 
                                 <div class="vision-mission-content">
                                     <x-vcms.settings :keys="[$list . '.sub_title', $list . '.title', $list . '.description']" label="Judul" class="section-title">
-                                        <h3 class="wow fadeInUp">{{ $settings->get($list . '.sub_title') }}</h3>
+                                        <h3>{{ $settings->get($list . '.sub_title') }}</h3>
                                         <h2 class="text-anime-style-2" data-cursor="-opaque">{!! $settings->get($list . '.title') !!}</h2>
-                                        <p class="wow fadeInUp" data-wow-delay="0.2s">{{ $settings->get($list . '.description') }}</p>
+                                        <p>{{ $settings->get($list . '.description') }}</p>
                                     </x-vcms.settings>
 
-                                    <div class="vision-mission-list wow fadeInUp" data-wow-delay="0.4s">
+                                    <div class="vision-mission-list">
                                         @include('partials.page-list')
                                     </div>
                                 </div>
@@ -110,7 +110,7 @@
                 <div class="col-lg-9">
                     <!-- Section Title Start -->
                     <div class="section-title">
-                        <h3 class="wow fadeInUp">{{ $settings->get('faqs.header.breadcrumb') }}</h3>
+                        <h3>{{ $settings->get('faqs.header.breadcrumb') }}</h3>
                         <h2 class="text-anime-style-2" data-cursor="-opaque">{!! $settings->get('faqs.header.title') !!}</h2>
                     </div>
                     <!-- Section Title End -->
@@ -118,7 +118,7 @@
 
                 <div class="col-lg-3">
                     <!-- Section Button Start -->
-                    <div class="section-btn wow fadeInUp" data-wow-delay="0.2s">
+                    <div class="section-btn">
                         <a href="{{ route('faqs') }}" class="btn-default">view all FAQ</a>
                     </div>
                     <!-- Section Button End -->
@@ -133,11 +133,10 @@
                         <div class="faq-accordion" id="accordion">
                             @foreach ($faqs as $index => $faq)
                                 @php
-                                    $delayValue = $index * 0.2;
                                     $isFirst = $index === 0;
                                 @endphp
                                 <!-- FAQ Item Start -->
-                                <div class="accordion-item wow fadeInUp" @if($delayValue > 0) data-wow-delay="{{ $delayValue }}s" @endif>
+                                <div class="accordion-item">
                                     <h2 class="accordion-header" id="heading-about-faq-{{ $faq->id }}">
                                         <button class="accordion-button {{ !$isFirst ? 'collapsed' : '' }}" type="button"
                                             data-bs-toggle="collapse"

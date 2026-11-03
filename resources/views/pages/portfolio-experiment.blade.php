@@ -44,7 +44,7 @@
                 </div>
 
                 <div class="col-lg-12">
-                    <div class="our-work-nav wow fadeInUp">
+                    <div class="our-work-nav">
                         <ul>
                             <li><a href="#" class="active-btn" data-filter="*">All projects <span class="count-badge">{{ $totalProjects }}</span></a></li>
                             <li><a href="#" data-filter=".video">Video <span class="count-badge">{{ $videoCount }}</span></a></li>
@@ -59,7 +59,7 @@
                         <div class="swiper-wrapper">
                             @forelse ($projects as $project)
                                 <div class="swiper-slide portfolio-slide {{ $project->media_type }}">
-                                    @include('partials.work-item', ['animate' => false])
+                                    @include('partials.work-item')
                                 </div>
                             @empty
                                 <div class="swiper-slide">
@@ -92,9 +92,6 @@
 @endsection
 
 @push('styles')
-<!-- Swiper CSS -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-
 <style>
 /* Experiment Header */
 .experiment-header {
@@ -363,105 +360,41 @@
 @endpush
 
 @push('scripts')
-<!-- Swiper JS -->
-<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-
 <script>
+// Horizontal slider of the projects (Swiper comes with js/site.min.js), with the Portfolio page's category filter.
 (function ($) {
-    "use strict";
+    'use strict';
 
-    var portfolioSwiper;
-    var currentFilter = '*';
-
-    // Initialize Swiper
-    function initSwiper() {
-        portfolioSwiper = new Swiper('.portfolio-swiper', {
-            slidesPerView: 'auto',
-            spaceBetween: 30,
-            centeredSlides: true,
-            loop: false,
-            grabCursor: true,
-            pagination: {
-                el: '.swiper-pagination',
-                clickable: true,
-            },
-            navigation: {
-                nextEl: '.swiper-button-next',
-                prevEl: '.swiper-button-prev',
-            },
-            breakpoints: {
-                320: {
-                    spaceBetween: 20,
-                },
-                768: {
-                    spaceBetween: 30,
-                },
-                1024: {
-                    spaceBetween: 40,
-                }
-            },
-            on: {
-                slideChange: function() {
-                    updateSlideCounter();
-                }
-            }
-        });
-
-        updateSlideCounter();
-    }
-
-    // Update slide counter
-    function updateSlideCounter() {
-        if (portfolioSwiper) {
-            var current = portfolioSwiper.activeIndex + 1;
-            var total = portfolioSwiper.slides.length;
-            $('#current-slide').text(current);
-            $('#total-slides').text(total);
-        }
-    }
-
-    // Filter functionality
-    function filterSlides(filter) {
-        var $slides = $('.portfolio-slide');
-
-        if (filter === '*') {
-            $slides.show();
-        } else {
-            $slides.hide();
-            $slides.filter(filter).show();
-        }
-
-        // Update Swiper
-        if (portfolioSwiper) {
-            portfolioSwiper.update();
-            portfolioSwiper.slideTo(0);
-            updateSlideCounter();
-        }
-
-        // Update count badge
-        var visibleCount = filter === '*' ? $slides.length : $slides.filter(filter).length;
-        $('#total-slides').text(visibleCount);
-    }
-
-    // Category filter click handler
-    $('.our-work-nav ul li a').on('click', function(e) {
-        e.preventDefault();
-
-        var $this = $(this);
-        var filterValue = $this.attr('data-filter');
-
-        $('.our-work-nav ul li a').removeClass('active-btn');
-        $this.addClass('active-btn');
-
-        currentFilter = filterValue;
-        filterSlides(filterValue);
+    var $slides = $('.portfolio-slide');
+    var $filters = $('.our-work-nav a');
+    var filter = '*';
+    var swiper = new Swiper('.portfolio-swiper', {
+        slidesPerView: 'auto',
+        spaceBetween: 20,
+        centeredSlides: true,
+        grabCursor: true,
+        pagination: { el: '.swiper-pagination', clickable: true },
+        navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
+        breakpoints: { 768: { spaceBetween: 30 }, 1024: { spaceBetween: 40 } },
+        on: { slideChange: updateCounter },
     });
 
-    // Initialize on document ready
-    $(document).ready(function() {
-        initSwiper();
+    function updateCounter() {
+        $('#current-slide').text(swiper.activeIndex + 1);
+        $('#total-slides').text($slides.filter(filter).length);
+    }
+
+    $filters.on('click', function (event) {
+        event.preventDefault();
+        $filters.removeClass('active-btn');
+        filter = $(this).addClass('active-btn').attr('data-filter');
+        $slides.prop('hidden', true).filter(filter).prop('hidden', false);
+        swiper.update();
+        swiper.slideTo(0);
+        updateCounter();
     });
 
+    updateCounter();
 })(jQuery);
 </script>
 @endpush

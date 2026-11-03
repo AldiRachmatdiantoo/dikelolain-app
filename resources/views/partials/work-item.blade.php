@@ -1,12 +1,10 @@
 {{--
     One project card (Home, Portfolio, slider experiment). The arrow, and the image of a design project,
-    open the project modal in layouts/app. Needs $project and $projectFields; optional $delay (seconds),
-    $movable (default true), $animate (wow fade-in, default true) and $ratioImage (crop designs like videos, Home).
+    open the project modal in layouts/app. Needs $project and $projectFields; optional $movable (default true)
+    and $ratioImage (crop designs like videos, Home).
 --}}
 @php
-    $delay ??= 0;
     $movable ??= true;
-    $animate ??= true;
     $ratioImage ??= false;
     $modalData = [
         'title' => $project->title,
@@ -18,16 +16,16 @@
     ];
 @endphp
 <x-vcms.item resource="projects" :item="$project" :fields="$projectFields" label="project" :movable="$movable"
-    class="work-item {{ $animate ? 'wow fadeInUp' : '' }} {{ $project->is_active ? '' : 'vcms-hidden' }}" :data-wow-delay="$animate && $delay > 0 ? $delay . 's' : null">
+    class="work-item {{ $project->is_active ? '' : 'vcms-hidden' }}">
     <div class="work-image">
         @if ($project->isVideo())
             <div class="ratio" style="--bs-aspect-ratio: 76%; border-radius: 30px; overflow: hidden;">
                 @if ($project->embed_url)
-                    <iframe src="{{ $project->embed_url }}" title="{{ $project->title }}"
-                        frameborder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
-                    </iframe>
+                    {{-- Thumbnail only; function.js swaps in the (heavy) YouTube player on click. --}}
+                    <button type="button" class="video-facade" data-embed="{{ $project->embed_url }}?autoplay=1" data-title="{{ $project->title }}" aria-label="Putar video {{ $project->title }}">
+                        <img src="{{ $project->thumbnail_url }}" alt="" loading="lazy">
+                        <span class="video-facade-play" aria-hidden="true"></span>
+                    </button>
                 @endif
             </div>
         @elseif ($ratioImage)

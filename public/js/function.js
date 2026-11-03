@@ -1,326 +1,200 @@
+/**
+ * Public site behaviour: only the template features the pages actually use.
+ *
+ * Bundled with the libraries into public/js/site.min.js (see resources/site-assets.json).
+ * After editing this file run `npm run build:site`; SiteAssetsTest fails until you do.
+ */
 (function ($) {
-    "use strict";
-	
-	var $window = $(window); 
-	var $body = $('body'); 
+    'use strict';
 
-	/* Preloader Effect */
-	$window.on('load', function(){
-		$(".preloader").fadeOut(600);
-	});
+    var $window = $(window);
 
-	/* Sticky Header */	
-	if($('.active-sticky-header').length){
-		$window.on('resize', function(){
-			setHeaderHeight();
-		});
+    /** Fades the loading screen out once the page (images included) has loaded. */
+    function initPreloader() {
+        $window.on('load', function () {
+            $('.preloader').fadeOut(600);
+        });
+    }
 
-		function setHeaderHeight(){
-	 		$("header.main-header").css("height", $('header .header-sticky').outerHeight());
-		}	
-	
-		$window.on("scroll", function() {
-			var fromTop = $(window).scrollTop();
-			setHeaderHeight();
-			var headerHeight = $('header .header-sticky').outerHeight()
-			$("header .header-sticky").toggleClass("hide", (fromTop > headerHeight + 100));
-			$("header .header-sticky").toggleClass("active", (fromTop > 600));
-		});
-	}	
-	
-	/* Slick Menu JS */
-	$('#menu').slicknav({
-		label : '',
-		prependTo : '.responsive-menu'
-	});
+    /** Mobile menu: SlickNav copies #menu into .responsive-menu. */
+    function initMobileMenu() {
+        $('#menu').slicknav({ label: '', prependTo: '.responsive-menu' });
+    }
 
-	if($("a[href='#top']").length){
-		$(document).on("click", "a[href='#top']", function() {
-			$("html, body").animate({ scrollTop: 0 }, "slow");
-			return false;
-		});
-	}
+    /** Client logo carousel (partials/client-logos). */
+    function initClientLogoSlider() {
+        var slider = document.querySelector('.trusted-clients-slider .swiper');
+        if (!slider) {
+            return;
+        }
 
-	/* Hero Slider Layout JS */
-	const hero_slider_layout = new Swiper('.hero-slider-layout .swiper', {
-		effect: 'fade',
-		slidesPerView : 1,
-		speed: 1000,
-		spaceBetween: 0,
-		loop: true,
-		autoplay: {
-			delay: 4000,
-		},
-		pagination: {
-			el: '.hero-pagination',
-			clickable: true,
-		},
-	});
+        new Swiper(slider, {
+            slidesPerView: 2,
+            speed: 2000,
+            spaceBetween: 30,
+            loop: true,
+            autoplay: { delay: 5000 },
+            breakpoints: {
+                768: { slidesPerView: 4 },
+                991: { slidesPerView: 5 },
+            },
+        });
+    }
 
-	/* How We Work Client Logo Slider JS */ 
-	if ($('.trusted-clients-slider').length) {
-		const trusted_clients_slider = new Swiper('.trusted-clients-slider .swiper', {
-			slidesPerView : 2,
-			speed: 2000,
-			spaceBetween: 30,
-			loop: true,
-			autoplay: {
-				delay: 5000,
-			},
-			breakpoints: {
-				768:{
-				  	slidesPerView: 4,
-				},
-				991:{
-				  	slidesPerView: 5,
-				}
-			}
-		});
-	}
+    /** Skill bars (team member page) fill up when scrolled into view. */
+    function initSkillBars() {
+        var $section = $('.skills-progress-bar');
+        if (!$section.length) {
+            return;
+        }
 
-	/* testimonial Slider JS */
-	if ($('.testimonial-slider').length) {
-		const testimonial_slider = new Swiper('.testimonial-slider .swiper', {
-			slidesPerView : 1,
-			speed: 1000,
-			spaceBetween: 30,
-			loop: true,
-			autoplay: {
-				delay: 5000,
-			},
-			pagination: {
-				el: '.testimonial-pagination',
-				clickable: true,
-			},
-			navigation: {
-				nextEl: '.testimonial-button-next',
-				prevEl: '.testimonial-button-prev',
-			},
-			breakpoints: {
-				768:{
-					slidesPerView: 2,
-				},
-				991:{
-					slidesPerView: 3,
-				}
-			}
-		});
-	}
-
-	/* Skill Bar */
-	if ($('.skills-progress-bar').length) {
-		$('.skills-progress-bar').waypoint(function() {
-			$('.skillbar').each(function() {
-				$(this).find('.count-bar').animate({
-				width:$(this).attr('data-percent')
-				},2000);
-			});
-		},{
-			offset: '50%'
-		});
-	}
-
-	/* Youtube Background Video JS */
-	if ($('#herovideo').length) {
-		var myPlayer = $("#herovideo").YTPlayer();
-	}
-
-	/* Init Counter */
-	if ($('.counter').length) {
-		$('.counter').counterUp({ delay: 6, time: 3000 });
-	}
-
-	/* Image Reveal Animation */
-	if ($('.reveal').length) {
-        gsap.registerPlugin(ScrollTrigger);
-        let revealContainers = document.querySelectorAll(".reveal");
-        revealContainers.forEach((container) => {
-            let image = container.querySelector("img");
-            let tl = gsap.timeline({
-                scrollTrigger: {
-                    trigger: container,
-                    toggleActions: "play none none none"
-                }
+        $section.waypoint(function () {
+            $('.skillbar').each(function () {
+                $(this).find('.count-bar').animate({ width: $(this).attr('data-percent') }, 2000);
             });
-            tl.set(container, {
-                autoAlpha: 1
-            });
-            tl.from(container, 1, {
-                xPercent: -100,
-                ease: Power2.out
-            });
-            tl.from(image, 1, {
-                xPercent: 100,
-                scale: 1,
-                delay: -1,
-                ease: Power2.out
+        }, { offset: '50%' });
+    }
+
+    /** CTA numbers count up when scrolled into view (partials/cta). */
+    function initCounters() {
+        var $counters = $('.counter');
+        if ($counters.length) {
+            $counters.counterUp({ delay: 6, time: 3000 });
+        }
+    }
+
+    /** Images inside .reveal slide in when scrolled into view. */
+    function initImageReveal() {
+        document.querySelectorAll('.reveal').forEach(function (container) {
+            gsap.timeline({ scrollTrigger: { trigger: container, toggleActions: 'play none none none' } })
+                .set(container, { autoAlpha: 1 })
+                .from(container, { duration: 1, xPercent: -100, ease: 'power2.out' })
+                .from(container.querySelector('img'), { duration: 1, xPercent: 100, ease: 'power2.out' }, '<');
+        });
+    }
+
+    /** Headings with .text-anime-style-2 appear letter by letter when scrolled into view. */
+    function initHeadingAnimation() {
+        document.querySelectorAll('.text-anime-style-2').forEach(function (heading) {
+            var split = new SplitText(heading, { type: 'chars, words' });
+
+            gsap.from(split.chars, {
+                duration: 1,
+                delay: 0.1,
+                x: 20,
+                autoAlpha: 0,
+                stagger: 0.03,
+                ease: 'power2.out',
+                scrollTrigger: { trigger: heading, start: 'top 85%' },
             });
         });
     }
 
-	/* Text Effect Animation */
-	if ($('.text-anime-style-1').length) {
-		let staggerAmount 	= 0.05,
-			translateXValue = 0,
-			delayValue 		= 0.5,
-		   animatedTextElements = document.querySelectorAll('.text-anime-style-1');
-		
-		animatedTextElements.forEach((element) => {
-			let animationSplitText = new SplitText(element, { type: "chars, words" });
-				gsap.from(animationSplitText.words, {
-				duration: 1,
-				delay: delayValue,
-				x: 20,
-				autoAlpha: 0,
-				stagger: staggerAmount,
-				scrollTrigger: { trigger: element, start: "top 85%" },
-				});
-		});		
-	}
-	
-	if ($('.text-anime-style-2').length) {				
-		let	 staggerAmount 		= 0.03,
-			 translateXValue	= 20,
-			 delayValue 		= 0.1,
-			 easeType 			= "power2.out",
-			 animatedTextElements = document.querySelectorAll('.text-anime-style-2');
-		
-		animatedTextElements.forEach((element) => {
-			let animationSplitText = new SplitText(element, { type: "chars, words" });
-				gsap.from(animationSplitText.chars, {
-					duration: 1,
-					delay: delayValue,
-					x: translateXValue,
-					autoAlpha: 0,
-					stagger: staggerAmount,
-					ease: easeType,
-					scrollTrigger: { trigger: element, start: "top 85%"},
-				});
-		});		
-	}
-	
-	if ($('.text-anime-style-3').length) {		
-		let	animatedTextElements = document.querySelectorAll('.text-anime-style-3');
-		
-		 animatedTextElements.forEach((element) => {
-			//Reset if needed
-			if (element.animation) {
-				element.animation.progress(1).kill();
-				element.split.revert();
-			}
+    /** Creative tools: the hovered tool becomes the highlighted one. */
+    function initCreativeTools() {
+        var $tools = $('.creative-tools-box .creative-tool-item');
 
-			element.split = new SplitText(element, {
-				type: "lines,words,chars",
-				linesClass: "split-line",
-			});
-			gsap.set(element, { perspective: 400 });
+        $tools.on('mouseenter', function () {
+            $tools.removeClass('active');
+            $(this).addClass('active');
+        });
+    }
 
-			gsap.set(element.split.chars, {
-				opacity: 0,
-				x: "50",
-			});
+    /**
+     * YouTube projects show a thumbnail (partials/work-item). The player, which weighs
+     * far more than the page around it, is only loaded when the visitor clicks.
+     */
+    function initVideoThumbnails() {
+        $(document).on('click', '.video-facade', function () {
+            var $thumbnail = $(this);
 
-			element.animation = gsap.to(element.split.chars, {
-				scrollTrigger: { trigger: element,	start: "top 90%" },
-				x: "0",
-				y: "0",
-				rotateX: "0",
-				opacity: 1,
-				duration: 1,
-				ease: Back.easeOut,
-				stagger: 0.02,
-			});
-		});		
-	}
+            $('<iframe allowfullscreen>')
+                .attr({
+                    src: $thumbnail.attr('data-embed'),
+                    title: $thumbnail.attr('data-title'),
+                    allow: 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share',
+                    referrerpolicy: 'strict-origin-when-cross-origin',
+                })
+                .replaceAll($thumbnail);
+        });
+    }
 
-	/* Parallaxie js */
-	var $parallaxie = $('.parallaxie');
-	if($parallaxie.length && ($window.width() > 991))
-	{
-		if ($window.width() > 768) {
-			$parallaxie.parallaxie({
-				speed: 0.55,
-				offset: 0,
-			});
-		}
-	}
+    /**
+     * Project modal (#portfolioModal in layouts/app), opened from a project card.
+     * Built with text()/attr() so titles and descriptions can never inject HTML;
+     * the media source is prepared by the server (YouTube embed or image URL).
+     */
+    function initProjectModal() {
+        var $modal = $('#portfolioModal');
+        if (!$modal.length) {
+            return;
+        }
 
-	/* Zoom Gallery screenshot */
-	$('.gallery-items').magnificPopup({
-		delegate: 'a',
-		type: 'image',
-		closeOnContentClick: false,
-		closeBtnInside: false,
-		mainClass: 'mfp-with-zoom',
-		image: {
-			verticalFit: true,
-		},
-		gallery: {
-			enabled: true
-		},
-		zoom: {
-			enabled: true,
-			duration: 300, // don't foget to change the duration also in CSS
-			opener: function(element) {
-			  return element.find('img');
-			}
-		}
-	});
+        function open($trigger) {
+            var title = $trigger.attr('data-title') || '';
+            var description = $trigger.attr('data-desc') || '';
+            var link = $trigger.attr('data-link') || '';
+            var mediaSrc = $trigger.attr('data-media-src') || '';
+            var isVideo = $trigger.attr('data-media-type') === 'video';
 
-	/* Animated Wow Js */	
-	new WOW().init();
+            var $details = $('#modalProjectDetails').empty();
+            [['Project Name:', title], ['Category:', $trigger.attr('data-category') || '']].forEach(function (row) {
+                $('<div class="category-list-item">').append($('<h3>').text(row[0]), $('<p>').text(row[1])).appendTo($details);
+            });
 
-	/* Our Work (filtering) Start */
-	$window.on( "load", function(){
-		if( $(".work-item-boxes").length ) {
-				
-			/* Init Isotope */
-			var $menuitem = $(".work-item-boxes").isotope({
-				itemSelector: ".work-item-box",
-				layoutMode: "masonry",
-				masonry: {
-					// use outer width of grid-sizer for columnWidth
-					columnWidth: 1,
-				}
-			});
-				
-			/* Filter items on click */
-			var $menudisesnav=$(".our-work-nav li a");
-				$menudisesnav.on('click', function (e) { 
-			
-				var filterValue = $(this).attr('data-filter');
-				$menuitem.isotope({
-					filter: filterValue
-				}); 
-				
-				$menudisesnav.removeClass("active-btn"); 
-				$(this).addClass("active-btn");
-				e.preventDefault();
-			});		
-			$menuitem.isotope({ filter: "*" });
-		}			
-	});
-	/* Our Work (filtering) End */
+            var $overview = $('#modalProjectOverview').empty().append('<h2>Project <span>Overview</span></h2>');
+            if (mediaSrc) {
+                var $media = isVideo
+                    ? $('<iframe allowfullscreen>').attr({ src: mediaSrc, title: title })
+                    : $('<img>').attr({ src: mediaSrc, alt: title });
+                $('<div class="project-media">').append($media).appendTo($overview);
+            }
+            if (description) {
+                $('<p>').text(description).appendTo($overview);
+            }
+            if (/^https?:\/\//i.test(link)) {
+                $('<a class="visit-btn" target="_blank" rel="noopener">').attr('href', link).text('Visit Project').appendTo($overview);
+            }
 
-	/* Our Services Active Start */
-	if ($('.creative-tools-box').length) {
-		var element = $('.creative-tools-box');            
-		var items = element.find('.creative-tool-item');
-		if (items.length) {
-			items.on({
-				mouseenter: function() {
-					if($(this).hasClass('active')) return;
+            $modal.addClass('active');
+            $('body').css({ overflow: 'hidden', 'overflow-x': 'clip' });
+        }
 
-					items.removeClass('active');
-					$(this).addClass('active');
+        function close() {
+            $modal.addClass('closing');
+            setTimeout(function () {
+                $modal.removeClass('active closing');
+                $('#modalProjectOverview').empty(); // stops a playing video
+                $('body').css({ 'overflow-y': 'auto', 'overflow-x': 'clip' });
+            }, 300);
+        }
 
-				},
-				mouseleave: function() {
-					//stuff to do on mouse leave
-				}
-			});
-		}                 
-	}
-	/* Our Services Active End */
-	
+        $(document)
+            .on('click', '.open-portfolio-modal', function (event) {
+                event.preventDefault();
+                open($(this));
+            })
+            .on('click', '.portfolio-modal-close, .portfolio-modal-overlay', close)
+            .on('keydown', function (event) {
+                if (event.key === 'Escape' && $modal.hasClass('active')) {
+                    close();
+                }
+            });
+    }
+
+    initPreloader();
+
+    $(function () {
+        gsap.registerPlugin(ScrollTrigger);
+
+        initMobileMenu();
+        initClientLogoSlider();
+        initSkillBars();
+        initCounters();
+        initImageReveal();
+        initHeadingAnimation();
+        initCreativeTools();
+        initVideoThumbnails();
+        initProjectModal();
+    });
 })(jQuery);
