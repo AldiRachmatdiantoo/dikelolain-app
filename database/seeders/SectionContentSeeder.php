@@ -43,13 +43,6 @@ class SectionContentSeeder extends Seeder
             ['type' => 'video', 'src' => 'https://www.youtube.com/embed/YQHsXMglC9A', 'title' => 'Pop Music Video', 'desc' => 'Popular song MV.', 'link' => '/portfolio/single'],
         ];
         
-        // Data Default untuk Section CTA (Counters)
-        $defaultCounters = [
-            ['num' => '45', 'sym' => '+', 'label' => 'project completed'],
-            ['num' => '15', 'sym' => '+', 'label' => 'years of experience'],
-            ['num' => '100', 'sym' => '%', 'label' => 'client satisfaction'],
-        ];
-
         // ========================================
         // 2. CORE SECTION DEFINITION (Keys di sini disesuaikan)
         // ========================================
@@ -100,16 +93,6 @@ class SectionContentSeeder extends Seeder
                     ['key' => 'team_main_title', 'type' => 'text', 'value' => 'The Minds Behind <span>the Magic</span>', 'order' => 2], // KEY CHANGE: team-title_main_title -> team_main_title
                     ['key' => 'team_btn_text', 'type' => 'text', 'value' => 'all team members', 'order' => 3], // KEY CHANGE: team-btn_button_text -> team_btn_text
                     ['key' => 'team_btn_link', 'type' => 'url', 'value' => '/team', 'order' => 4], // KEY CHANGE: team-btn_button_link -> team_btn_link
-                ]
-            ],
-            // 9. CTA SECTION (Order 9)
-            [
-                'key' => 'cta', 'name' => 'CTA Section', 'order' => 9,
-                'contents' => [
-                    ['key' => 'cta_text_content', 'type' => 'textarea', 'value' => 'We specialize in delivering innovative and impactful design solutions that elevate brands and drive results. From digital experiences to print media, our team of creative professionals is dedicated to transforming ideas into compelling visual stories that resonate with audiences. With a focus on creativity, strategy, and client collaboration.', 'order' => 1], // KEY CHANGE: cta-desc_text_content -> cta_text_content
-                    
-                    ['key' => 'cta-circle-img_image_file', 'type' => 'image', 'value' => 'images/cta-contact-circle.png', 'order' => 5],
-                    ['key' => 'cta-circle-img_link_url', 'type' => 'url', 'value' => '/contact', 'order' => 6],
                 ]
             ],
         ];
@@ -193,27 +176,6 @@ class SectionContentSeeder extends Seeder
             }
         }
         
-        // ========================================
-        // 10. SEED LOOPED CONTENT (CTA Counters)
-        // ========================================
-        $ctaSection = Section::where('key', 'cta')->first();
-        if ($ctaSection) {
-            $order = 2; // Starts after 'cta_text_content' (order 1 in core definition)
-            foreach ($defaultCounters as $index => $counter) {
-                $baseKey = "cta-counters_cnt_{$index}";
-
-                $contents = [
-                    ['key' => $baseKey . '_num', 'type' => 'number', 'value' => $counter['num'], 'order' => $order++],
-                    ['key' => $baseKey . '_sym', 'type' => 'text', 'value' => $counter['sym'], 'order' => $order++],
-                    ['key' => $baseKey . '_label', 'type' => 'text', 'value' => $counter['label'], 'order' => $order++],
-                ];
-
-                foreach ($contents as $content) {
-                    $ctaSection->contents()->updateOrCreate(['key' => $content['key']], $content);
-                }
-            }
-        }
-
         $this->command->info('✅ All VCMS section content seeded successfully!');
     }
 }

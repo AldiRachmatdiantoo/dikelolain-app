@@ -526,53 +526,7 @@
     <!-- Our Achievements Section End -->
 
     <!-- CTA Section Start -->
-    <div class="cta-section bg-section">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="cta-box">
-                        <div class="cta-counter-content-box">
-                            <div class="cta-box-content wow fadeInUp">
-                                @php
-                                    $ctaDesc = getContent($sections, 'cta', 'cta_text_content', 'We specialize in delivering innovative and impactful design solutions that elevate brands and drive results. From digital experiences to print media, our team of creative professionals is dedicated to transforming ideas into compelling visual stories that resonate with audiences. With a focus on creativity, strategy, and client collaboration.');
-                                @endphp
-                                <p>{{ $ctaDesc }}</p>
-                            </div>
-                            <div class="cta-counter-box">
-                                @php
-                                    $defaultCounters = [
-                                        ['num' => '45', 'sym' => '+', 'label' => 'project completed'],
-                                        ['num' => '15', 'sym' => '+', 'label' => 'years of experience'],
-                                        ['num' => '100', 'sym' => '%', 'label' => 'client satisfaction'],
-                                    ];
-                                @endphp
-
-                                @foreach ($defaultCounters as $index => $counter)
-                                    @php
-                                        $countNum = getContent($sections, 'cta', "cta-counters_cnt_{$index}_num", $counter['num']);
-                                        $countSym = getContent($sections, 'cta', "cta-counters_cnt_{$index}_sym", $counter['sym']);
-                                        $countLabel = getContent($sections, 'cta', "cta-counters_cnt_{$index}_label", $counter['label']);
-                                    @endphp
-                                    <div class="cta-counter-item">
-                                        <h3><span class="counter">{{ $countNum }}</span>{{ $countSym }}</h3>
-                                        <p>{{ $countLabel }}</p>
-                                    </div>
-                                @endforeach
-                            </div>
-                        </div>
-
-                        <div class="cta-contact-circle">
-                            @php
-                                $ctaCircleImg = getContent($sections, 'cta', 'cta-circle-img_image_file', 'images/cta-contact-circle.png');
-                                $ctaCircleLink = getContent($sections, 'cta', 'cta-circle-img_link_url', route('contact'));
-                            @endphp
-                            <a href="{{ $ctaCircleLink }}"><img src="{{ asset($ctaCircleImg) }}" alt="Contact Circle"></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    @include('partials.cta')
     <!-- CTA Section End -->
     <div style="height: 80px;"></div>
     <!-- Client Logos Section Start -->

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\Api\AchievementController;
 use App\Http\Controllers\Admin\Api\ClientLogoController;
+use App\Http\Controllers\Admin\Api\CounterController;
 use App\Http\Controllers\Admin\Api\FaqController;
 use App\Http\Controllers\Admin\Api\ProcessStepController;
 use App\Http\Controllers\Admin\Api\SettingController;
@@ -124,6 +125,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
                 'tools' => ToolController::class,
                 'process-steps' => ProcessStepController::class,
                 'achievements' => AchievementController::class,
+                'counters' => CounterController::class,
             ];
             foreach ($lists as $uri => $controller) {
                 Route::get("/{$uri}", [$controller, 'index'])->name("{$uri}.index");

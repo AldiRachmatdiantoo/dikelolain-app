@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Repositories\Contracts\AchievementRepositoryInterface;
 use App\Repositories\Contracts\ClientLogoRepositoryInterface;
+use App\Repositories\Contracts\CounterRepositoryInterface;
 use App\Repositories\Contracts\FaqRepositoryInterface;
 use App\Repositories\Contracts\PageSettingRepositoryInterface;
 use App\Repositories\Contracts\ProcessStepRepositoryInterface;
@@ -11,6 +12,7 @@ use App\Repositories\Contracts\TestimonialRepositoryInterface;
 use App\Repositories\Contracts\ToolRepositoryInterface;
 use App\Repositories\Eloquent\EloquentAchievementRepository;
 use App\Repositories\Eloquent\EloquentClientLogoRepository;
+use App\Repositories\Eloquent\EloquentCounterRepository;
 use App\Repositories\Eloquent\EloquentFaqRepository;
 use App\Repositories\Eloquent\EloquentPageSettingRepository;
 use App\Repositories\Eloquent\EloquentProcessStepRepository;
@@ -34,5 +36,6 @@ class RepositoryServiceProvider extends ServiceProvider
         ToolRepositoryInterface::class => EloquentToolRepository::class,
         ProcessStepRepositoryInterface::class => EloquentProcessStepRepository::class,
         AchievementRepositoryInterface::class => EloquentAchievementRepository::class,
+        CounterRepositoryInterface::class => EloquentCounterRepository::class,
     ];
 }

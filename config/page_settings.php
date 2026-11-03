@@ -21,6 +21,11 @@ return [
     'achievements.button_text' => ['type' => 'text', 'label' => 'Teks tombol', 'default' => "let's get started !"],
     'achievements.button_link' => ['type' => 'url', 'label' => 'Link tombol', 'default' => '/contact'],
 
+    // CTA section with counters (Home, About)
+    'cta.text' => ['type' => 'textarea', 'label' => 'Teks', 'default' => 'We specialize in delivering innovative and impactful design solutions that elevate brands and drive results. From digital experiences to print media, our team of creative professionals is dedicated to transforming ideas into compelling visual stories that resonate with audiences. With a focus on creativity, strategy, and client collaboration.'],
+    'cta.circle_image' => ['type' => 'image', 'label' => 'Gambar tombol bulat', 'default' => 'images/cta-contact-circle.png'],
+    'cta.circle_link' => ['type' => 'url', 'label' => 'Link tombol bulat', 'default' => '/contact'],
+
     // Client logos section (Home, About)
     'clients.sub_title' => ['type' => 'text', 'label' => 'Sub judul', 'default' => 'testimonials'],
     'clients.title' => ['type' => 'rich_text', 'label' => 'Judul', 'default' => 'Trusted by <span>Teams at</span>'],

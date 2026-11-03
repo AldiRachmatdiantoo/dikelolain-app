@@ -14,7 +14,7 @@
 
 **Mode:** eksekusi otomatis atas instruksi pemilik (3 Nov 2026): kerjakan PBI berurutan tanpa bertanya, uji setiap PBI (`php artisan test` + cek browser bila terlihat), commit + push per PBI, kendala dicatat di [kendala_backlog.md](kendala_backlog.md).
 
-**Sedang dikerjakan:** Epic 3, PBI-306 (Counter). Selesai: Epic 0–2, PBI-301–305.
+**Sedang dikerjakan:** Epic 3, PBI-307 (Tim). Selesai: Epic 0–2, PBI-301–306.
 
 **Contoh pola entitas = Testimonial** (memakai kerangka daftar bersama, [ARCHITECTURE §7.1](ARCHITECTURE.md#71-kerangka-bersama-untuk-daftar-terurut)). Entitas berikutnya meniru file-file ini:
 - `database/migrations/2026_11_03_000003_create_testimonials_table.php`, `app/Models/Testimonial.php` (scope + accessor `logo_url`/`photo_url`)
@@ -35,10 +35,10 @@
 
 | Status | Jumlah | PBI |
 |---|---|---|
-| ✅ Selesai | 31 | **001–005** (seluruh Epic 0), **101–111** (seluruh Epic 1), **201–210** (seluruh Epic 2), **301–305** |
+| ✅ Selesai | 32 | **001–005** (seluruh Epic 0), **101–111** (seluruh Epic 1), **201–210** (seluruh Epic 2), **301–306** |
 | ⏳ Sedang dikerjakan | 0 | – |
 | ⏸️ Menunggu keputusan | 2 | **504**, **507** (hosting, lihat [kendala_backlog.md](kendala_backlog.md) KD-1) |
-| ❌ Belum | 20 | Epic 3–5 |
+| ❌ Belum | 19 | Epic 3–5 |
 
 Total **53 PBI** dalam 6 epic:
 
@@ -47,7 +47,7 @@ Total **53 PBI** dalam 6 epic:
 | 0 | Persiapan | 001–005 | 5/5 ✅ |
 | 1 | Beres-beres tanpa risiko | 101–111 | 11/11 ✅ |
 | 2 | Fondasi VCMS baru + FAQ | 201–210 | 10/10 ✅ |
-| 3 | Migrasi entitas | 301–313 | 5/13 |
+| 3 | Migrasi entitas | 301–313 | 6/13 |
 | 4 | Pembersihan akhir | 401–406 | 0/6 |
 | 5 | Setelah rombak (fitur & rilis) | 501–508 | 0/8 |
 
@@ -131,7 +131,7 @@ Urutan dari yang paling sederhana. Setiap PBI mengikuti checklist [ARCHITECTURE 
 | 303 | Tools | `tools` | `creative-tools` (tools-list) | Home, Services, Pricing, Testimonials | ✅ 3 Nov 2026: section ternyata ada di **4 halaman** dengan markup kembar, kini satu `partials/creative-tools.blade.php` (kelas `service-creative-tools` untuk Pricing/Testimonials lewat variabel). Judul dan tombol jadi setting `tools.*`. Services dan Pricing kini lewat page controller + page service. Data section bersama dikumpulkan di `Pages/SectionData` (dipakai juga untuk logo klien). Dicek di browser: edit, sembunyikan, geser. 157 test hijau |
 | 304 | Langkah proses | `process_steps` | `how-it-works` (process-list) | Home | ✅ 3 Nov 2026: nomor "01.", "02." tidak lagi disimpan di judul tetapi dihitung dari urutan, jadi tetap benar setelah digeser. Judul langkah kini di-escape (sebelumnya `{!! !!}`). Judul, tombol bulat, dan dua gambar jadi setting `process.*`. Dicek di browser: accordion, tambah, geser, hapus. 170 test hijau |
 | 305 | Pencapaian | `achievements` | `achievements` (achievement-list) | Home, About | ✅ 3 Nov 2026: section kembar di Home dan About kini satu `partials/achievements.blade.php` + `SectionData::achievements()`. Judul, deskripsi, dan tombol jadi setting `achievements.*`. Seeder memuat 7 pencapaian seperti seed lama (fallback di view dulu hanya 6). Dicek di browser: edit di About ikut tampil di Home. 184 test hijau |
-| 306 | Counter | `counters` | `cta` (counter-list) | Home, About | ❌ |
+| 306 | Counter | `counters` | `cta` (counter-list) | Home, About | ✅ 3 Nov 2026: section CTA kembar di Home dan About kini satu `partials/cta.blade.php` + `SectionData::counters()`. Teks dan tombol bulat jadi setting `cta.*`. Angka divalidasi (hanya digit, boleh pemisah `.`/`,`) supaya animasi counterUp tidak rusak. Dicek di browser: pesan validasi tampil, angka `1.250` teranimasi benar. 204 test hijau |
 | 307 | Tim | `team_members`, `team_member_skills`, `team_member_expertises` | `our-team` (team-list) | Home, About, Team, Team detail | ❌ |
 | 308 | Layanan | `services`, `service_benefits`, `service_process_steps`, `service_faqs` | `services` (service-list, service-detail) | Home, Services, Service detail | ❌ |
 | 309 | Project / portofolio | `projects` | `our-work` (project-list, portfolio-item) | Home, Portfolio | ❌ |
@@ -276,3 +276,4 @@ Ringkasan hasil membaca kode di commit `02fa1fd` (isi sama dengan branch `back-e
 | 3 Nov 2026 | PBI-303 selesai: tools di tabel `tools`, satu section bersama untuk Home, Services, Pricing, Testimonials; `Pages/SectionData` untuk section bersama; 157 test hijau |
 | 3 Nov 2026 | PBI-304 selesai: langkah proses di tabel `process_steps`, nomor urut otomatis; 170 test hijau |
 | 3 Nov 2026 | PBI-305 selesai: pencapaian di tabel `achievements`, section bersama Home/About; 184 test hijau |
+| 3 Nov 2026 | PBI-306 selesai: angka CTA di tabel `counters`, section CTA bersama Home/About; 204 test hijau |
