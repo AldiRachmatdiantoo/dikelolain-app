@@ -10,9 +10,17 @@
             <h2 class="mb-1 fw-bold dash-yellow">Dashboard</h2>
             <p class="mb-0 dash-muted">Konten website diedit langsung di halamannya. Pilih halaman, lalu klik tombol ✎ di bagian yang ingin diubah.</p>
         </div>
-        <a href="{{ route('admin.pages.analytics') }}" class="btn btn-sm fw-bold dash-btn-outline">
-            <i class="fa-solid fa-chart-line me-1"></i> Analytics
-        </a>
+        <div class="d-flex flex-wrap gap-2">
+            <a href="{{ route('admin.messages.index') }}" class="btn btn-sm fw-bold {{ $unreadMessages ? 'dash-btn' : 'dash-btn-outline' }}">
+                <i class="fa-solid fa-envelope me-1"></i> Pesan Masuk
+                @if ($unreadMessages)
+                    <span class="badge rounded-pill text-bg-dark ms-1">{{ $unreadMessages }} baru</span>
+                @endif
+            </a>
+            <a href="{{ route('admin.pages.analytics') }}" class="btn btn-sm fw-bold dash-btn-outline">
+                <i class="fa-solid fa-chart-line me-1"></i> Analytics
+            </a>
+        </div>
     </div>
 
     <div class="row g-3">

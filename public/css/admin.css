@@ -209,6 +209,19 @@
     font-weight: 500;
 }
 
+/* Unread count, e.g. next to "Pesan Masuk". */
+.menu-item a .menu-badge {
+    margin-left: auto;
+    min-width: 22px;
+    padding: 1px 7px;
+    border-radius: 999px;
+    background: #FFD700;
+    color: #000;
+    font-size: 12px;
+    font-weight: 700;
+    text-align: center;
+}
+
 .menu-logout {
     margin-top: 20px;
     border-top: 1px solid #2a2a2a;

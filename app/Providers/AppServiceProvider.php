@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Services\SettingService;
 use App\Vcms\EditMode;
+use App\View\Composers\AdminSidebarComposer;
 use App\View\Composers\FooterComposer;
 use App\View\Composers\SeoComposer;
 use Illuminate\Support\Facades\Blade;
@@ -31,5 +32,6 @@ class AppServiceProvider extends ServiceProvider
 
         View::composer('partials.footer', FooterComposer::class);
         View::composer('layouts.app', SeoComposer::class);
+        View::composer('admin.partials.sidebar', AdminSidebarComposer::class);
     }
 }

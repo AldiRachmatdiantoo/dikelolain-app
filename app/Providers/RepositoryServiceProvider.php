@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Repositories\Contracts\AchievementRepositoryInterface;
 use App\Repositories\Contracts\ClientLogoRepositoryInterface;
+use App\Repositories\Contracts\ContactMessageRepositoryInterface;
 use App\Repositories\Contracts\CounterRepositoryInterface;
 use App\Repositories\Contracts\FaqRepositoryInterface;
 use App\Repositories\Contracts\PageSettingRepositoryInterface;
@@ -22,6 +23,7 @@ use App\Repositories\Contracts\TestimonialRepositoryInterface;
 use App\Repositories\Contracts\ToolRepositoryInterface;
 use App\Repositories\Eloquent\EloquentAchievementRepository;
 use App\Repositories\Eloquent\EloquentClientLogoRepository;
+use App\Repositories\Eloquent\EloquentContactMessageRepository;
 use App\Repositories\Eloquent\EloquentCounterRepository;
 use App\Repositories\Eloquent\EloquentFaqRepository;
 use App\Repositories\Eloquent\EloquentPageSettingRepository;
@@ -67,5 +69,6 @@ class RepositoryServiceProvider extends ServiceProvider
         ServiceRepositoryInterface::class => EloquentServiceRepository::class,
         ServiceBenefitRepositoryInterface::class => EloquentServiceBenefitRepository::class,
         ServiceFaqRepositoryInterface::class => EloquentServiceFaqRepository::class,
+        ContactMessageRepositoryInterface::class => EloquentContactMessageRepository::class,
     ];
 }

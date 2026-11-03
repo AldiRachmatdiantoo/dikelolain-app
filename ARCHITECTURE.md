@@ -58,7 +58,7 @@ app/
 │   │   ├── Pages/                 HomePageController, FaqPageController, ...
 │   │   └── Admin/
 │   │       ├── Api/               FaqController, TestimonialController, SettingController, ...
-│   │       ├── DashboardController.php, AnalyticsController.php, EditModeController.php
+│   │       ├── DashboardController.php, AnalyticsController.php, EditModeController.php, MessageController.php
 │   │       ├── AuthController.php
 │   │       └── ProfileController.php
 │   ├── Requests/Admin/            StoreFaqRequest, UpdateFaqRequest, MoveRequest, UpdateSettingRequest, ...
@@ -80,7 +80,7 @@ app/
 │   ├── FieldSet.php               mengisi definisi field dengan nilai
 │   ├── EditablePages.php          halaman publik yang bisa diedit (tautan di dashboard)
 │   └── Fields/                    definisi field yang bisa diedit per entitas (FaqFields, ...)
-├── View/Composers/                FooterComposer (data footer untuk semua halaman, 404 juga), SeoComposer (meta description + og:image)
+├── View/Composers/                FooterComposer (data footer untuk semua halaman, 404 juga), SeoComposer (meta description + og:image), AdminSidebarComposer (jumlah pesan belum dibaca)
 └── Providers/                     AppServiceProvider (composer, scoped SettingService), RepositoryServiceProvider
 
 config/page_settings.php           daftar semua nilai tunggal: tipe, label, default
@@ -163,6 +163,8 @@ Dipakai untuk: judul dan deskripsi hero, header setiap halaman, judul section, C
 
 `users`, `password_reset_tokens`, `sessions`, `cache`, `cache_locks`, `jobs`, `job_batches`, `failed_jobs`.
 
+Di luar konten: `contact_messages` (`first_name`, `last_name`, `email`, `phone`, `message`, `read_at`) berisi pesan dari form Contact, dibaca di menu **Pesan Masuk** admin. Bukan daftar terurut, jadi tanpa `sort_order`/`is_active`; diurutkan dari yang terbaru, `read_at` di-index untuk hitungan belum dibaca.
+
 ### 4.5 Tabel yang dihapus di akhir
 
 `sections`, `section_contents`, `media`: sudah di-drop oleh migration `2026_11_03_000014_drop_legacy_content_tables` (PBI-405).
@@ -232,7 +234,7 @@ Keduanya membalas `200 { "data": { "name", "label", "type", "value", "url"? } }`
 - `GET /admin/edit-mode?to=/faqs` menyalakan mode edit lalu membuka halaman itu; `POST /admin/edit-mode/off` mematikannya. `to` hanya menerima path di situs ini (bukan `//...`, URL lain, atau backslash).
 - Status disimpan di sesi (`App\Vcms\EditMode`), dan hanya berlaku bila sedang login. Blade: `@vcmsediting ... @endvcmsediting`.
 - Pengunjung dan admin dengan mode edit mati melihat HTML yang sama, tanpa atribut atau script editor. Aset editor (`@vite`) hanya dimuat dalam mode edit.
-- Panel `/admin` hanya berisi: login, dashboard, analytics, profil, dan tautan "Edit halaman X" yang membuka halaman publik dalam mode edit.
+- Panel `/admin` hanya berisi: login, dashboard, analytics, Pesan Masuk (form Contact), profil, dan tautan "Edit halaman X" yang membuka halaman publik dalam mode edit.
 
 ### 6.2 Komponen Blade
 

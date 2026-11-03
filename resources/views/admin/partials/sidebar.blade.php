@@ -26,7 +26,18 @@
                     <span>Analytics</span>
                 </a>
             </li>
-            
+
+            {{-- $unreadMessages comes from App\View\Composers\AdminSidebarComposer. --}}
+            <li class="menu-item {{ request()->routeIs('admin.messages.*') ? 'active' : '' }}">
+                <a href="{{ route('admin.messages.index') }}">
+                    <i class="fa-solid fa-envelope"></i>
+                    <span>Pesan Masuk</span>
+                    @if ($unreadMessages)
+                        <span class="menu-badge" title="{{ $unreadMessages }} pesan belum dibaca">{{ $unreadMessages }}</span>
+                    @endif
+                </a>
+            </li>
+
             <li class="menu-section">
                 <span>Edit Halaman</span>
             </li>

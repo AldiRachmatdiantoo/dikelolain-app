@@ -21,6 +21,7 @@ use App\Http\Controllers\Admin\Api\TestimonialController;
 use App\Http\Controllers\Admin\Api\ToolController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\EditModeController;
+use App\Http\Controllers\Admin\MessageController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Pages\AboutPageController;
 use App\Http\Controllers\Pages\ContactPageController;
@@ -35,6 +36,7 @@ use App\Http\Controllers\Pages\TeamMemberPageController;
 use App\Http\Controllers\Pages\TeamPageController;
 use App\Http\Controllers\Pages\TestimonialPageController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ContactMessageController;
 use App\Http\Controllers\SeoController;
 use Illuminate\Support\Facades\Route;
 
@@ -51,6 +53,8 @@ Route::get('/about', AboutPageController::class)->name('about');
 Route::get('/services', ServicePageController::class)->name('services');
 
 Route::get('/contact', ContactPageController::class)->name('contact');
+// The form saves the message, then the page opens WhatsApp. At most 5 per minute per visitor.
+Route::post('/contact', ContactMessageController::class)->middleware('throttle:5,1')->name('contact.send');
 
 Route::get('/portfolio', [PortfolioPageController::class, 'index'])->name('portfolio');
 Route::get('/portfolio-experiment', [PortfolioPageController::class, 'experiment'])->name('portfolio.experiment');
@@ -137,6 +141,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
         });
 
         Route::get('/dashboard', DashboardController::class)->name('dashboard');
+
+        // Inbox for the Contact page form.
+        Route::get('/messages', [MessageController::class, 'index'])->name('messages.index');
+        Route::patch('/messages/{id}', [MessageController::class, 'update'])->whereNumber('id')->name('messages.update');
+        Route::delete('/messages/{id}', [MessageController::class, 'destroy'])->whereNumber('id')->name('messages.destroy');
 
         Route::prefix('pages')->name('pages.')->group(function () {
             Route::get('/analytics', AnalyticsController::class)->name('analytics');

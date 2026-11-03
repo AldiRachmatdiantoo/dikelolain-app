@@ -47,6 +47,7 @@ class SmokeTest extends TestCase
         return [
             'dashboard' => ['/admin/dashboard'],
             'analytics' => ['/admin/pages/analytics'],
+            'messages' => ['/admin/messages'],
             'profile' => ['/admin/profile-detail'],
             'reset password' => ['/admin/reset-password'],
         ];

@@ -51,42 +51,44 @@
 
                         <!-- Contact Form Start -->
                         <div class="contact-form">
-                            {{-- The form opens WhatsApp with the message; the number keeps digits only. --}}
-                            <form id="contactForm" action="#" method="POST" class="wow fadeInUp" data-wow-delay="0.25s" data-whatsapp="{{ preg_replace('/\D+/', '', $settings->get('contact.whatsapp')) }}">
+                            {{-- The form saves the message (admin inbox), then opens WhatsApp with it; the number keeps digits only. --}}
+                            <form id="contactForm" action="{{ route('contact.send') }}" method="POST" class="wow fadeInUp" data-wow-delay="0.25s" data-whatsapp="{{ preg_replace('/\D+/', '', $settings->get('contact.whatsapp')) }}">
+                                @csrf
+                                {{-- Honeypot: hidden from people, bots fill it in. --}}
+                                <div class="d-none" aria-hidden="true"><input type="text" name="website" tabindex="-1" autocomplete="off"></div>
                                 <div class="row">
                                     <div class="form-group col-md-6 mb-4">
-                                        <label class="form-label">first name</label>
-                                        <input type="text" name="fname" class="form-control" id="fname" placeholder="First Name" required>
+                                        <label class="form-label" for="fname">first name</label>
+                                        <input type="text" name="first_name" class="form-control" id="fname" placeholder="First Name" maxlength="100" required>
                                         <div class="help-block with-errors"></div>
                                     </div>
 
                                     <div class="form-group col-md-6 mb-4">
-                                        <label class="form-label">last name</label>
-                                        <input type="text" name="lname" class="form-control" id="lname" placeholder="Last Name" required>
+                                        <label class="form-label" for="lname">last name</label>
+                                        <input type="text" name="last_name" class="form-control" id="lname" placeholder="Last Name" maxlength="100" required>
                                         <div class="help-block with-errors"></div>
                                     </div>
 
                                     <div class="form-group col-md-6 mb-4">
-                                        <label class="form-label">email address</label>
-                                        <input type="email" name="email" class="form-control" id="email" placeholder="Email Address" required>
+                                        <label class="form-label" for="email">email address</label>
+                                        <input type="email" name="email" class="form-control" id="email" placeholder="Email Address" maxlength="255" required>
                                         <div class="help-block with-errors"></div>
                                     </div>
 
                                     <div class="form-group col-md-6 mb-4">
-                                        <label class="form-label">mobile number</label>
-                                        <input type="text" name="phone" class="form-control" id="phone" placeholder="Mobile Number" required>
+                                        <label class="form-label" for="phone">mobile number</label>
+                                        <input type="tel" name="phone" class="form-control" id="phone" placeholder="Mobile Number" maxlength="30" required>
                                         <div class="help-block with-errors"></div>
                                     </div>
 
                                     <div class="form-group col-md-12 mb-5">
-                                        <label class="form-label">your message</label>
-                                        <textarea name="message" class="form-control" id="message" rows="4" placeholder="Your message here..."></textarea>
+                                        <label class="form-label" for="message">your message</label>
+                                        <textarea name="message" class="form-control" id="message" rows="4" placeholder="Your message here..." maxlength="5000"></textarea>
                                         <div class="help-block with-errors"></div>
                                     </div>
 
                                     <div class="col-md-12">
                                         <button type="submit" class="btn-default">{{ $settings->get('contact.form_button') }}</button>
-                                        <div id="msgSubmit" class="h3 hidden"></div>
                                     </div>
                                 </div>
                             </form>
@@ -121,48 +123,90 @@
 (function() {
     const contactForm = document.getElementById('contactForm');
 
-    if (contactForm) {
-        contactForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
+    if (!contactForm) {
+        return;
+    }
 
-            // Get WhatsApp number from data attribute
-            const whatsappNumber = this.getAttribute('data-whatsapp') || '6281234567890';
-
-            // Get form values
-            const fname = this.querySelector('[name="fname"]').value.trim();
-            const lname = this.querySelector('[name="lname"]').value.trim();
-            const email = this.querySelector('[name="email"]').value.trim();
-            const phone = this.querySelector('[name="phone"]').value.trim();
-            const message = this.querySelector('[name="message"]').value.trim();
-
-            // Validate required fields
-            if (!fname || !lname || !email || !phone) {
-                alert('Mohon lengkapi semua field yang wajib diisi.');
-                return false;
-            }
-
-            // Build WhatsApp message
-            let waMessage = `Halo, saya ingin menghubungi Anda.\n\n`;
-            waMessage += `*Nama:* ${fname} ${lname}\n`;
-            waMessage += `*Email:* ${email}\n`;
-            waMessage += `*No. HP:* ${phone}\n`;
-            if (message) {
-                waMessage += `\n*Pesan:*\n${message}`;
-            }
-
-            // Encode message for URL
-            const encodedMessage = encodeURIComponent(waMessage);
-
-            // Build WhatsApp URL
-            const waUrl = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
-
-            // Redirect to WhatsApp
-            window.location.href = waUrl;
-
-            return false;
+    function clearErrors() {
+        contactForm.querySelectorAll('.help-block.with-errors').forEach(function(help) {
+            help.textContent = '';
         });
     }
+
+    // Server validation messages go under their field, in the template's error style.
+    function showErrors(errors) {
+        Object.keys(errors).forEach(function(name) {
+            const field = contactForm.querySelector('[name="' + name + '"]');
+            const help = field && field.parentElement.querySelector('.help-block.with-errors');
+            if (!help) {
+                return;
+            }
+            const list = document.createElement('ul');
+            list.className = 'list-unstyled';
+            const item = document.createElement('li');
+            item.textContent = errors[name][0];
+            list.appendChild(item);
+            help.appendChild(list);
+        });
+
+        const first = contactForm.querySelector('.help-block.with-errors li');
+        if (first) {
+            first.closest('.form-group').querySelector('.form-control').focus();
+        }
+    }
+
+    function whatsappUrl(form) {
+        const value = function(name) {
+            return form.querySelector('[name="' + name + '"]').value.trim();
+        };
+        const number = form.getAttribute('data-whatsapp') || '6281234567890';
+
+        let text = 'Halo, saya ingin menghubungi Anda.\n\n';
+        text += '*Nama:* ' + value('first_name') + ' ' + value('last_name') + '\n';
+        text += '*Email:* ' + value('email') + '\n';
+        text += '*No. HP:* ' + value('phone') + '\n';
+        if (value('message')) {
+            text += '\n*Pesan:*\n' + value('message');
+        }
+
+        return 'https://wa.me/' + number + '?text=' + encodeURIComponent(text);
+    }
+
+    // The browser checks required fields and the email format before this runs.
+    contactForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const button = this.querySelector('[type="submit"]');
+        const url = whatsappUrl(this);
+        button.disabled = true;
+        clearErrors();
+
+        // Save first (admin inbox), then continue to WhatsApp. Only invalid input stops
+        // the visitor; if saving fails for another reason, WhatsApp still opens.
+        try {
+            const response = await fetch(this.action, {
+                method: 'POST',
+                body: new FormData(this),
+                headers: { 'Accept': 'application/json' },
+            });
+
+            if (response.status === 422) {
+                showErrors((await response.json()).errors || {});
+                button.disabled = false;
+                return;
+            }
+        } catch (error) {
+            // Network error: the message is not saved, but WhatsApp still has it.
+        }
+
+        this.reset();
+        window.location.href = url;
+    });
+
+    // Coming back from WhatsApp with the Back button restores the page as it was left.
+    window.addEventListener('pageshow', function() {
+        contactForm.querySelector('[type="submit"]').disabled = false;
+    });
 })();
 </script>
 @endpush
