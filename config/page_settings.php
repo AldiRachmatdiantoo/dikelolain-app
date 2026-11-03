@@ -21,7 +21,7 @@ return [
     'about.sub_title' => ['type' => 'text', 'label' => 'Sub judul', 'default' => 'about us'],
     'about.title' => ['type' => 'rich_text', 'label' => 'Judul', 'default' => 'A team of <span>creative thinkers</span>'],
     'about.description' => ['type' => 'textarea', 'label' => 'Deskripsi', 'default' => 'We\'re a full-service design agency specializing in branding, web design, and creative strategies that elevate businesses.'],
-    'about.circle_image' => ['type' => 'image', 'label' => 'Gambar tombol bulat', 'default' => 'images/contact-circle.png'],
+    'about.circle_image' => ['type' => 'image', 'label' => 'Gambar tombol bulat', 'default' => 'images/contact-circle-yellow.png'],
     'about.circle_link' => ['type' => 'url', 'label' => 'Link tombol bulat', 'default' => '/contact'],
     'vision.image' => ['type' => 'image', 'label' => 'Gambar', 'default' => 'images/our-vision-img.jpg'],
     'vision.sub_title' => ['type' => 'text', 'label' => 'Sub judul', 'default' => 'our vision'],

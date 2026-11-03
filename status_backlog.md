@@ -14,7 +14,7 @@
 
 **Mode:** eksekusi otomatis atas instruksi pemilik (3 Nov 2026): kerjakan PBI berurutan tanpa bertanya, uji setiap PBI (`php artisan test` + cek browser bila terlihat), commit + push per PBI, kendala dicatat di [kendala_backlog.md](kendala_backlog.md).
 
-**Sedang dikerjakan:** Epic 4, PBI-406 (test lengkap + cek manual semua halaman dalam mode edit dan mode publik). Selesai: Epic 0–3, PBI-401–405. Tabel dan model konten lama sudah tidak ada; cadangan isi lamanya di `storage/app/private/backups/` (lihat kendala_backlog).
+**Sedang dikerjakan:** Epic 5, PBI-501 (meta SEO + sitemap; form kontak menunggu keputusan). Selesai: Epic 0–4 (rombak arsitektur tuntas). Tabel dan model konten lama sudah tidak ada; cadangan isi lamanya di `storage/app/private/backups/` (lihat kendala_backlog).
 
 **Contoh pola entitas = Testimonial** (memakai kerangka daftar bersama, [ARCHITECTURE §7.1](ARCHITECTURE.md#71-kerangka-bersama-untuk-daftar-terurut)). Entitas berikutnya meniru file-file ini:
 - `database/migrations/2026_11_03_000003_create_testimonials_table.php`, `app/Models/Testimonial.php` (scope + accessor `logo_url`/`photo_url`)
@@ -35,10 +35,10 @@
 
 | Status | Jumlah | PBI |
 |---|---|---|
-| ✅ Selesai | 44 | **001–005** (seluruh Epic 0), **101–111** (seluruh Epic 1), **201–210** (seluruh Epic 2), **301–313** (seluruh Epic 3), **401–405** |
+| ✅ Selesai | 45 | **001–005** (seluruh Epic 0), **101–111** (seluruh Epic 1), **201–210** (seluruh Epic 2), **301–313** (seluruh Epic 3), **401–406** (seluruh Epic 4) |
 | ⏳ Sedang dikerjakan | 0 | – |
 | ⏸️ Menunggu keputusan | 2 | **504**, **507** (hosting, lihat [kendala_backlog.md](kendala_backlog.md) KD-1) |
-| ❌ Belum | 7 | Epic 4–5 |
+| ❌ Belum | 6 | Epic 5 |
 
 Total **53 PBI** dalam 6 epic:
 
@@ -48,7 +48,7 @@ Total **53 PBI** dalam 6 epic:
 | 1 | Beres-beres tanpa risiko | 101–111 | 11/11 ✅ |
 | 2 | Fondasi VCMS baru + FAQ | 201–210 | 10/10 ✅ |
 | 3 | Migrasi entitas | 301–313 | 13/13 ✅ |
-| 4 | Pembersihan akhir | 401–406 | 5/6 |
+| 4 | Pembersihan akhir | 401–406 | 6/6 ✅ |
 | 5 | Setelah rombak (fitur & rilis) | 501–508 | 0/8 |
 
 **Urutan wajib:** Epic 0 → 1 → 2 → 3 → 4. Fitur baru (Epic 5) baru dikerjakan setelah Epic 4, kecuali yang tidak menyentuh model konten (lihat [PBI-501](#epic-5-setelah-rombak-fitur--rilis)).
@@ -149,7 +149,7 @@ Urutan dari yang paling sederhana. Setiap PBI mengikuti checklist [ARCHITECTURE 
 | 403 | Hapus semua `resources/views/admin/pages/*` kecuali analytics dan profil | ✅ 3 Nov 2026 | Sembilan view editor lama (home, about, services, service-detail, portfolio, team, pricing, contact, testimonials) dan route closure-nya dihapus; URL lamanya kini 404. Menu "Pages Management" di sidebar diganti "Edit Halaman": sembilan tautan yang membuka halaman publik dalam mode edit (dari `App\Vcms\EditablePages`, sama dengan kartu dashboard). Layout admin dirampingkan: modal portofolio, indikator "VCMS Edit Mode", serta CSS/JS template yang dulu hanya untuk pratinjau section (jQuery, swiper, gsap, isotope, wow, magnific-popup, dll.) dibuang; yang tersisa Bootstrap (modal analytics) + `admin.js`. Test penjaga closure tidak lagi punya pengecualian. Dicek di browser: dashboard, profil, ganti password, modal analytics, menu sidebar membuka mode edit Contact, `/admin/pages/home` → 404. 362 test hijau (18 test smoke editor lama ikut hilang) |
 | 404 | Hapus semua fungsi `getContent()` / `get*Content()` di view | ✅ 3 Nov 2026 | Tidak ada yang tersisa untuk dihapus: semua helper sudah hilang saat view-nya ditulis ulang di PBI-301–312 (terakhir hero, Contact, footer, Testimonials di PBI-312; editor lama di PBI-403). Ditambah `ViewHygieneTest` yang memeriksa semua view: tidak boleh ada fungsi PHP bernama di blok `@php`, `function_exists`, `$sections`/`->contents`, atau query model langsung (dicoba dengan view percobaan berisi helper lama: tertangkap). Blok `@php` yang tersisa hanya hitungan tampilan (delay animasi, jumlah halaman paginasi). Tanpa cek browser: tidak ada perubahan yang terlihat. 363 test hijau |
 | 405 | Migration drop `section_contents`, `sections`, `media`; hapus model dan `SectionContentSeeder` | ✅ 3 Nov 2026 | Migration baru `2026_11_03_000014_drop_legacy_content_tables` (migration lama dibiarkan supaya riwayat database yang sudah ada tetap cocok; `down()` membuat ulang tabel kosong). Model `Section`, `SectionContent`, `Media` dihapus (`SectionContentSeeder` sudah hilang di PBI-312). Sebelum `migrate` lokal, database dicadangkan utuh dan isi tiga tabel itu diekspor ke JSON di `storage/app/private/backups/` (tidak masuk git): 10 section, 215 isi, 0 media. `LegacyContentRemovedTest` memastikan tabel dan model sudah tidak ada. Setelah `migrate` lokal dicek di browser: 13 URL publik (termasuk 404 dan login) tampil tanpa error dengan footer lengkap; halaman admin dijaga test. 365 test hijau |
-| 406 | Test lengkap hijau + cek manual semua halaman dalam mode edit dan mode publik | ❌ | |
+| 406 | Test lengkap hijau + cek manual semua halaman dalam mode edit dan mode publik | ✅ 3 Nov 2026 | 366 test hijau. **Mode edit** (12 halaman: 9 halaman utama, detail layanan, detail anggota tim, slider eksperimen): semua zona punya data editor yang valid (0 JSON rusak), modal editor terbuka dengan field di setiap halaman, bilah admin tampil, 404 tetap punya zona footer. **Mode publik**: di 12 halaman admin tanpa mode edit hanya melihat bilah "Edit halaman ini" tanpa zona; tamu tidak menerima markup editor maupun item tersembunyi. **Aset**: 96 file lokal yang dirujuk 16 halaman (publik + admin) dicek satu per satu; satu hilang dan diperbaiki: gambar tombol bulat About (`images/contact-circle.png` tidak pernah ada di template, sejak sebelum rombak) kini default `images/contact-circle-yellow.png`, dijaga `PageSettingsRegistryTest` (semua default gambar/video lokal harus ada). Ikut dibersihkan: blok CTA yang di-comment di Pricing dan Testimonials (kode template mati, salah satunya berlink `contact.html`) |
 
 ### Epic 5: Setelah rombak (fitur & rilis)
 
@@ -243,9 +243,9 @@ Ringkasan hasil membaca kode di commit `02fa1fd` (isi sama dengan branch `back-e
 | # | Masalah | Lokasi | Ditangani di |
 |---|---|---|---|
 | 1 | ✅ (tabel dihapus di PBI-405) **Semua konten di satu tabel key–value.** Struktur daftar disembunyikan di nama key (`faq-list-1_faq_123_question`, `pricing-plans_plan_basic_feature_1`). Baca pakai regex/`LIKE`, nomor urut digeser manual, beberapa daftar "hapus semua lalu tulis ulang" | `section_contents` | Epic 2–3 |
-| 2 | **`batchUpdate` ~700 baris** dengan cabang `delete_*` per jenis data | `app/Http/Controllers/Admin/ContentController.php` | Epic 2–4 |
-| 3 | **Setiap halaman dibuat dua kali**: versi publik dan versi admin | `resources/views/pages/*` vs `resources/views/admin/pages/*` | Epic 2–4 |
-| 4 | **`admin-vcms.js` 6.000 baris**: satu objek, 103 method, ±50 pembuat form HTML manual, `switch` 52 kasus, `saveChanges` 575 baris, 13 `setTimeout`, 34 `innerHTML`/`.html()` | `public/js/admin-vcms.js` | Epic 2–4 |
+| 2 | **`batchUpdate` ~700 baris** dengan cabang `delete_*` per jenis data | `app/Http/Controllers/Admin/ContentController.php` | Epic 2–4 ✅ (dihapus PBI-401) |
+| 3 | **Setiap halaman dibuat dua kali**: versi publik dan versi admin | `resources/views/pages/*` vs `resources/views/admin/pages/*` | Epic 2–4 ✅ (versi admin dihapus PBI-403) |
+| 4 | **`admin-vcms.js` 6.000 baris**: satu objek, 103 method, ±50 pembuat form HTML manual, `switch` 52 kasus, `saveChanges` 575 baris, 13 `setTimeout`, 34 `innerHTML`/`.html()` | `public/js/admin-vcms.js` | Epic 2–4 ✅ (dihapus PBI-402) |
 | 5 | **Logika di view**: blok `@php` dengan regex, fungsi global `getContent()` disalin di ±15 file | `resources/views/**` | Epic 2–4 ✅ (dijaga `ViewHygieneTest`) |
 | 6 | **Semua route berupa closure** yang memuat semua section + konten + media di setiap halaman | `routes/web.php` | PBI-313 ✅ (sisa editor lama: PBI-403) |
 | 7 | Kode mati dan route ke view yang tidak ada | lihat PBI-101–103 | Epic 1 |
@@ -289,3 +289,4 @@ Ringkasan hasil membaca kode di commit `02fa1fd` (isi sama dengan branch `back-e
 | 3 Nov 2026 | PBI-403 selesai: halaman editor lama `/admin/pages/*` dihapus, sidebar membuka mode edit, layout admin dirampingkan; 362 test hijau |
 | 3 Nov 2026 | PBI-404 selesai: helper `getContent()` sudah habis sejak Epic 3; ditambah test penjaga `ViewHygieneTest`; 363 test hijau |
 | 3 Nov 2026 | PBI-405 selesai: tabel `sections`, `section_contents`, `media` di-drop (cadangan lokal di `storage/app/private/backups/`), model lama dihapus; 365 test hijau |
+| 3 Nov 2026 | PBI-406 selesai, **Epic 4 tuntas**: semua halaman dicek di mode edit dan publik, satu gambar default yang hilang diperbaiki; 366 test hijau |
