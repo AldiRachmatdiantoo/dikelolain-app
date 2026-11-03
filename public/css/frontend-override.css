@@ -1,0 +1,20 @@
+/* =========================================
+   FRONTEND OVERRIDE - SIMPLE APPROACH
+   ========================================= */
+
+/* Just disable animations, keep everything else */
+
+/* Kill WOW animations */
+.wow {
+    animation: none !important;
+    visibility: visible !important;
+    animation-name: none !important;
+}
+
+/* Kill text anime */
+.text-anime-style-2,
+.text-anime-style-3 {
+    /* Keep the element, just remove animation */
+}
+
+

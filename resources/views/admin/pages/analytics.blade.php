@@ -1,0 +1,338 @@
+@extends('admin.layouts.admin')
+
+@section('title', 'Dashboard Analytics')
+
+@section('content')
+@php
+    $defaultIframeUrl = 'https://lookerstudio.google.com/embed/reporting/c13bd4e0-3d10-48f4-ad69-27e600a65c1a/page/GzLhF';
+    $iframeUrl = isset($sections['analytics'])
+        ? ($sections['analytics']->contents->firstWhere('key', 'looker_iframe_url')?->value ?? $defaultIframeUrl)
+        : $defaultIframeUrl;
+    $iframeHeight = isset($sections['analytics'])
+        ? ($sections['analytics']->contents->firstWhere('key', 'looker_iframe_height')?->value ?? '')
+        : '';
+@endphp
+
+<div class="container-fluid" style="padding-left: 15px; padding-right: 15px;">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="mb-1 fw-bold text-custom-yellow">Dashboard Analytics</h2>
+            <p class="mb-0 text-custom-yellow" style="opacity: 0.9;">Monitoring performa website secara real-time.</p>
+        </div>
+        <div class="d-flex gap-2">
+            <button class="btn btn-custom-yellow-outline btn-sm fw-bold" onclick="openEditIframeModal()">
+                <i class="fa-solid fa-pen-to-square me-1"></i> Edit Iframe
+            </button>
+            <button class="btn btn-custom-yellow btn-sm fw-bold" onclick="location.reload();">
+                <i class="fa-solid fa-arrows-rotate me-1"></i> Refresh Data
+            </button>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-4" style="overflow: hidden; background-color: #212529;">
+        <div class="card-body p-0">
+            <div class="looker-wrapper" id="looker-wrapper">
+                <iframe
+                    id="looker-iframe"
+                    src="{{ $iframeUrl }}"
+                    frameborder="0"
+                    allowfullscreen
+                    sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox">
+                </iframe>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Iframe Modal -->
+<div class="modal fade" id="editIframeModal" tabindex="-1" aria-labelledby="editIframeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content" style="background-color: #1a1a1a; border: 1px solid #3a3a3a;">
+            <div class="modal-header border-0" style="border-bottom: 1px solid #3a3a3a !important;">
+                <h5 class="modal-title fw-bold" id="editIframeModalLabel" style="color: #ffcc01;">
+                    <i class="fa-solid fa-code me-2"></i>Edit Looker Studio Iframe
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="iframeUrl" class="form-label" style="color: #e0e0e0;">Looker Studio Embed URL</label>
+                    <input type="url" class="form-control" id="iframeUrl"
+                           value="{{ $iframeUrl }}"
+                           placeholder="https://lookerstudio.google.com/embed/reporting/..."
+                           style="background-color: #252525; border: 1px solid #3a3a3a; color: #fff;">
+                    <div class="form-text" style="color: #888;">
+                        <i class="fa-solid fa-info-circle me-1"></i>
+                        Paste URL embed dari Google Looker Studio. Pastikan URL mengandung "/embed/" untuk tampilan embedded.
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="iframeHeight" class="form-label" style="color: #e0e0e0;">
+                        <i class="fa-solid fa-arrows-up-down me-1"></i> Tinggi Iframe (opsional)
+                    </label>
+                    <div class="input-group">
+                        <input type="number" class="form-control" id="iframeHeight"
+                               placeholder="Auto"
+                               min="400" max="5000" step="50"
+                               style="background-color: #252525; border: 1px solid #3a3a3a; color: #fff;">
+                        <span class="input-group-text" style="background-color: #3a3a3a; border: 1px solid #3a3a3a; color: #888;">px</span>
+                        <button type="button" class="btn btn-outline-secondary" onclick="resetIframeHeight()" title="Reset ke Auto">
+                            <i class="fa-solid fa-rotate-left"></i>
+                        </button>
+                    </div>
+                    <div class="form-text" style="color: #888;">
+                        Kosongkan untuk auto-height berdasarkan viewport. Set manual jika report terlalu panjang.
+                    </div>
+                </div>
+                
+                <div class="alert" style="background-color: #252525; border: 1px solid #3a3a3a; color: #ffcc01;">
+                    <strong><i class="fa-solid fa-lightbulb me-1"></i> Tips:</strong>
+                    <ul class="mb-0 mt-2" style="color: #e0e0e0;">
+                        <li>Buka report di Looker Studio</li>
+                        <li>Klik File → Embed report</li>
+                        <li>Copy URL dari kolom "Embed URL"</li>
+                        <li>Jika report terpotong, set tinggi manual (contoh: 1500px untuk report panjang)</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="modal-footer border-0" style="border-top: 1px solid #3a3a3a !important;">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn fw-bold" id="saveIframeBtn" onclick="saveIframeUrl()" style="background-color: #ffcc01; color: #000;">
+                    <i class="fa-solid fa-save me-1"></i> Save Changes
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* === Styling Warna Khusus #ffcc01 === */
+    .text-custom-yellow {
+        color: #ffcc01 !important;
+    }
+
+    .btn-custom-yellow {
+        color: #ffcc01;
+        border: 1px solid #ffcc01;
+        background: transparent;
+        transition: all 0.3s ease;
+    }
+
+    .btn-custom-yellow:hover {
+        background-color: #ffcc01;
+        color: #000000;
+    }
+
+    .btn-custom-yellow-outline {
+        color: #ffcc01;
+        border: 1px solid #ffcc01;
+        background: transparent;
+        transition: all 0.3s ease;
+    }
+
+    .btn-custom-yellow-outline:hover {
+        background-color: rgba(255, 204, 1, 0.15);
+        color: #ffcc01;
+        border-color: #ffcc01;
+    }
+
+    /* === Styling Layout Iframe === */
+    .looker-wrapper {
+        position: relative;
+        width: 100%;
+        background-color: #f8f9fa;
+        overflow: hidden;
+    }
+
+    #looker-iframe {
+        width: 100%;
+        border: 0;
+        display: block;
+    }
+
+    #iframeUrl:focus {
+        background-color: #252525;
+        border-color: #ffcc01;
+        color: #fff;
+        box-shadow: 0 0 0 0.2rem rgba(255, 204, 1, 0.25);
+    }
+</style>
+
+<script>
+    let editIframeModal;
+
+    document.addEventListener('DOMContentLoaded', function() {
+        editIframeModal = new bootstrap.Modal(document.getElementById('editIframeModal'));
+        
+        // Initialize iframe height
+        adjustIframeHeight();
+        
+        // Adjust on window resize
+        window.addEventListener('resize', debounce(adjustIframeHeight, 150));
+    });
+
+    // Debounce function to limit resize calls
+    function debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func(...args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    }
+
+    // Custom height from database (empty = auto)
+    let customIframeHeight = '{{ $iframeHeight }}';
+    
+    // Calculate and set optimal iframe height
+    function adjustIframeHeight(forceHeight = null) {
+        const iframe = document.getElementById('looker-iframe');
+        const wrapper = document.getElementById('looker-wrapper');
+        
+        if (!iframe || !wrapper) return;
+        
+        let optimalHeight;
+        
+        // Use forced height, custom height from DB, or auto-calculate
+        if (forceHeight && forceHeight > 0) {
+            optimalHeight = parseInt(forceHeight);
+        } else if (customIframeHeight && parseInt(customIframeHeight) > 0) {
+            optimalHeight = parseInt(customIframeHeight);
+        } else {
+            // Auto-calculate based on viewport
+            const wrapperRect = wrapper.getBoundingClientRect();
+            const wrapperTop = wrapperRect.top;
+            const viewportHeight = window.innerHeight;
+            const padding = 30;
+            const availableHeight = viewportHeight - wrapperTop - padding;
+            
+            const minHeight = 800;
+            const maxHeight = 2500;
+            
+            optimalHeight = Math.max(availableHeight, minHeight);
+            optimalHeight = Math.min(optimalHeight, maxHeight);
+        }
+        
+        // Apply height
+        iframe.style.height = optimalHeight + 'px';
+        wrapper.style.height = optimalHeight + 'px';
+        
+        console.log('Iframe height adjusted to:', optimalHeight + 'px', customIframeHeight ? '(custom)' : '(auto)');
+    }
+    
+    // Reset height to auto
+    function resetIframeHeight() {
+        document.getElementById('iframeHeight').value = '';
+        customIframeHeight = '';
+        adjustIframeHeight();
+        showToast('Tinggi iframe di-reset ke auto', 'success');
+    }
+
+    function openEditIframeModal() {
+        // Populate height field with current value
+        document.getElementById('iframeHeight').value = customIframeHeight || '';
+        editIframeModal.show();
+    }
+
+    function saveIframeUrl() {
+        const url = document.getElementById('iframeUrl').value.trim();
+        const height = document.getElementById('iframeHeight').value.trim();
+        const saveBtn = document.getElementById('saveIframeBtn');
+
+        if (!url) {
+            alert('Please enter a valid URL');
+            return;
+        }
+
+        if (!url.includes('lookerstudio.google.com')) {
+            if (!confirm('This URL does not appear to be from Google Looker Studio. Continue anyway?')) {
+                return;
+            }
+        }
+
+        saveBtn.disabled = true;
+        saveBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-1"></i> Saving...';
+
+        // Save URL
+        const saveUrl = fetch('{{ route("admin.api.content.update") }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                section_key: 'analytics',
+                content_key: 'looker_iframe_url',
+                value: url,
+                type: 'url'
+            })
+        });
+
+        // Save Height
+        const saveHeight = fetch('{{ route("admin.api.content.update") }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                section_key: 'analytics',
+                content_key: 'looker_iframe_height',
+                value: height || '',
+                type: 'text'
+            })
+        });
+
+        Promise.all([saveUrl, saveHeight])
+            .then(responses => Promise.all(responses.map(r => r.json())))
+            .then(results => {
+                const allSuccess = results.every(r => r.success);
+                if (allSuccess) {
+                    document.getElementById('looker-iframe').src = url;
+                    customIframeHeight = height;
+                    adjustIframeHeight(height);
+                    editIframeModal.hide();
+                    showToast('Settings updated successfully!', 'success');
+                } else {
+                    throw new Error('Failed to save some settings');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showToast('Failed to save: ' + error.message, 'error');
+            })
+            .finally(() => {
+                saveBtn.disabled = false;
+                saveBtn.innerHTML = '<i class="fa-solid fa-save me-1"></i> Save Changes';
+            });
+    }
+
+    function showToast(message, type = 'success') {
+        const toastContainer = document.createElement('div');
+        toastContainer.style.cssText = 'position: fixed; top: 20px; right: 20px; z-index: 9999;';
+
+        const bgColor = type === 'success' ? '#28a745' : '#dc3545';
+        toastContainer.innerHTML = `
+            <div style="background: ${bgColor}; color: white; padding: 15px 25px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); display: flex; align-items: center; gap: 10px;">
+                <i class="fa-solid ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i>
+                <span>${message}</span>
+            </div>
+        `;
+
+        document.body.appendChild(toastContainer);
+
+        setTimeout(() => {
+            toastContainer.style.transition = 'opacity 0.5s';
+            toastContainer.style.opacity = '0';
+            setTimeout(() => toastContainer.remove(), 500);
+        }, 3000);
+    }
+</script>
+@endsection
