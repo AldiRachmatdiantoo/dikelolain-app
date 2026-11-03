@@ -123,4 +123,20 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | First Admin Account
+    |--------------------------------------------------------------------------
+    |
+    | Created by DatabaseSeeder. Without ADMIN_PASSWORD the seeder generates a
+    | random password and prints it once.
+    |
+    */
+
+    'admin' => [
+        'name' => env('ADMIN_NAME', 'Admin'),
+        'email' => env('ADMIN_EMAIL', 'admin@dikelolain.test'),
+        'password' => env('ADMIN_PASSWORD'),
+    ],
+
 ];

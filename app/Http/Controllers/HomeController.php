@@ -19,15 +19,4 @@ class HomeController extends Controller
 
         return view('pages.home', compact('sections'));
     }
-
-    public static function getContent($sections, $sectionKey, $contentKey, $default = '')
-    {
-        if (!isset($sections[$sectionKey])) {
-            return $default;
-        }
-
-        $content = $sections[$sectionKey]->contents->firstWhere('key', $contentKey);
-
-        return $content ? $content->value : $default;
-    }
 }

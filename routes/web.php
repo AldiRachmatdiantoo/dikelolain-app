@@ -74,7 +74,7 @@ Route::prefix('pages')->name('pages.')->group(function () {
 
 // Rute untuk 404
 Route::fallback(function () {
-    return view('pages.404'); // Pastikan Anda membuat pages/404.blade.php
+    return response()->view('pages.404', [], 404);
 });
 
 
@@ -182,78 +182,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
                 return view('admin.pages.testimonials', compact('sections'));
             })->name('testimonials');
         });
-
-        // Portfolio Management
-        Route::prefix('portfolio')->name('portfolio.')->group(function () {
-            Route::get('/', function () {
-                return view('admin.portfolio.index');
-            })->name('index');
-
-            Route::get('/create', function () {
-                return view('admin.portfolio.create');
-            })->name('create');
-
-            Route::get('/{id}/edit', function ($id) {
-                return view('admin.portfolio.edit', compact('id'));
-            })->name('edit');
-        });
-
-        // Services Management
-        Route::prefix('services')->name('services.')->group(function () {
-            Route::get('/', function () {
-                return view('admin.services.index');
-            })->name('index');
-
-            Route::get('/create', function () {
-                return view('admin.services.create');
-            })->name('create');
-
-            Route::get('/{id}/edit', function ($id) {
-                return view('admin.services.edit', compact('id'));
-            })->name('edit');
-        });
-
-        // Team Management
-        Route::prefix('team')->name('team.')->group(function () {
-            Route::get('/', function () {
-                return view('admin.team.index');
-            })->name('index');
-
-            Route::get('/create', function () {
-                return view('admin.team.create');
-            })->name('create');
-
-            Route::get('/{id}/edit', function ($id) {
-                return view('admin.team.edit', compact('id'));
-            })->name('edit');
-        });
-
-        // Testimonials Management
-        Route::prefix('testimonials')->name('testimonials.')->group(function () {
-            Route::get('/', function () {
-                return view('admin.testimonials.index');
-            })->name('index');
-
-            Route::get('/create', function () {
-                return view('admin.testimonials.create');
-            })->name('create');
-
-            Route::get('/{id}/edit', function ($id) {
-                return view('admin.testimonials.edit', compact('id'));
-            })->name('edit');
-        });
-
-        // Settings
-        Route::prefix('settings')->name('settings.')->group(function () {
-            Route::get('/general', function () {
-                return view('admin.settings.general');
-            })->name('general');
-        });
-
-        // Media Library
-        Route::get('/media-library', function () {
-            return view('admin.media.library');
-        })->name('media.library');
 
         // API Routes for Content Management
         Route::prefix('api/content')->name('api.content.')->group(function () {

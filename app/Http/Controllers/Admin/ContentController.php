@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Section;
 use App\Models\SectionContent;
 use App\Models\Media;
+use App\Rules\MediaUpload;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -24,7 +25,7 @@ class ContentController extends Controller
             'content_key' => 'required|string',
             'value' => 'nullable',
             'type' => 'required|in:text,textarea,rich-text,image,video,url,json',
-            'file' => 'nullable|file|max:10240', // Max 10MB
+            'file' => ['nullable', new MediaUpload],
         ]);
 
         if ($validator->fails()) {
@@ -59,7 +60,7 @@ class ContentController extends Controller
                     $this->deleteOldMedia($existingContent->media_id);
                 }
 
-                $media = $this->uploadMedia($request->file('file'), $request->type);
+                $media = $this->uploadMedia($request->file('file'));
                 $mediaId = $media->id;
                 $value = 'storage/' . $media->path;
             }
@@ -91,7 +92,7 @@ class ContentController extends Controller
             \Illuminate\Support\Facades\Log::error('ContentController updateContent error: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
-                'message' => 'Failed to update content: ' . $e->getMessage()
+                'message' => 'Gagal menyimpan konten, coba lagi.'
             ], 500);
         }
     }
@@ -102,7 +103,7 @@ class ContentController extends Controller
     public function uploadFile(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'file' => 'required|file|max:10240', // Max 10MB
+            'file' => ['required', new MediaUpload],
             'type' => 'nullable|in:image,video',
             'section_key' => 'nullable|string',
             'content_key' => 'nullable|string',
@@ -117,10 +118,7 @@ class ContentController extends Controller
         }
 
         try {
-            $file = $request->file('file');
-            $type = $request->type ?? (str_starts_with($file->getMimeType(), 'image/') ? 'image' : 'video');
-
-            $media = $this->uploadMedia($file, $type);
+            $media = $this->uploadMedia($request->file('file'));
 
             // If section_key and content_key provided, link to content
             if ($request->section_key && $request->content_key) {
@@ -152,7 +150,7 @@ class ContentController extends Controller
             \Illuminate\Support\Facades\Log::error('ContentController uploadFile error: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
-                'message' => 'Failed to upload file: ' . $e->getMessage()
+                'message' => 'Gagal mengunggah file, coba lagi.'
             ], 500);
         }
     }
@@ -187,9 +185,10 @@ class ContentController extends Controller
             ]);
 
         } catch (\Exception $e) {
+            report($e);
             return response()->json([
                 'success' => false,
-                'message' => 'Failed to get media list: ' . $e->getMessage()
+                'message' => 'Gagal memuat daftar media, coba lagi.'
             ], 500);
         }
     }
@@ -217,6 +216,20 @@ class ContentController extends Controller
      */
     public function batchUpdate(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'files' => 'nullable|array',
+            'files.*' => [new MediaUpload],
+        ]);
+
+        if ($validator->fails()) {
+            // The editor shows `message` to the admin, so make it the actual reason.
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()->first(),
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
         try {
             // Decode JSON contents if sent as string
             $contents = $request->contents;
@@ -265,12 +278,7 @@ class ContentController extends Controller
                         continue;
                     }
 
-                    // Determine file type
-                    $mimeType = $file->getMimeType();
-                    $fileType = str_starts_with($mimeType, 'image/') ? 'image' : 'video';
-
-                    // Upload the file
-                    $media = $this->uploadMedia($file, $fileType);
+                    $media = $this->uploadMedia($file);
                     $uploadedFiles[$fieldName] = $media;
 
                     \Illuminate\Support\Facades\Log::info('File uploaded', [
@@ -913,7 +921,7 @@ class ContentController extends Controller
             ]);
             return response()->json([
                 'success' => false,
-                'message' => 'Failed to update contents: ' . $e->getMessage()
+                'message' => 'Gagal menyimpan perubahan, coba lagi.'
             ], 500);
         }
     }
@@ -939,9 +947,10 @@ class ContentController extends Controller
             ]);
 
         } catch (\Exception $e) {
+            report($e);
             return response()->json([
                 'success' => false,
-                'message' => 'Failed to get content: ' . $e->getMessage()
+                'message' => 'Gagal memuat konten, coba lagi.'
             ], 500);
         }
     }
@@ -949,9 +958,11 @@ class ContentController extends Controller
     /**
      * Upload media file
      */
-    private function uploadMedia($file, $type)
+    private function uploadMedia($file)
     {
-        $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+        // Type and extension come from the file's content, never from the client.
+        $type = str_starts_with($file->getMimeType(), 'video/') ? 'video' : 'image';
+        $filename = time() . '_' . uniqid() . '.' . $file->guessExtension();
         $path = $file->storeAs('media/' . $type . 's', $filename, 'public');
 
         return Media::create([
@@ -985,9 +996,10 @@ class ContentController extends Controller
             ]);
 
         } catch (\Exception $e) {
+            report($e);
             return response()->json([
                 'success' => false,
-                'message' => 'Failed to delete media: ' . $e->getMessage()
+                'message' => 'Gagal menghapus media, coba lagi.'
             ], 500);
         }
     }

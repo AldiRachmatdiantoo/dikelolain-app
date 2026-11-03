@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class DatabaseSeeder extends Seeder
 {
@@ -16,11 +16,17 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Create admin user
+        // Create admin user from ADMIN_* in .env
+        $password = config('app.admin.password');
+        if (blank($password)) {
+            $password = Str::password(16, symbols: false);
+            $this->command?->warn('ADMIN_PASSWORD kosong, password admin dibuat acak: ' . $password);
+        }
+
         User::factory()->create([
-            'name' => 'admin',
-            'email' => 'test@example.com',
-            'password' => Hash::make('123')
+            'name' => config('app.admin.name'),
+            'email' => config('app.admin.email'),
+            'password' => $password,
         ]);
 
         // Seed VCMS sections and content

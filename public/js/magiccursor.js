@@ -9,6 +9,8 @@ class Cursor {
         this.body = $(this.options.container);
         this.el = $('<div class="cb-cursor"></div>');
         this.text = $('<div class="cb-cursor-text"></div>');
+        // Starting position: move() falls back to it when the viewport is 0 wide (hidden tab or iframe).
+        this.pos = { x: 0, y: 0 };
         this.init();
     }
 

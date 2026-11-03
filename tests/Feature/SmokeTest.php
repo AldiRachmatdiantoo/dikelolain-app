@@ -15,7 +15,13 @@ class SmokeTest extends TestCase
 {
     use RefreshDatabase;
 
-    protected bool $seed = true;
+    protected function setUp(): void
+    {
+        parent::setUp();
+        // Seed per test (rolled back afterwards). `$seed = true` only seeds when the
+        // in-memory database is first migrated, so it would depend on test order.
+        $this->seed();
+    }
 
     public static function publicPages(): array
     {
@@ -64,8 +70,9 @@ class SmokeTest extends TestCase
 
     public function test_unknown_url_shows_the_404_page(): void
     {
-        // The status should be 404 as well; see PBI-109.
-        $this->get('/halaman-tidak-ada')->assertViewIs('pages.404');
+        $this->get('/halaman-tidak-ada')
+            ->assertNotFound()
+            ->assertViewIs('pages.404');
     }
 
     #[DataProvider('adminPages')]

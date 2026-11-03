@@ -12,17 +12,17 @@
 
 | Status | Jumlah | PBI |
 |---|---|---|
-| ✅ Selesai | 5 | **001** (jalan di lokal + README), **002** (smoke test), **003** (ARCHITECTURE.md), **004** (status backlog), **111** (pengaman `getContent()`) |
+| ✅ Selesai | 15 | **001–004** (Epic 0 selain keputusan), **101–111** (seluruh Epic 1) |
 | ⏳ Sedang dikerjakan | 0 | – |
-| ⏸️ Menunggu keputusan | 4 | **005** (K-1 s.d. K-4), **203** (K-4), **504** (K-3), **507** (K-3) |
-| ❌ Belum | 44 | Semua PBI lain |
+| ⏸️ Menunggu keputusan | 4 | **005** (K-1 s.d. K-4, K-9), **203** (K-4), **504** (K-3), **507** (K-3) |
+| ❌ Belum | 34 | Epic 2–5 |
 
 Total **53 PBI** dalam 6 epic:
 
 | Epic | Isi | PBI | Selesai |
 |---|---|---|---|
 | 0 | Persiapan | 001–005 | 4/5 |
-| 1 | Beres-beres tanpa risiko | 101–111 | 1/11 |
+| 1 | Beres-beres tanpa risiko | 101–111 | 11/11 ✅ |
 | 2 | Fondasi VCMS baru + FAQ | 201–210 | 0/10 |
 | 3 | Migrasi entitas | 301–313 | 0/13 |
 | 4 | Pembersihan akhir | 401–406 | 0/6 |
@@ -44,6 +44,8 @@ Total **53 PBI** dalam 6 epic:
 | K-6 | Editor baru tanpa jQuery (Alpine.js + Vite); website publik tetap jQuery | – | – | ✅ Disepakati 3 Nov 2026 |
 | K-7 | Index database: unique, foreign key, dan index gabungan untuk query daftar; tidak meng-index semua kolom | Aturan setiap migration | – | ✅ Disepakati 3 Nov 2026, aturan di [ARCHITECTURE §4.6](ARCHITECTURE.md#46-index) |
 | K-8 | **Tanpa Redis.** Kalau perlu cache, pakai facade `Cache` dengan driver `database`/`file` dan key eksplisit (tanpa `Cache::tags()`); pindah ke Redis nanti cukup ubah `CACHE_STORE` | Infrastruktur rilis | – | ✅ Disepakati 3 Nov 2026, aturan di [ARCHITECTURE §10](ARCHITECTURE.md#10-performa--cache) |
+| K-9 | Halaman `/portfolio-experiment` (slider horizontal, ditautkan dari banner "Try Our New Horizontal Slider!" di Portfolio): pertahankan sebagai alternatif, jadikan tampilan utama, atau hapus? | PBI-309 (satu atau dua view portofolio) | Dipertahankan apa adanya | ❓ Belum dijawab |
+| K-10 | Upload SVG ditolak (SVG bisa berisi script). Logo/ikon SVG bawaan template di `public/images` tetap tampil | Admin harus upload logo sebagai PNG/WebP | – | ✅ Diterapkan 3 Nov 2026 (PBI-104); bisa ditinjau ulang bila logo klien wajib SVG (perlu sanitasi SVG) |
 
 ---
 
@@ -59,22 +61,22 @@ Legenda: ✅ selesai · ⏳ sedang dikerjakan · ❌ belum · ⏸️ menunggu ke
 | 002 | Smoke test: semua halaman publik 200, semua halaman admin 200 saat login / redirect saat belum login | ✅ | 3 Nov 2026: `tests/Feature/SmokeTest.php`, **47 test hijau** (±8 dtk), lihat [Hasil PBI-002](#hasil-pbi-002-3-november-2026). Jalankan: `php artisan test` |
 | 003 | `ARCHITECTURE.md`: target arsitektur, model data, kontrak API, VCMS, konvensi | ✅ | 3 Nov 2026 |
 | 004 | Status backlog (file ini) | ✅ | 3 Nov 2026 |
-| 005 | Jawab keputusan K-1 sampai K-4 | ⏸️ | Lihat [Keputusan yang dibutuhkan](#keputusan-yang-dibutuhkan) |
+| 005 | Jawab keputusan K-1 sampai K-4 dan K-9 | ⏸️ | Lihat [Keputusan yang dibutuhkan](#keputusan-yang-dibutuhkan) |
 
 ### Epic 1: Beres-beres tanpa risiko
 
 | PBI | Judul | Status | Catatan |
 |---|---|---|---|
-| 101 | Hapus controller dan model yang tidak dipakai: `ContentController` (root), `SectionController`, `MediaController`, `Admin/ProjectController`, model `Home`, `HomeController::getContent` | ❌ | Tidak dirujuk route mana pun. `SectionController` juga memicu peringatan PSR-4 saat `composer install` (namespace `Admin`, file di root `Controllers`) |
-| 102 | Hapus route ke view yang tidak ada: `/admin/portfolio/*`, `/admin/services/*`, `/admin/team/*`, `/admin/testimonials/*`, `/admin/settings/general`, `/admin/media-library` | ❌ | Semuanya error 500 kalau dibuka |
-| 103 | Hapus view tak terpakai: `welcome.blade.php`, `admin/pages/service.blade.php` (kosong), `portfolio-experiment` (+ route), `layouts/sidebar.blade.php` bila tak dirujuk | ❌ | Cek dulu dengan grep |
-| 104 | Upload: validasi mime sebenarnya (gambar/video), ekstensi dari mime, bukan dari nama file pengguna | ❌ | Sekarang file apa pun (termasuk `.php`) bisa masuk ke folder publik |
-| 105 | Seeder admin: password dari `.env` (`ADMIN_EMAIL`, `ADMIN_PASSWORD`), bukan password lemah yang ditulis di kode | ❌ | |
-| 106 | Respons error API tidak lagi menyertakan `$e->getMessage()` | ❌ | Bocor detail internal |
-| 107 | `.env.example`: `APP_NAME=Dikelolain`, `APP_LOCALE=id`, variabel admin | ❌ | |
-| 108 | Link project di seeder mengarah ke `/portfolio/single` yang tidak punya route (jatuh ke 404); `portfolio-single.blade.php` tidak dipakai | ❌ | Putuskan: buat route detail project atau hapus view |
-| 109 | Halaman 404 dikirim dengan status **200**, bukan 404 (`Route::fallback` mengembalikan view tanpa status) | ❌ | Buruk untuk SEO; ditemukan di PBI-001 |
-| 110 | Error JS di setiap halaman: `magiccursor.js:104` `Cannot read properties of undefined (reading 'x')` saat halaman dimuat sebelum mouse bergerak | ❌ | Plugin template; ditemukan di PBI-001 |
+| 101 | Hapus controller dan model yang tidak dipakai | ✅ | 3 Nov 2026: `ContentController` (root), `SectionController`, `MediaController`, `Admin/ProjectController`, model `Home`, `HomeController::getContent` dihapus. Peringatan PSR-4 saat `composer install` ikut hilang |
+| 102 | Hapus route ke view yang tidak ada | ✅ | 3 Nov 2026: `/admin/portfolio/*`, `/admin/services/*`, `/admin/team/*`, `/admin/testimonials/*`, `/admin/settings/general`, `/admin/media-library` dihapus (sebelumnya 500, sekarang 404). Sisa 40 route |
+| 103 | Hapus view tak terpakai | ✅ | 3 Nov 2026: `welcome.blade.php`, `admin/pages/service.blade.php` (kosong) dihapus. **Tidak dihapus:** `portfolio-experiment` (ditautkan dari halaman Portfolio, lihat K-9) dan `layouts/sidebar.blade.php` (dipakai FAQs dan detail layanan) |
+| 104 | Upload: validasi berdasarkan isi file | ✅ | 3 Nov 2026: rule `App\Rules\MediaUpload` di ketiga endpoint upload (termasuk `batchUpdate` yang sebelumnya tanpa validasi). Hanya JPG/PNG/GIF/WebP (maks 10 MB) dan MP4/WebM (maks 50 MB), dinilai dari isi file; SVG ditolak (K-10); ekstensi file tersimpan diambil dari isi. Editor menampilkan alasan penolakan. Test: `MediaUploadTest` (6) |
+| 105 | Seeder admin dari `.env` | ✅ | 3 Nov 2026: `ADMIN_NAME`, `ADMIN_EMAIL`, `ADMIN_PASSWORD` lewat `config('app.admin')`; tanpa `ADMIN_PASSWORD` seeder membuat password acak dan menampilkannya sekali. Test: `AdminSeederTest` (2). **Database lokal yang sudah ada tidak berubah**; jalankan `migrate:fresh --seed` untuk memakai akun baru |
+| 106 | Respons error API tidak lagi menyertakan `$e->getMessage()` | ✅ | 3 Nov 2026: 6 respons di `Admin/ContentController` diganti pesan umum berbahasa Indonesia; detail dicatat ke log (`report($e)` ditambahkan di 3 tempat yang belum mencatat) |
+| 107 | `.env.example` | ✅ | 3 Nov 2026: `APP_NAME=Dikelolain`, `APP_URL=http://localhost:8000`, `APP_LOCALE=id`, `APP_FAKER_LOCALE=id_ID`, variabel `ADMIN_*` |
+| 108 | `portfolio-single.blade.php` tidak terjangkau | ✅ | 3 Nov 2026: view dihapus. Klik project membuka modal; `data-link` tidak pernah dipakai modal, jadi `/portfolio/single` di seeder tidak pernah dikunjungi. Halaman detail project (bila diinginkan) dibuat di PBI-309 |
+| 109 | Halaman 404 dikirim dengan status 200 | ✅ | 3 Nov 2026: `Route::fallback` kini mengirim status 404; smoke test memeriksa status |
+| 110 | Error JS `magiccursor.js:104` | ✅ | 3 Nov 2026: terjadi saat halaman dimuat dengan lebar viewport 0 (tab/iframe tersembunyi): `-window.innerWidth` bernilai 0 sehingga jatuh ke `this.pos` yang belum ada. Diberi posisi awal |
 | 111 | Fungsi global `getContent()` dideklarasikan tanpa `function_exists` di 6 view → fatal "Cannot redeclare" bila dua halaman dirender dalam satu proses PHP (test, Octane) | ✅ | 3 Nov 2026, ditemukan oleh PBI-002. Dibungkus `function_exists` seperti view lain; isi semua versi identik secara perilaku. Fungsi ini tetap dihapus di PBI-404 |
 
 ### Epic 2: Fondasi VCMS baru + FAQ
@@ -188,6 +190,18 @@ Total 46 test di `SmokeTest` + 1 `tests/Unit/ExampleTest` = **47 hijau, 73 asser
 
 ---
 
+## Hasil Epic 1 (3 November 2026)
+
+Semua 11 PBI selesai. `php artisan test`: **55 hijau, 93 assertion, ±13 detik** (`SmokeTest` 46, `MediaUploadTest` 6, `AdminSeederTest` 2, `Unit\ExampleTest` 1).
+
+Dicek di browser setelah perubahan: URL tak dikenal → 404 dengan halaman 404; route admin yang dihapus → 404 (sebelumnya 500); `/portfolio-experiment` tetap 200; kursor `magiccursor` terpasang tanpa error.
+
+**Perubahan test:** `SmokeTest` kini menjalankan seeder di `setUp()` setiap test. Dengan SQLite in-memory, `$seed = true` hanya men-seed saat migrasi pertama dalam satu proses, sehingga hasilnya bergantung urutan test begitu ada kelas test lain.
+
+**Yang perlu kamu lakukan di lokal (opsional):** isi `ADMIN_EMAIL`/`ADMIN_PASSWORD` di `.env`, lalu `php artisan migrate:fresh --seed`. Tanpa itu, database lokal tetap memakai akun admin lama.
+
+---
+
 ## Kondisi awal (3 November 2026)
 
 Ringkasan hasil membaca kode di commit `02fa1fd` (isi sama dengan branch `back-end` repo asal, 16 Jan 2026).
@@ -230,3 +244,4 @@ Ringkasan hasil membaca kode di commit `02fa1fd` (isi sama dengan branch `back-e
 | 3 Nov 2026 | Keputusan index (K-7) dan tanpa Redis (K-8) dicatat; PBI-506–508 (performa) ditambahkan |
 | 3 Nov 2026 | PBI-001 selesai: project jalan di lokal, README ditulis ulang; temuan baru PBI-109, PBI-110 |
 | 3 Nov 2026 | PBI-002 selesai: smoke test 47 hijau; PBI-111 ditemukan dan diperbaiki |
+| 3 Nov 2026 | Epic 1 selesai (PBI-101–110): kode mati dihapus, upload aman, admin dari `.env`, error tidak bocor, 404 benar, `magiccursor` diperbaiki; keputusan baru K-9, K-10 |
