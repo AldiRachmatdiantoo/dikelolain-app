@@ -14,7 +14,7 @@
 
 **Mode:** eksekusi otomatis atas instruksi pemilik (3 Nov 2026): kerjakan PBI berurutan tanpa bertanya, uji setiap PBI (`php artisan test` + cek browser bila terlihat), commit + push per PBI, kendala dicatat di [kendala_backlog.md](kendala_backlog.md).
 
-**Sedang dikerjakan:** tidak ada. **Semua PBI yang bisa dikerjakan tanpa pemilik sudah selesai** (Epic 0–4, lalu 501, 503, 506, 509, 510, 511; 510 dan 511 atas aba-aba pemilik 4 Nov 2026). Sisanya menunggu pemilik: 502 konten asli (KD-2), 504 dan 507 hosting (KD-1). PBI-508 (cache) belum perlu, 505 belum diisi. Lanjutkan begitu salah satu kendala di [kendala_backlog.md](kendala_backlog.md) terjawab. Selesai: Epic 0–4 (rombak arsitektur tuntas). Tabel dan model konten lama sudah tidak ada; cadangan isi lamanya di `storage/app/private/backups/` (lihat kendala_backlog).
+**Sedang dikerjakan:** tidak ada. **Semua PBI yang bisa dikerjakan tanpa pemilik sudah selesai** (Epic 0–4, lalu 501, 503, 506, 509, 510, 511; 510 dan 511 atas aba-aba pemilik 4 Nov 2026). Sisanya menunggu pemilik: 502 konten asli (KD-2), 504 dan 507 hosting (KD-1). PBI-512 (CSS inline ke file CSS) dan 513 (pangkas CSS template) dicatat 4 Nov 2026, belum dikerjakan: tunggu aba-aba pemilik. PBI-508 (cache) belum perlu, 505 belum diisi. Lanjutkan begitu salah satu kendala di [kendala_backlog.md](kendala_backlog.md) terjawab. Selesai: Epic 0–4 (rombak arsitektur tuntas). Tabel dan model konten lama sudah tidak ada; cadangan isi lamanya di `storage/app/private/backups/` (lihat kendala_backlog).
 
 **Contoh pola entitas = Testimonial** (memakai kerangka daftar bersama, [ARCHITECTURE §7.1](ARCHITECTURE.md#71-kerangka-bersama-untuk-daftar-terurut)). Entitas berikutnya meniru file-file ini:
 - `database/migrations/2026_11_03_000003_create_testimonials_table.php`, `app/Models/Testimonial.php` (scope + accessor `logo_url`/`photo_url`)
@@ -38,9 +38,9 @@
 | ✅ Selesai | 51 | **001–005** (seluruh Epic 0), **101–111** (seluruh Epic 1), **201–210** (seluruh Epic 2), **301–313** (seluruh Epic 3), **401–406** (seluruh Epic 4), **501**, **503**, **506**, **509**, **510**, **511** |
 | ⏳ Sedang dikerjakan | 0 | – |
 | ⏸️ Menunggu pemilik | 3 | **502** (konten asli, KD-2), **504**, **507** (hosting, lihat [kendala_backlog.md](kendala_backlog.md) KD-1) |
-| ❌ Belum | 2 | **505** (belum diisi), **508** (cache, hanya bila perlu) |
+| ❌ Belum | 4 | **505** (belum diisi), **508** (cache, hanya bila perlu), **512** (CSS inline ke file CSS), **513** (pangkas CSS template) |
 
-Total **53 PBI** dalam 6 epic:
+Total **55 PBI** dalam 6 epic:
 
 | Epic | Isi | PBI | Selesai |
 |---|---|---|---|
@@ -49,7 +49,7 @@ Total **53 PBI** dalam 6 epic:
 | 2 | Fondasi VCMS baru + FAQ | 201–210 | 10/10 ✅ |
 | 3 | Migrasi entitas | 301–313 | 13/13 ✅ |
 | 4 | Pembersihan akhir | 401–406 | 6/6 ✅ |
-| 5 | Setelah rombak (fitur & rilis) | 501–511 | 6/11 |
+| 5 | Setelah rombak (fitur & rilis) | 501–513 | 6/13 |
 
 **Urutan wajib:** Epic 0 → 1 → 2 → 3 → 4. Fitur baru (Epic 5) baru dikerjakan setelah Epic 4, kecuali yang tidak menyentuh model konten (lihat [PBI-501](#epic-5-setelah-rombak-fitur--rilis)).
 
@@ -153,7 +153,7 @@ Urutan dari yang paling sederhana. Setiap PBI mengikuti checklist [ARCHITECTURE 
 
 ### Epic 5: Setelah rombak (fitur & rilis)
 
-Fitur dan persiapan rilis setelah rombak arsitektur. PBI-509 sampai 511 ditambahkan selama eksekusi.
+Fitur dan persiapan rilis setelah rombak arsitektur. PBI-509 sampai 513 ditambahkan selama eksekusi.
 
 | PBI | Judul | Status | Catatan |
 |---|---|---|---|
@@ -168,6 +168,8 @@ Fitur dan persiapan rilis setelah rombak arsitektur. PBI-509 sampai 511 ditambah
 | 505 | Fitur baru (diisi kemudian) | ❌ | |
 | 510 | Akun admin mengikuti pola berlapis: `ProfileController` (ubah profil, ubah password) dan `AuthController` (login) | ✅ 4 Nov 2026 | Kedua controller pindah ke `Controllers/Admin` (sesuai [ARCHITECTURE §3](ARCHITECTURE.md#3-struktur-folder)) dan kini tipis. Validasi di `LoginRequest`, `UpdateProfileRequest` (email unik kecuali milik sendiri), dan `UpdatePasswordRequest` (aturan bawaan `current_password` menggantikan `Hash::check` manual; pesan Indonesia tetap). Logika di `AccountService`: login/logout, email baru → `email_verified_at` dikosongkan, password di-hash oleh cast `hashed` model. Penyimpanan lewat `UserRepositoryInterface` + `EloquentUserRepository` (terdaftar di `RepositoryServiceProvider`). Ikut ditambah: login dibatasi 5 percobaan per menit (`throttle:5,1`, sama dengan form kontak); centang "ingat saya" di form login kini benar-benar dipakai; setelah login diarahkan ke halaman yang tadinya dituju (default dashboard); password tidak dikembalikan ke form saat gagal; pesan gagal login jadi "Email atau password salah.". `AccountTest` (12 test) menguji login, ingat saya, gagal login, validasi, batas percobaan, logout, ubah profil, email milik user lain, kolom selain nama/email tidak bisa diubah lewat form profil, password saat ini salah, password baru terlalu pendek/tidak cocok. Dicek di browser dengan akun QA sementara (dihapus setelahnya): gagal login, login → dashboard, ubah nama, pesan validasi ganti password, logout. 440 test hijau |
 | 511 | Frontend lebih ringan | ✅ 4 Nov 2026 | Home kini **30 request** (dulu 59): satu CSS (`css/site.min.css`, 409 KB sebelum gzip) + Google Font, satu JS (`js/site.min.js`, 411 KB), **0 iframe** (dulu 6 pemutar YouTube langsung dimuat); Portfolio 14 request. (1) Kartu video Home/Portfolio/slider jadi tombol thumbnail (`i.ytimg.com`, accessor `Project::thumbnail_url`) yang diganti iframe `?autoplay=1` saat diklik. (2) Dibuang: `wow.min.js` + `animate.css` (animasinya sudah dimatikan; 49 kelas `wow fadeInUp` dan atribut `data-wow-delay` di 20 view ikut dihapus), `magnific-popup` (+ CSS), `parallaxie`, `jquery.mb.YTPlayer`, `SmoothScroll`, dan `isotope` (filter + paginasi Portfolio kini show/hide biasa karena grid sudah kolom Bootstrap); Swiper kedua dari CDN di slider eksperimen juga dibuang karena sudah ada di bundle. (3) Sisa 7 CSS dan 11 JS template digabung dan diperkecil esbuild dari `resources/site-assets.json` (`npm run build:site`); `SiteAssetsTest` gagal bila sumber berubah tanpa build ulang. (4) jQuery dirapikan: `function.js` jadi IIFE dengan satu fungsi per fitur (preloader, menu HP, slider logo, skillbar, counter, reveal gambar, animasi judul, tools, thumbnail video, modal project yang dipindah dari script inline layout); script inline Portfolio, Services, dan slider eksperimen ditulis ulang tanpa fungsi global, `onclick`, atau gaya lewat `.css()` (gaya tombol paginasi Services pindah ke CSS). Dicek di browser: Home, Portfolio (filter, paginasi, thumbnail → pemutar, modal + Escape), slider eksperimen (navigasi, filter, penghitung), accordion FAQ, counter About, paginasi Services (DOM tiruan karena seed hanya 5 layanan; markup dijaga test), tanpa error console. 428 test hijau |
+| 512 | CSS inline pindah ke file CSS: blok `<style>` dan atribut `style="..."` di view publik ke `frontend-override.css` (ikut bundle), di view admin ke `admin.css`; Bootstrap CDN di halaman login diganti file lokal | ❌ | Dicatat 4 Nov 2026 atas permintaan pemilik, dikerjakan nanti. **Temuan:** ±770 baris CSS ditulis langsung di 8 view: `portfolio-experiment` (265), `admin/pages/profile-detail` (118), `portfolio` (102), `admin/auth/reset-password` (95), `admin/pages/messages` (63), `admin/dashboard` (56), `admin/pages/analytics` (52), `services` (17), ditambah `team-single` dan `vcms/admin-bar`. Atribut `style=` terbanyak di `admin/pages/analytics` (18), `portfolio` dan `portfolio-experiment` (6, misalnya banner kuning), `home` (4). CSS inline ikut terkirim setiap halaman dibuka dan tidak disimpan di cache browser. **Default:** CSS khusus satu halaman diberi awalan kelas halamannya (misalnya `.page-works`) supaya tidak bocor ke halaman lain; `style=` hanya boleh untuk nilai dinamis dari data. `ViewHygieneTest` diperluas: tidak boleh ada `<style>` di view maupun link CDN. Bundle dibangun ulang (`npm run build:site`), lalu dicek di browser: semua halaman publik, mode edit, dan halaman admin, juga di lebar HP |
+| 513 | Pangkas CSS template yang tidak dipakai: `custom.css` (6.599 baris), Font Awesome, dan Bootstrap di dalam `css/site.min.css` | ❌ | Dicatat 4 Nov 2026, dikerjakan **setelah PBI-512**. CSS template adalah bagian terbesar dari bundle 409 KB (sebelum gzip), dan banyak selectornya kemungkinan tidak dipakai. **Default:** pangkas otomatis saat `npm run build:site` dengan memindai view Blade + JS (misalnya PurgeCSS), dengan daftar pengecualian untuk kelas yang baru muncul lewat JavaScript (`swiper-*`, `slicknav_*`, `vcms-*`, kelas Bootstrap `show`/`collapsing`/`active`, karakter SplitText) supaya tidak ada tampilan yang rusak diam-diam. Ikon Font Awesome cukup yang dipakai. Ukur sebelum/sesudah, lalu cek di browser semua halaman publik dan mode edit, di desktop dan HP. Bila hasilnya kecil dibanding risikonya, cukup dicatat dan dibatalkan |
 
 ---
 
@@ -300,3 +302,4 @@ Ringkasan hasil membaca kode di commit `02fa1fd` (isi sama dengan branch `back-e
 | 3 Nov 2026 | PBI-510 (akun admin berlapis) dan 511 (frontend lebih ringan, dari hasil ukur Home) dicatat; PBI-507 diperluas dengan gzip dan header cache |
 | 4 Nov 2026 | PBI-511 selesai: satu CSS + satu JS per halaman (esbuild), YouTube jadi thumbnail, 7 plugin dibuang, jQuery dirapikan; Home 59 → 30 request; 428 test hijau |
 | 4 Nov 2026 | PBI-510 selesai: login, profil, dan password lewat FormRequest → `AccountService` → `UserRepository`; login dibatasi 5 percobaan/menit; semua PBI yang tidak menunggu pemilik selesai; 440 test hijau |
+| 4 Nov 2026 | PBI-512 (CSS inline ke file CSS + Bootstrap lokal di login) dan 513 (pangkas CSS template) dicatat atas permintaan pemilik |
