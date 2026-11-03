@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Portfolio Experiment - Horizontal Slider')
+@section('title', 'Portfolio Slider - Dikelolain')
 
 @php
     $totalProjects = $projects->count();

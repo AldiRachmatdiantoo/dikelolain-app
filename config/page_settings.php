@@ -146,7 +146,7 @@ return [
     'footer.title' => ['type' => 'text', 'label' => 'Judul besar', 'default' => 'Let\'s Connect'],
     'footer.title_link' => ['type' => 'url', 'label' => 'Link judul besar', 'default' => '/contact'],
     'footer.logo' => ['type' => 'image', 'label' => 'Logo', 'default' => 'images/logo-dikelolain-full-hitam.webp'],
-    'footer.description' => ['type' => 'textarea', 'label' => 'Teks', 'default' => 'The creativity and professionalism shown by Rovex exceeded our expectations. Their design transformed our brand, and the results speak for themselves.'],
+    'footer.description' => ['type' => 'textarea', 'label' => 'Teks', 'default' => 'Dikelolain is a creative agency for branding, websites and digital campaigns. We turn ideas into designs that help your business grow.'],
     'footer.facebook' => ['type' => 'url', 'label' => 'Link Facebook', 'default' => '#'],
     'footer.x' => ['type' => 'url', 'label' => 'Link X', 'default' => '#'],
     'footer.linkedin' => ['type' => 'url', 'label' => 'Link LinkedIn', 'default' => '#'],

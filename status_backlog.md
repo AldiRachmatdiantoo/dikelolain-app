@@ -14,7 +14,7 @@
 
 **Mode:** eksekusi otomatis atas instruksi pemilik (3 Nov 2026): kerjakan PBI berurutan tanpa bertanya, uji setiap PBI (`php artisan test` + cek browser bila terlihat), commit + push per PBI, kendala dicatat di [kendala_backlog.md](kendala_backlog.md).
 
-**Sedang dikerjakan:** Epic 5, PBI-503 (branding: `lang`, author, judul halaman). Selesai di Epic 5: 501, 506. PBI-507 menunggu KD-1, PBI-508 dilewati (hanya bila perlu), PBI-502 menunggu konten (KD-2), PBI-509 menunggu KD-3. Selesai: Epic 0–4 (rombak arsitektur tuntas). Tabel dan model konten lama sudah tidak ada; cadangan isi lamanya di `storage/app/private/backups/` (lihat kendala_backlog).
+**Sedang dikerjakan:** tidak ada. **Semua PBI yang bisa dikerjakan tanpa pemilik sudah selesai** (Epic 0–4, lalu 501, 503, 506). Sisanya menunggu pemilik: 502 konten asli (KD-2), 504 dan 507 hosting (KD-1), 509 form kontak (KD-3). PBI-508 (cache) belum perlu, 505 belum diisi. Lanjutkan begitu salah satu kendala di [kendala_backlog.md](kendala_backlog.md) terjawab. Selesai: Epic 0–4 (rombak arsitektur tuntas). Tabel dan model konten lama sudah tidak ada; cadangan isi lamanya di `storage/app/private/backups/` (lihat kendala_backlog).
 
 **Contoh pola entitas = Testimonial** (memakai kerangka daftar bersama, [ARCHITECTURE §7.1](ARCHITECTURE.md#71-kerangka-bersama-untuk-daftar-terurut)). Entitas berikutnya meniru file-file ini:
 - `database/migrations/2026_11_03_000003_create_testimonials_table.php`, `app/Models/Testimonial.php` (scope + accessor `logo_url`/`photo_url`)
@@ -35,10 +35,10 @@
 
 | Status | Jumlah | PBI |
 |---|---|---|
-| ✅ Selesai | 47 | **001–005** (seluruh Epic 0), **101–111** (seluruh Epic 1), **201–210** (seluruh Epic 2), **301–313** (seluruh Epic 3), **401–406** (seluruh Epic 4), **501**, **506** |
+| ✅ Selesai | 48 | **001–005** (seluruh Epic 0), **101–111** (seluruh Epic 1), **201–210** (seluruh Epic 2), **301–313** (seluruh Epic 3), **401–406** (seluruh Epic 4), **501**, **503**, **506** |
 | ⏳ Sedang dikerjakan | 0 | – |
-| ⏸️ Menunggu keputusan | 3 | **504**, **507** (hosting, lihat [kendala_backlog.md](kendala_backlog.md) KD-1), **509** (form kontak, KD-3) |
-| ❌ Belum | 4 | Epic 5 (502, 503, 505, 508) |
+| ⏸️ Menunggu pemilik | 4 | **502** (konten asli, KD-2), **504**, **507** (hosting, lihat [kendala_backlog.md](kendala_backlog.md) KD-1), **509** (form kontak, KD-3) |
+| ❌ Belum | 2 | **505** (belum diisi), **508** (cache, hanya bila perlu) |
 
 Total **53 PBI** dalam 6 epic:
 
@@ -49,7 +49,7 @@ Total **53 PBI** dalam 6 epic:
 | 2 | Fondasi VCMS baru + FAQ | 201–210 | 10/10 ✅ |
 | 3 | Migrasi entitas | 301–313 | 13/13 ✅ |
 | 4 | Pembersihan akhir | 401–406 | 6/6 ✅ |
-| 5 | Setelah rombak (fitur & rilis) | 501–509 | 2/9 |
+| 5 | Setelah rombak (fitur & rilis) | 501–509 | 3/9 |
 
 **Urutan wajib:** Epic 0 → 1 → 2 → 3 → 4. Fitur baru (Epic 5) baru dikerjakan setelah Epic 4, kecuali yang tidak menyentuh model konten (lihat [PBI-501](#epic-5-setelah-rombak-fitur--rilis)).
 
@@ -75,7 +75,7 @@ Total **53 PBI** dalam 6 epic:
 
 ## Status semua PBI
 
-Legenda: ✅ selesai · ⏳ sedang dikerjakan · ❌ belum · ⏸️ menunggu keputusan
+Legenda: ✅ selesai · ⏳ sedang dikerjakan · ❌ belum · ⏸️ menunggu pemilik (keputusan atau konten)
 
 ### Epic 0: Persiapan
 
@@ -161,9 +161,9 @@ Belum dirinci. Diisi setelah Epic 4.
 | 509 | Form kontak disimpan ke database / dikirim email (dipisah dari PBI-501) | ⏸️ | Menunggu KD-3. Sekarang form membuka WhatsApp dengan isi pesan terisi |
 | 506 | Gambar & video: kompres gambar ke WebP, `loading="lazy"` di bawah layar, video hero disimpan sendiri | ✅ | 3 Nov 2026. **Temuan:** 50 JPG template hanya placeholder kecil (±8 KB, diganti di PBI-502), jadi yang dikonversi hanya 14 PNG besar yang benar-benar tampil: logo 3500 px yang tampil setinggi 45 px kini WebP 720 px, latar testimoni, lingkaran dekoratif, bentuk latar CSS, gambar 404, avatar admin (±960 KB → ±290 KB). Favicon kini PNG 192 px (dulu 1500 px). PNG lama dihapus, logo PNG beresolusi tinggi tetap disimpan sebagai master. **Upload baru** JPG/PNG/WebP otomatis diperkecil ke sisi terpanjang 2000 px dan disimpan sebagai WebP (foto HP diputar sesuai EXIF; GIF dan video tidak diubah; `seo.image` tetap format asli lewat `'original' => true`); uji nyata: PNG 3,2 MB → WebP 51 KB. `loading="lazy"` di 17 tag gambar di bawah layar (hero, logo header, slider Swiper tidak). Bonus: gambar 404 rusak di URL bertingkat (path relatif), kini `asset()`. Video hero tidak diunduh dari server demo: diganti pemilik lewat tombol Hero di mode edit (lihat KD-2). Test: `ImageUploadTest` (6), `TemplateAssetsTest` (4) |
 | 507 | Optimasi rilis: `php artisan optimize`, OPcache di server | ⏸️ | Menunggu K-3 |
-| 508 | Cache data per halaman (`Cache::rememberForever('page.home')`, dihapus saat admin menyimpan) | ❌ | Hanya bila PBI-313 + 506 + 507 belum cukup; tanpa Redis (K-8) |
-| 502 | Ganti konten demo template dengan konten asli (video Awaiken, link YouTube acak, award 2015–2020, logo klien contoh, nama tim) | ❌ | Butuh konten dari pemilik |
-| 503 | Branding: `<html lang="id">`, meta author/description, judul halaman | ❌ | `lang="zxx"` dan author "Awaiken" masih dari template |
+| 508 | Cache data per halaman (`Cache::rememberForever('page.home')`, dihapus saat admin menyimpan) | ❌ | Hanya bila PBI-313 + 506 + 507 belum cukup; tanpa Redis (K-8). Dilewati 3 Nov 2026: baru bisa dinilai setelah ada hosting (507) |
+| 502 | Ganti konten demo template dengan konten asli (video Awaiken, link YouTube acak, award 2015–2020, logo klien contoh, nama tim) | ⏸️ | Menunggu konten dari pemilik (KD-2). Semua isi bisa diganti sendiri lewat mode edit |
+| 503 | Branding: `<html lang="id">`, meta author/description, judul halaman | ✅ | 3 Nov 2026: `lang` situs publik mengikuti `APP_LOCALE` (`id` di `.env.example`; `.env` lokal masih `en`, ubah bila perlu), halaman admin `lang="id"`; meta author "Dikelolain" (description sudah di PBI-501); semua judul berpola "Halaman - Dikelolain" (Home: "Dikelolain - Creative Agency", 404: "Page Not Found - Dikelolain", login: "Login - Dikelolain VCMS"). Teks default footer yang menyebut "Rovex" (nama template) diganti deskripsi Dikelolain. Kredit template di kepala `custom.css` sengaja dibiarkan (lisensi). Test: `BrandingTest` (16) |
 | 504 | Deploy | ⏸️ | Menunggu K-3 |
 | 505 | Fitur baru (diisi kemudian) | ❌ | |
 
@@ -293,3 +293,4 @@ Ringkasan hasil membaca kode di commit `02fa1fd` (isi sama dengan branch `back-e
 | 3 Nov 2026 | PBI-406 selesai, **Epic 4 tuntas**: semua halaman dicek di mode edit dan publik, satu gambar default yang hilang diperbaiki; 366 test hijau |
 | 3 Nov 2026 | PBI-501 selesai: meta description/OG per halaman (diedit lewat tombol SEO di bilah admin), sitemap.xml dan robots.txt dinamis; form kontak dipisah jadi PBI-509 (KD-3); 381 test hijau |
 | 3 Nov 2026 | PBI-506 selesai: PNG besar template jadi WebP seukuran tampilan, upload baru otomatis diperkecil + WebP, `loading="lazy"` di gambar bawah layar; 391 test hijau |
+| 3 Nov 2026 | PBI-503 selesai: `lang`, author, dan judul halaman berlabel Dikelolain; semua PBI yang tidak menunggu pemilik selesai; 407 test hijau |

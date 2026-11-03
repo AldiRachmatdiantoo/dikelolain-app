@@ -1,6 +1,6 @@
 @extends('layouts.sidebar')
 
-@section('title', 'Dikelolain - FAQs')
+@section('title', 'FAQs - Dikelolain')
 
 @section('page-header')
     <x-vcms.settings :keys="['faqs.header.title', 'faqs.header.breadcrumb']" label="Header">

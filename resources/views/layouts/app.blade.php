@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zxx">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -14,7 +14,7 @@
 	<meta property="og:url" content="{{ url()->current() }}">
 	<meta property="og:image" content="{{ $seo['image'] }}">
 	@stack('meta')
-	<meta name="author" content="Awaiken">
+	<meta name="author" content="Dikelolain">
 
     <title>@yield('title')</title>
 

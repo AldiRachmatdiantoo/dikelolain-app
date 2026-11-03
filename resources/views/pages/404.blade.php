@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Dikelolain - Creative Agency')
+@section('title', 'Page Not Found - Dikelolain')
 
 @push('meta')
     <meta name="robots" content="noindex">
