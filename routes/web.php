@@ -136,57 +136,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         Route::prefix('pages')->name('pages.')->group(function () {
             Route::get('/analytics', AnalyticsController::class)->name('analytics');
-
-            // Old editor pages (no longer affect the site): removed with their views in PBI-403.
-            Route::get('/home', function () {
-                $sections = App\Models\Section::with('contents.media')
-                    ->active()
-                    ->ordered()
-                    ->get()
-                    ->keyBy('key');
-
-                return view('admin.pages.home', compact('sections'));
-            })->name('home');
-
-            Route::get('/about', function () {
-                $sections = App\Models\Section::with('contents.media')->active()->ordered()->get()->keyBy('key');
-                return view('admin.pages.about', compact('sections'));
-            })->name('about');
-
-            Route::get('/services', function () {
-                $sections = App\Models\Section::with('contents.media')->active()->ordered()->get()->keyBy('key');
-                return view('admin.pages.services', compact('sections'));
-            })->name('services');
-
-            Route::get('/service/{serviceId}', function ($serviceId) {
-                $sections = App\Models\Section::with('contents.media')->active()->ordered()->get()->keyBy('key');
-                return view('admin.pages.service-detail', compact('sections', 'serviceId'));
-            })->name('service.detail');
-
-            Route::get('/portfolio', function () {
-                $sections = App\Models\Section::with('contents.media')->active()->ordered()->get()->keyBy('key');
-                return view('admin.pages.portfolio', compact('sections'));
-            })->name('portfolio');
-
-            Route::get('/team', function () {
-                $sections = App\Models\Section::with('contents.media')->active()->ordered()->get()->keyBy('key');
-                return view('admin.pages.team', compact('sections'));
-            })->name('team');
-
-            Route::get('/pricing', function () {
-                $sections = App\Models\Section::with('contents.media')->active()->ordered()->get()->keyBy('key');
-                return view('admin.pages.pricing', compact('sections'));
-            })->name('pricing');
-
-            Route::get('/contact', function () {
-                $sections = App\Models\Section::with('contents.media')->active()->ordered()->get()->keyBy('key');
-                return view('admin.pages.contact', compact('sections'));
-            })->name('contact');
-
-            Route::get('/testimonials', function () {
-                $sections = App\Models\Section::with('contents.media')->active()->ordered()->get()->keyBy('key');
-                return view('admin.pages.testimonials', compact('sections'));
-            })->name('testimonials');
         });
     });
 });

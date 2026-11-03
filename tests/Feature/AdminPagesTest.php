@@ -23,8 +23,6 @@ class AdminPagesTest extends TestCase
             ->map(fn ($route) => $route->uri())
             // Laravel's own health check and local storage routes.
             ->reject(fn ($uri) => in_array($uri, ['up', 'storage/{path}'], true))
-            // Old editor pages, removed with their views in PBI-403.
-            ->reject(fn ($uri) => str_starts_with($uri, 'admin/pages/'))
             ->values()
             ->all();
 
@@ -41,6 +39,28 @@ class AdminPagesTest extends TestCase
         foreach (EditablePages::all() as $page) {
             $response->assertSee(e(route('admin.edit-mode.on', ['to' => $page['path']])), false)
                 ->assertSee('<h3>' . $page['label'] . '</h3>', false);
+        }
+    }
+
+    public function test_sidebar_links_every_page_to_edit_mode(): void
+    {
+        $html = $this->actingAs(User::factory()->create())
+            ->get('/admin/pages/analytics')
+            ->assertOk()
+            ->getContent();
+
+        // The sidebar links each page once (the dashboard cards add a second link there).
+        foreach (EditablePages::all() as $page) {
+            $this->assertSame(1, substr_count($html, 'href="' . e(route('admin.edit-mode.on', ['to' => $page['path']])) . '"'), $page['label']);
+        }
+    }
+
+    public function test_old_editor_pages_are_gone(): void
+    {
+        $this->actingAs(User::factory()->create());
+
+        foreach (['home', 'about', 'services', 'service/01', 'portfolio', 'team', 'pricing', 'contact', 'testimonials'] as $page) {
+            $this->get("/admin/pages/{$page}")->assertNotFound();
         }
     }
 

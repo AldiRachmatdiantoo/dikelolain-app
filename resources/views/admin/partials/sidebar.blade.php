@@ -28,71 +28,18 @@
             </li>
             
             <li class="menu-section">
-                <span>Pages Management</span>
+                <span>Edit Halaman</span>
             </li>
 
-            <li class="menu-item {{ request()->routeIs('admin.pages.home') ? 'active' : '' }}">
-                <a href="{{ route('admin.pages.home') }}">
-                    <i class="fa-solid fa-house"></i>
-                    <span>Home Page</span>
-                </a>
-            </li>
-
-            <li class="menu-item {{ request()->routeIs('admin.pages.about') ? 'active' : '' }}">
-                <a href="{{ route('admin.pages.about') }}">
-                    <i class="fa-solid fa-info-circle"></i>
-                    <span>About Page</span>
-                </a>
-            </li>
-
-            <li class="menu-item {{ request()->routeIs('admin.pages.services') ? 'active' : '' }}">
-                <a href="{{ route('admin.pages.services') }}">
-                    <i class="fa-solid fa-briefcase"></i>
-                    <span>Services Page</span>
-                </a>
-            </li>
-
-            <li class="menu-item {{ request()->routeIs('admin.pages.portfolio') ? 'active' : '' }}">
-                <a href="{{ route('admin.pages.portfolio') }}">
-                    <i class="fa-solid fa-folder-open"></i>
-                    <span>Portfolio Page</span>
-                </a>
-            </li>
-
-            <li class="menu-item {{ request()->routeIs('admin.pages.team') ? 'active' : '' }}">
-                <a href="{{ route('admin.pages.team') }}">
-                    <i class="fa-solid fa-users"></i>
-                    <span>Team Page</span>
-                </a>
-            </li>
-
-            <li class="menu-item {{ request()->routeIs('admin.pages.pricing') ? 'active' : '' }}">
-                <a href="{{ route('admin.pages.pricing') }}">
-                    <i class="fa-solid fa-tag"></i>
-                    <span>Pricing Page</span>
-                </a>
-            </li>
-
-            <li class="menu-item {{ request()->routeIs('admin.pages.contact') ? 'active' : '' }}">
-                <a href="{{ route('admin.pages.contact') }}">
-                    <i class="fa-solid fa-envelope"></i>
-                    <span>Contact Page</span>
-                </a>
-            </li>
-
-            <li class="menu-item">
-                <a href="{{ route('admin.edit-mode.on', ['to' => '/faqs']) }}">
-                    <i class="fa-solid fa-circle-question"></i>
-                    <span>FAQs Page</span>
-                </a>
-            </li>
-
-            <li class="menu-item {{ request()->routeIs('admin.pages.testimonials') ? 'active' : '' }}">
-                <a href="{{ route('admin.pages.testimonials') }}">
-                    <i class="fa-solid fa-star"></i>
-                    <span>Testimonials Page</span>
-                </a>
-            </li>
+            {{-- Each link turns edit mode on and opens the public page. --}}
+            @foreach (\App\Vcms\EditablePages::all() as $page)
+                <li class="menu-item">
+                    <a href="{{ route('admin.edit-mode.on', ['to' => $page['path']]) }}">
+                        <i class="fa-solid {{ $page['icon'] }}"></i>
+                        <span>{{ $page['label'] }}</span>
+                    </a>
+                </li>
+            @endforeach
         </ul>
     </nav>
     <!-- Sidebar Menu End -->

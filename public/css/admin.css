@@ -74,18 +74,6 @@
     margin-bottom: 8px;
 }
 
-.vcms-badge {
-    background: #FFD700;
-    color: #1a1a1a;
-    padding: 4px 10px;
-    border-radius: 4px;
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    display: inline-block;
-}
-
 /* Sidebar Burger Button */
 .sidebar-burger {
     background: transparent;
@@ -355,22 +343,6 @@
     gap: 20px;
 }
 
-.vcms-mode-indicator {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: #FFD700;
-    color: #1a1a1a;
-    padding: 8px 16px;
-    border-radius: 6px;
-    font-size: 13px;
-    font-weight: 600;
-}
-
-.vcms-mode-indicator i {
-    font-size: 14px;
-}
-
 .admin-actions {
     display: flex;
     gap: 10px;
@@ -398,9 +370,9 @@
 }
 
 /* =========================================
-   VCMS PREVIEW CONTAINER
+   PAGE CONTENT
    ========================================= */
-.vcms-preview-container {
+.admin-page-content {
     padding: 30px;
     background: #161616;
 }
@@ -471,11 +443,6 @@
         flex-wrap: wrap;
     }
     
-    .vcms-mode-indicator {
-        font-size: 11px;
-        padding: 6px 12px;
-    }
-    
     .admin-actions {
         width: 100%;
         flex-direction: column;
@@ -486,7 +453,7 @@
         justify-content: center;
     }
     
-    .vcms-preview-container {
+    .admin-page-content {
         padding: 15px;
     }
 }
