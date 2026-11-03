@@ -21,6 +21,7 @@ use App\Repositories\Contracts\TeamMemberRepositoryInterface;
 use App\Repositories\Contracts\TeamMemberSkillRepositoryInterface;
 use App\Repositories\Contracts\TestimonialRepositoryInterface;
 use App\Repositories\Contracts\ToolRepositoryInterface;
+use App\Repositories\Contracts\UserRepositoryInterface;
 use App\Repositories\Eloquent\EloquentAchievementRepository;
 use App\Repositories\Eloquent\EloquentClientLogoRepository;
 use App\Repositories\Eloquent\EloquentContactMessageRepository;
@@ -40,6 +41,7 @@ use App\Repositories\Eloquent\EloquentTeamMemberRepository;
 use App\Repositories\Eloquent\EloquentTeamMemberSkillRepository;
 use App\Repositories\Eloquent\EloquentTestimonialRepository;
 use App\Repositories\Eloquent\EloquentToolRepository;
+use App\Repositories\Eloquent\EloquentUserRepository;
 use Illuminate\Support\ServiceProvider;
 
 /**
@@ -70,5 +72,6 @@ class RepositoryServiceProvider extends ServiceProvider
         ServiceBenefitRepositoryInterface::class => EloquentServiceBenefitRepository::class,
         ServiceFaqRepositoryInterface::class => EloquentServiceFaqRepository::class,
         ContactMessageRepositoryInterface::class => EloquentContactMessageRepository::class,
+        UserRepositoryInterface::class => EloquentUserRepository::class,
     ];
 }

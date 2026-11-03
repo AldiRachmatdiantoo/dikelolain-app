@@ -59,18 +59,19 @@ app/
 │   │   └── Admin/
 │   │       ├── Api/               FaqController, TestimonialController, SettingController, ...
 │   │       ├── DashboardController.php, AnalyticsController.php, EditModeController.php, MessageController.php
-│   │       ├── AuthController.php
-│   │       └── ProfileController.php
-│   ├── Requests/Admin/            StoreFaqRequest, UpdateFaqRequest, MoveRequest, UpdateSettingRequest, ...
+│   │       ├── AuthController.php     login (maks. 5 percobaan per menit), logout
+│   │       └── ProfileController.php  nama, email, dan password admin yang login
+│   ├── Requests/Admin/            FaqRequest, MoveRequest, UpdateSettingRequest, LoginRequest, UpdateProfileRequest, UpdatePasswordRequest, ...
 │   └── Resources/                 FaqResource, ...
 ├── Services/
 │   ├── Pages/                     HomePageService, AboutPageService, ..., SectionData (section bersama)
+│   ├── AccountService.php         akun admin sendiri: login, logout, profil, password
 │   ├── FaqService.php
 │   ├── SettingService.php         nilai tunggal (page_settings)
 │   ├── SitemapService.php         URL untuk sitemap.xml (halaman utama + detail aktif)
 │   └── ImageUploadService.php     simpan upload; gambar diperkecil (maks 2000 px) dan dijadikan WebP
 ├── Repositories/
-│   ├── Contracts/                 FaqRepositoryInterface, PageSettingRepositoryInterface, ...
+│   ├── Contracts/                 FaqRepositoryInterface, PageSettingRepositoryInterface, UserRepositoryInterface, ...
 │   └── Eloquent/                  EloquentFaqRepository, ...
 ├── Models/                        Faq, Testimonial, TeamMember, ..., PageSetting
 ├── Rules/MediaUpload.php          validasi upload dari isi file

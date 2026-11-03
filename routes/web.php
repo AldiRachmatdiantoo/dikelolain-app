@@ -19,10 +19,11 @@ use App\Http\Controllers\Admin\Api\TeamMemberExpertiseController;
 use App\Http\Controllers\Admin\Api\TeamMemberSkillController;
 use App\Http\Controllers\Admin\Api\TestimonialController;
 use App\Http\Controllers\Admin\Api\ToolController;
+use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\EditModeController;
 use App\Http\Controllers\Admin\MessageController;
-use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Pages\AboutPageController;
 use App\Http\Controllers\Pages\ContactPageController;
 use App\Http\Controllers\Pages\FaqPageController;
@@ -35,7 +36,6 @@ use App\Http\Controllers\Pages\ServicePageController;
 use App\Http\Controllers\Pages\TeamMemberPageController;
 use App\Http\Controllers\Pages\TeamPageController;
 use App\Http\Controllers\Pages\TestimonialPageController;
-use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ContactMessageController;
 use App\Http\Controllers\SeoController;
 use Illuminate\Support\Facades\Route;
@@ -88,7 +88,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
     //guest login
     Route::middleware('guest')->group(function () {
         Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-        Route::post('/login', [AuthController::class, 'login'])->name('handle-login');
+        // Five tries per minute per address against password guessing.
+        Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:5,1')->name('handle-login');
     });
 
     Route::middleware('auth')->group(function () {
