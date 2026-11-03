@@ -14,7 +14,7 @@
 
 **Mode:** eksekusi otomatis atas instruksi pemilik (3 Nov 2026): kerjakan PBI berurutan tanpa bertanya, uji setiap PBI (`php artisan test` + cek browser bila terlihat), commit + push per PBI, kendala dicatat di [kendala_backlog.md](kendala_backlog.md).
 
-**Sedang dikerjakan:** Epic 4, PBI-404 (sisa fungsi `getContent()` / `get*Content()` di view). Selesai: Epic 0–3, PBI-401–403. Tidak ada lagi kode yang membaca `sections` lama selain model dan migration-nya (dihapus di PBI-405).
+**Sedang dikerjakan:** Epic 4, PBI-405 (drop tabel `section_contents`, `sections`, `media` + modelnya). Selesai: Epic 0–3, PBI-401–404. Tidak ada lagi kode yang membaca `sections` lama selain model dan migration-nya (dihapus di PBI-405).
 
 **Contoh pola entitas = Testimonial** (memakai kerangka daftar bersama, [ARCHITECTURE §7.1](ARCHITECTURE.md#71-kerangka-bersama-untuk-daftar-terurut)). Entitas berikutnya meniru file-file ini:
 - `database/migrations/2026_11_03_000003_create_testimonials_table.php`, `app/Models/Testimonial.php` (scope + accessor `logo_url`/`photo_url`)
@@ -35,10 +35,10 @@
 
 | Status | Jumlah | PBI |
 |---|---|---|
-| ✅ Selesai | 42 | **001–005** (seluruh Epic 0), **101–111** (seluruh Epic 1), **201–210** (seluruh Epic 2), **301–313** (seluruh Epic 3), **401–403** |
+| ✅ Selesai | 43 | **001–005** (seluruh Epic 0), **101–111** (seluruh Epic 1), **201–210** (seluruh Epic 2), **301–313** (seluruh Epic 3), **401–404** |
 | ⏳ Sedang dikerjakan | 0 | – |
 | ⏸️ Menunggu keputusan | 2 | **504**, **507** (hosting, lihat [kendala_backlog.md](kendala_backlog.md) KD-1) |
-| ❌ Belum | 9 | Epic 4–5 |
+| ❌ Belum | 8 | Epic 4–5 |
 
 Total **53 PBI** dalam 6 epic:
 
@@ -48,7 +48,7 @@ Total **53 PBI** dalam 6 epic:
 | 1 | Beres-beres tanpa risiko | 101–111 | 11/11 ✅ |
 | 2 | Fondasi VCMS baru + FAQ | 201–210 | 10/10 ✅ |
 | 3 | Migrasi entitas | 301–313 | 13/13 ✅ |
-| 4 | Pembersihan akhir | 401–406 | 3/6 |
+| 4 | Pembersihan akhir | 401–406 | 4/6 |
 | 5 | Setelah rombak (fitur & rilis) | 501–508 | 0/8 |
 
 **Urutan wajib:** Epic 0 → 1 → 2 → 3 → 4. Fitur baru (Epic 5) baru dikerjakan setelah Epic 4, kecuali yang tidak menyentuh model konten (lihat [PBI-501](#epic-5-setelah-rombak-fitur--rilis)).
@@ -147,7 +147,7 @@ Urutan dari yang paling sederhana. Setiap PBI mengikuti checklist [ARCHITECTURE 
 | 401 | Hapus `Admin/ContentController` (`batchUpdate` dkk) dan route `/admin/api/content/*` | ✅ 3 Nov 2026 | Controller 966 baris dan enam route dihapus. Test upload (`MediaUploadTest`: ekstensi dari isi file, PHP menyamar gambar, SVG, ukuran, pesan yang terbaca) kini memakai endpoint setting gambar/video, karena aturan `MediaUpload` yang sama dipakai semua API baru. Sejak ini editor lama `/admin/pages/*` tidak bisa menyimpan lagi (halamannya dihapus di PBI-403). Tanpa cek browser: tidak ada perubahan yang terlihat di halaman publik maupun mode edit. 378 test hijau |
 | 402 | Hapus `public/js/admin-vcms.js` dan CSS yang tidak dipakai lagi | ✅ 3 Nov 2026 | `admin-vcms.js` (5.243 baris) dihapus; satu-satunya bagian yang masih dibutuhkan, buka/tutup sidebar admin (sembunyikan di desktop, geser masuk dengan overlay di HP), ditulis ulang di `public/js/admin.js` (±50 baris, tanpa jQuery). `admin-vcms.css` dipangkas dari 1.321 menjadi 491 baris (gaya modal, form, upload, dan section editor lama dibuang; layout, sidebar, topbar dipertahankan) dan diganti nama `public/css/admin.css`. Modal edit global di layout admin ikut dihapus. Halaman editor lama masih tampil tanpa interaksi sampai PBI-403. Ikut diperbaiki: kartu dashboard menimpa nama halaman di layar 1280 px dengan sidebar terbuka (tombol kini turun ke bawah bila tidak muat). Dicek di browser: sidebar desktop dan HP, modal analytics, mode edit publik tetap jalan, aset baru 200. 378 test hijau |
 | 403 | Hapus semua `resources/views/admin/pages/*` kecuali analytics dan profil | ✅ 3 Nov 2026 | Sembilan view editor lama (home, about, services, service-detail, portfolio, team, pricing, contact, testimonials) dan route closure-nya dihapus; URL lamanya kini 404. Menu "Pages Management" di sidebar diganti "Edit Halaman": sembilan tautan yang membuka halaman publik dalam mode edit (dari `App\Vcms\EditablePages`, sama dengan kartu dashboard). Layout admin dirampingkan: modal portofolio, indikator "VCMS Edit Mode", serta CSS/JS template yang dulu hanya untuk pratinjau section (jQuery, swiper, gsap, isotope, wow, magnific-popup, dll.) dibuang; yang tersisa Bootstrap (modal analytics) + `admin.js`. Test penjaga closure tidak lagi punya pengecualian. Dicek di browser: dashboard, profil, ganti password, modal analytics, menu sidebar membuka mode edit Contact, `/admin/pages/home` → 404. 362 test hijau (18 test smoke editor lama ikut hilang) |
-| 404 | Hapus semua fungsi `getContent()` / `get*Content()` di view | ❌ | |
+| 404 | Hapus semua fungsi `getContent()` / `get*Content()` di view | ✅ 3 Nov 2026 | Tidak ada yang tersisa untuk dihapus: semua helper sudah hilang saat view-nya ditulis ulang di PBI-301–312 (terakhir hero, Contact, footer, Testimonials di PBI-312; editor lama di PBI-403). Ditambah `ViewHygieneTest` yang memeriksa semua view: tidak boleh ada fungsi PHP bernama di blok `@php`, `function_exists`, `$sections`/`->contents`, atau query model langsung (dicoba dengan view percobaan berisi helper lama: tertangkap). Blok `@php` yang tersisa hanya hitungan tampilan (delay animasi, jumlah halaman paginasi). Tanpa cek browser: tidak ada perubahan yang terlihat. 363 test hijau |
 | 405 | Migration drop `section_contents`, `sections`, `media`; hapus model dan `SectionContentSeeder` | ❌ | |
 | 406 | Test lengkap hijau + cek manual semua halaman dalam mode edit dan mode publik | ❌ | |
 
@@ -246,7 +246,7 @@ Ringkasan hasil membaca kode di commit `02fa1fd` (isi sama dengan branch `back-e
 | 2 | **`batchUpdate` ~700 baris** dengan cabang `delete_*` per jenis data | `app/Http/Controllers/Admin/ContentController.php` | Epic 2–4 |
 | 3 | **Setiap halaman dibuat dua kali**: versi publik dan versi admin | `resources/views/pages/*` vs `resources/views/admin/pages/*` | Epic 2–4 |
 | 4 | **`admin-vcms.js` 6.000 baris**: satu objek, 103 method, ±50 pembuat form HTML manual, `switch` 52 kasus, `saveChanges` 575 baris, 13 `setTimeout`, 34 `innerHTML`/`.html()` | `public/js/admin-vcms.js` | Epic 2–4 |
-| 5 | **Logika di view**: blok `@php` dengan regex, fungsi global `getContent()` disalin di ±15 file | `resources/views/**` | Epic 2–4 |
+| 5 | **Logika di view**: blok `@php` dengan regex, fungsi global `getContent()` disalin di ±15 file | `resources/views/**` | Epic 2–4 ✅ (dijaga `ViewHygieneTest`) |
 | 6 | **Semua route berupa closure** yang memuat semua section + konten + media di setiap halaman | `routes/web.php` | PBI-313 ✅ (sisa editor lama: PBI-403) |
 | 7 | Kode mati dan route ke view yang tidak ada | lihat PBI-101–103 | Epic 1 |
 | 8 | Upload tanpa validasi tipe file, password admin seeder lemah, pesan exception bocor ke klien | lihat PBI-104–106 | Epic 1 |
@@ -287,3 +287,4 @@ Ringkasan hasil membaca kode di commit `02fa1fd` (isi sama dengan branch `back-e
 | 3 Nov 2026 | PBI-401 selesai: `ContentController` dan `/admin/api/content/*` dihapus, test upload pindah ke API setting; 378 test hijau |
 | 3 Nov 2026 | PBI-402 selesai: `admin-vcms.js` dihapus (sidebar admin pindah ke `admin.js`), CSS editor lama dibuang, sisa layout jadi `admin.css`; 378 test hijau |
 | 3 Nov 2026 | PBI-403 selesai: halaman editor lama `/admin/pages/*` dihapus, sidebar membuka mode edit, layout admin dirampingkan; 362 test hijau |
+| 3 Nov 2026 | PBI-404 selesai: helper `getContent()` sudah habis sejak Epic 3; ditambah test penjaga `ViewHygieneTest`; 363 test hijau |
