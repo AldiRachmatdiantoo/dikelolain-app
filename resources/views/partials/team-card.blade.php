@@ -5,7 +5,7 @@
         <div class="team-image">
             <a href="{{ route('pages.team.single', $member->slug) }}" data-cursor-text="View">
                 <figure class="image-anime">
-                    <img src="{{ $member->photo_url }}" alt="{{ $member->name }}">
+                    <img src="{{ $member->photo_url }}" alt="{{ $member->name }}" loading="lazy">
                 </figure>
             </a>
         </div>

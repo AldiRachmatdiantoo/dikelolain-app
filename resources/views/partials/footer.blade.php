@@ -24,7 +24,7 @@
                             <x-vcms.settings :keys="['footer.logo', 'footer.description', 'footer.facebook', 'footer.x', 'footer.linkedin', 'footer.instagram']" label="Logo & sosial media" class="about-footer">
                                 <!-- Footer Logo Start -->
                                 <div class="footer-logo">
-                                    <img src="{{ $settings->url('footer.logo') }}" alt="">
+                                    <img src="{{ $settings->url('footer.logo') }}" alt="" loading="lazy">
                                 </div>
                                 <!-- Footer Logo End -->
 

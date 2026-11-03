@@ -22,7 +22,7 @@
                     </div>
 
                     <x-vcms.settings :keys="['cta.circle_image', 'cta.circle_link']" label="Tombol" class="cta-contact-circle">
-                        <a href="{{ $settings->get('cta.circle_link') }}"><img src="{{ $settings->url('cta.circle_image') }}" alt="Contact Circle"></a>
+                        <a href="{{ $settings->get('cta.circle_link') }}"><img src="{{ $settings->url('cta.circle_image') }}" alt="Contact Circle" loading="lazy"></a>
                     </x-vcms.settings>
                 </div>
             </div>

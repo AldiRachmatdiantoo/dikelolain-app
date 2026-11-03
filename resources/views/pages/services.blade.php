@@ -51,7 +51,7 @@
                             <div class="service-image">
                                 <a href="{{ $serviceLink }}" data-cursor-text="View">
                                     <figure class="image-anime">
-                                        <img src="{{ $service->image_url }}" alt="{{ $service->name }}">
+                                        <img src="{{ $service->image_url }}" alt="{{ $service->name }}" loading="lazy">
                                     </figure>
                                 </a>
                             </div>

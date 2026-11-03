@@ -33,7 +33,7 @@ class CounterSectionTest extends TestCase
             ->assertSee('<span class="counter">45</span>+', false)
             ->assertSee('<span class="counter">100</span>%', false)
             ->assertSee('client satisfaction')
-            ->assertSee(asset('images/cta-contact-circle.png'), false)
+            ->assertSee(asset('images/cta-contact-circle.webp'), false)
             ->getContent();
 
         $this->assertSame(3, substr_count($html, 'class="cta-counter-item'));

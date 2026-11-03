@@ -27,15 +27,16 @@ class MediaUploadTest extends TestCase
 
     public function test_image_is_stored_with_the_extension_of_its_content(): void
     {
-        $image = UploadedFile::fake()->image('foto.png');
-        // Same picture, misleading name: the stored file must still end in .png.
+        // A GIF is stored as uploaded (JPG/PNG become WebP, see ImageUploadTest).
+        $image = UploadedFile::fake()->image('foto.gif');
+        // Same picture, misleading name: the stored file must still end in .gif.
         $renamed = new UploadedFile($image->getPathname(), 'foto.php', null, null, true);
 
         $value = $this->patch(self::URL, ['file' => $renamed])
             ->assertOk()
             ->json('data.value');
 
-        $this->assertStringEndsWith('.png', $value);
+        $this->assertStringEndsWith('.gif', $value);
         Storage::disk('public')->assertExists(substr($value, strlen('storage/')));
     }
 

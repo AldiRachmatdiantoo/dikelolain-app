@@ -10,7 +10,7 @@
     <title>@yield('title', 'Admin Dashboard') - Dikelolain VCMS</title>
 
     <!-- Favicon and Touch Icons -->
-    <link href="{{ asset('images/logo-dikelolain-potrait.png') }}" rel="shortcut icon" type="image/png">
+    <link href="{{ asset('images/favicon-dikelolain.png') }}" rel="icon" type="image/png">
 
     <!-- Main CSS Files -->
     <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet" media="screen">

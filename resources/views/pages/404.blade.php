@@ -18,7 +18,7 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="error-page-image wow fadeInUp">
-                        <img src="images/404-error-img.png" alt="">
+                        <img src="{{ asset('images/404-error-img.webp') }}" alt="Halaman tidak ditemukan">
                     </div>
                     <div class="error-page-content">
                         <div class="section-title">

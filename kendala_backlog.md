@@ -8,7 +8,7 @@
 | # | Kendala | Jenis | Menghambat | Yang dibutuhkan | Status |
 |---|---|---|---|---|---|
 | KD-1 | Database dan hosting untuk rilis belum dipilih (K-3) | Keputusan | PBI-504 (deploy), PBI-507 (optimasi server) | Pilih DB (SQLite/MySQL/PostgreSQL) dan hosting (Azure App Service / lainnya) | ⏳ Menunggu pemilik |
-| KD-2 | Konten asli belum ada: video hero, foto & link project, nama dan foto tim, logo klien, testimoni, harga paket, nomor WhatsApp, alamat & peta | Konten | PBI-502 | Konten dari pemilik/klien | ⏳ Menunggu pemilik |
+| KD-2 | Konten asli belum ada: video hero, foto & link project, nama dan foto tim, logo klien, testimoni, harga paket, nomor WhatsApp, alamat & peta | Konten | PBI-502 | Konten dari pemilik/klien. **Video hero** masih diputar langsung dari server demo Awaiken (bisa hilang sewaktu-waktu); ganti lewat tombol Hero di mode edit (unggah MP4/WebM, maks 50 MB). Foto yang diunggah otomatis diperkecil dan dijadikan WebP | ⏳ Menunggu pemilik |
 | KD-3 | Form kontak: tetap membuka WhatsApp (sekarang), disimpan ke database (dibaca di panel admin), atau dikirim ke email? Email butuh akun SMTP (misalnya App Password Gmail) di `.env` | Keputusan + akun | PBI-509 | Pilih salah satu; bila email, siapkan alamat tujuan dan kredensial SMTP (diisi sendiri di `.env`, jangan dikirim lewat chat) | ⏳ Menunggu pemilik |
 
 ## Catatan masa transisi

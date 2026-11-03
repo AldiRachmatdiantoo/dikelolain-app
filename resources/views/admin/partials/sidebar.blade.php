@@ -2,7 +2,7 @@
     <!-- Sidebar Header Start -->
     <div class="sidebar-header">
         <a href="{{ route('admin.dashboard') }}" class="sidebar-logo">
-            <img src="{{ asset('images/logo-dikelolain.png') }}" alt="Dikelolain Logo">
+            <img src="{{ asset('images/logo-dikelolain.webp') }}" alt="Dikelolain Logo">
         </a>
         <button class="sidebar-burger" id="sidebarBurger" title="Toggle Fullscreen">
             <i class="fa-solid fa-bars"></i>
@@ -48,7 +48,7 @@
     <div class="sidebar-footer">
         <div class="admin-user-info">
             <div class="user-avatar">
-                <a href="{{route('admin.profile-detail')}}" style="text-decoration: none;"><img src="{{ asset('images/default-profilee.png') }}" alt="Admin">
+                <a href="{{route('admin.profile-detail')}}" style="text-decoration: none;"><img src="{{ asset('images/default-profilee.webp') }}" alt="Admin">
                 </a>
             </div>
             <div class="user-details">

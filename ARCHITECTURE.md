@@ -68,7 +68,7 @@ app/
 │   ├── FaqService.php
 │   ├── SettingService.php         nilai tunggal (page_settings)
 │   ├── SitemapService.php         URL untuk sitemap.xml (halaman utama + detail aktif)
-│   └── ImageUploadService.php
+│   └── ImageUploadService.php     simpan upload; gambar diperkecil (maks 2000 px) dan dijadikan WebP
 ├── Repositories/
 │   ├── Contracts/                 FaqRepositoryInterface, PageSettingRepositoryInterface, ...
 │   └── Eloquent/                  EloquentFaqRepository, ...
@@ -343,7 +343,7 @@ Hampir semua entitas berupa daftar dengan `sort_order` dan `is_active`. Logika y
 Urutan prioritas bila website terasa lambat:
 
 1. **Query per halaman:** setiap halaman hanya mengambil data yang dipakainya, dengan eager loading (`with()`) untuk relasi. Tidak ada lagi "muat semua section".
-2. **Gambar & video:** WebP, ukuran sesuai tampilan, `loading="lazy"` untuk gambar di bawah layar, video disimpan sendiri.
+2. **Gambar & video:** WebP, ukuran sesuai tampilan, `loading="lazy"` untuk gambar di bawah layar, video disimpan sendiri. Sudah diterapkan (PBI-506): gambar template dalam WebP, dan `ImageUploadService` memperkecil setiap upload JPG/PNG/WebP ke sisi terpanjang 2000 px lalu menyimpannya sebagai WebP (kecuali setting dengan `'original' => true`). Gambar di bagian pertama halaman (hero, logo header) dan di slider Swiper tidak diberi `loading="lazy"`.
 3. **Optimasi rilis:** `php artisan optimize` dan OPcache.
 4. **Cache data halaman** bila 1–3 belum cukup.
 

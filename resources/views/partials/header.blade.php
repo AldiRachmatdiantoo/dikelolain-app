@@ -2,7 +2,7 @@
     <div class="header-sticky">
         <nav class="navbar navbar-expand-lg">
             <div class="container">
-                <a class="navbar-brand" href="{{ route('home') }}"> <img src="{{ asset('images/logo-dikelolain.png') }}" alt="Logo">
+                <a class="navbar-brand" href="{{ route('home') }}"> <img src="{{ asset('images/logo-dikelolain.webp') }}" alt="Logo">
                 </a>
                 <div class="collapse navbar-collapse main-menu">
                     <div class="nav-menu-wrapper">

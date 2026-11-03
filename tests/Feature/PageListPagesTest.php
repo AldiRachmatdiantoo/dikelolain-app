@@ -64,8 +64,8 @@ class PageListPagesTest extends TestCase
 
         $this->get('/pricing')
             ->assertSeeInOrder(['Get 30 day free trial', 'No any hidden fees pay', 'You can cancel anytime', 'Tanpa ikon'])
-            ->assertSee('<img src="' . asset('images/icon-pricing-benefit-1.svg') . '" alt="">Get 30 day free trial', false)
-            ->assertDontSee('alt="">Tanpa ikon', false)
+            ->assertSee('<img src="' . asset('images/icon-pricing-benefit-1.svg') . '" alt="" loading="lazy">Get 30 day free trial', false)
+            ->assertDontSee('loading="lazy">Tanpa ikon', false)
             ->assertDontSee('Keuntungan Rahasia');
 
         $this->editor()->get('/pricing')

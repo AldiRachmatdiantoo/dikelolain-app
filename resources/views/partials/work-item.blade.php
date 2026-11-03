@@ -33,13 +33,13 @@
         @elseif ($ratioImage)
             <div class="ratio" style="--bs-aspect-ratio: 76%; border-radius: 30px; overflow: hidden;">
                 <figure class="image-anime">
-                    <img src="{{ $project->image_url }}" alt="{{ $project->title }}">
+                    <img src="{{ $project->image_url }}" alt="{{ $project->title }}" loading="lazy">
                 </figure>
             </div>
         @else
             <a href="javascript:void(0)" class="open-portfolio-modal" data-cursor-text="View" @foreach ($modalData as $name => $value) data-{{ $name }}="{{ $value }}" @endforeach>
                 <figure class="image-anime">
-                    <img src="{{ $project->image_url }}" alt="{{ $project->title }}">
+                    <img src="{{ $project->image_url }}" alt="{{ $project->title }}" loading="lazy">
                 </figure>
             </a>
         @endif

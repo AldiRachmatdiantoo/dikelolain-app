@@ -22,7 +22,7 @@
                         <x-vcms.item resource="tools" :item="$tool" :fields="$toolFields" label="tool"
                             class="creative-tool-item wow fadeInUp {{ $tool->is_active ? '' : 'vcms-hidden' }}" data-wow-delay="{{ 0.2 * ($index % 4) }}s">
                             <div class="icon-box">
-                                <img src="{{ $tool->icon_url }}" alt="{{ $tool->name }} Icon">
+                                <img src="{{ $tool->icon_url }}" alt="{{ $tool->name }} Icon" loading="lazy">
                             </div>
                             <div class="creative-tool-item-content">
                                 <h3>{{ $tool->name }}</h3>

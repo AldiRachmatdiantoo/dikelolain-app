@@ -8,6 +8,7 @@
 | Every single value an admin can edit (titles, button texts, contact info...).
 | The database only stores values that were changed; anything else falls back
 | to the default here. Types: text, textarea, rich_text, url, email, image, video.
+| Uploaded pictures are scaled down and saved as WebP unless 'original' => true.
 | rich_text allows only <span>, <strong>, <em> and <br>.
 |
 */
@@ -21,7 +22,7 @@ return [
     'about.sub_title' => ['type' => 'text', 'label' => 'Sub judul', 'default' => 'about us'],
     'about.title' => ['type' => 'rich_text', 'label' => 'Judul', 'default' => 'A team of <span>creative thinkers</span>'],
     'about.description' => ['type' => 'textarea', 'label' => 'Deskripsi', 'default' => 'We\'re a full-service design agency specializing in branding, web design, and creative strategies that elevate businesses.'],
-    'about.circle_image' => ['type' => 'image', 'label' => 'Gambar tombol bulat', 'default' => 'images/contact-circle-yellow.png'],
+    'about.circle_image' => ['type' => 'image', 'label' => 'Gambar tombol bulat', 'default' => 'images/contact-circle-yellow.webp'],
     'about.circle_link' => ['type' => 'url', 'label' => 'Link tombol bulat', 'default' => '/contact'],
     'vision.image' => ['type' => 'image', 'label' => 'Gambar', 'default' => 'images/our-vision-img.jpg'],
     'vision.sub_title' => ['type' => 'text', 'label' => 'Sub judul', 'default' => 'our vision'],
@@ -41,7 +42,7 @@ return [
 
     // CTA section with counters (Home, About)
     'cta.text' => ['type' => 'textarea', 'label' => 'Teks', 'default' => 'We specialize in delivering innovative and impactful design solutions that elevate brands and drive results. From digital experiences to print media, our team of creative professionals is dedicated to transforming ideas into compelling visual stories that resonate with audiences. With a focus on creativity, strategy, and client collaboration.'],
-    'cta.circle_image' => ['type' => 'image', 'label' => 'Gambar tombol bulat', 'default' => 'images/cta-contact-circle.png'],
+    'cta.circle_image' => ['type' => 'image', 'label' => 'Gambar tombol bulat', 'default' => 'images/cta-contact-circle.webp'],
     'cta.circle_link' => ['type' => 'url', 'label' => 'Link tombol bulat', 'default' => '/contact'],
 
     // Client logos section (Home, About)
@@ -94,10 +95,10 @@ return [
     // How we work section (Home)
     'process.sub_title' => ['type' => 'text', 'label' => 'Sub judul', 'default' => 'how we work'],
     'process.title' => ['type' => 'rich_text', 'label' => 'Judul', 'default' => 'Our methodology for <span>success</span>'],
-    'process.cta_image' => ['type' => 'image', 'label' => 'Gambar tombol bulat', 'default' => 'images/contact-circle-yellow.png'],
+    'process.cta_image' => ['type' => 'image', 'label' => 'Gambar tombol bulat', 'default' => 'images/contact-circle-yellow.webp'],
     'process.cta_link' => ['type' => 'url', 'label' => 'Link tombol bulat', 'default' => '/contact'],
     'process.image' => ['type' => 'image', 'label' => 'Gambar utama', 'default' => 'images/how-it-work-image.jpg'],
-    'process.circle_image' => ['type' => 'image', 'label' => 'Gambar lingkaran dekorasi', 'default' => 'images/how-work-image-circle.png'],
+    'process.circle_image' => ['type' => 'image', 'label' => 'Gambar lingkaran dekorasi', 'default' => 'images/how-work-image-circle.webp'],
 
     // FAQs page
     'faqs.header.title' => ['type' => 'rich_text', 'label' => 'Judul header', 'default' => 'FAQs'],
@@ -144,7 +145,7 @@ return [
     // Footer (every page)
     'footer.title' => ['type' => 'text', 'label' => 'Judul besar', 'default' => 'Let\'s Connect'],
     'footer.title_link' => ['type' => 'url', 'label' => 'Link judul besar', 'default' => '/contact'],
-    'footer.logo' => ['type' => 'image', 'label' => 'Logo', 'default' => 'images/logo-dikelolain-full-hitam.png'],
+    'footer.logo' => ['type' => 'image', 'label' => 'Logo', 'default' => 'images/logo-dikelolain-full-hitam.webp'],
     'footer.description' => ['type' => 'textarea', 'label' => 'Teks', 'default' => 'The creativity and professionalism shown by Rovex exceeded our expectations. Their design transformed our brand, and the results speak for themselves.'],
     'footer.facebook' => ['type' => 'url', 'label' => 'Link Facebook', 'default' => '#'],
     'footer.x' => ['type' => 'url', 'label' => 'Link X', 'default' => '#'],
@@ -169,7 +170,8 @@ return [
     'analytics.looker_height' => ['type' => 'text', 'label' => 'Tinggi laporan (piksel, kosong = otomatis)', 'default' => ''],
 
     // SEO: search and social previews (edited from the admin bar in edit mode).
-    'seo.image' => ['type' => 'image', 'label' => 'Gambar pratinjau saat dibagikan', 'default' => 'images/logo-dikelolain-full-hitam.png'],
+    // original: stored exactly as uploaded, since not every social network shows WebP previews.
+    'seo.image' => ['type' => 'image', 'label' => 'Gambar pratinjau saat dibagikan', 'default' => 'images/logo-dikelolain-full-hitam.png', 'original' => true],
     'seo.home.description' => ['type' => 'textarea', 'label' => 'Deskripsi halaman Home (Google, maks. ±160 karakter)', 'default' => 'We\'re a full-service design agency specializing in branding, web design, and creative strategies that elevate businesses.'],
     'seo.about.description' => ['type' => 'textarea', 'label' => 'Deskripsi halaman About (Google, maks. ±160 karakter)', 'default' => 'Get to know Dikelolain: a team of creative thinkers building brands, websites and digital campaigns.'],
     'seo.services.description' => ['type' => 'textarea', 'label' => 'Deskripsi halaman Services (Google, maks. ±160 karakter)', 'default' => 'Branding, UI/UX design, web development, 3D design and digital marketing services from Dikelolain.'],

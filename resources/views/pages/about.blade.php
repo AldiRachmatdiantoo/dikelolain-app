@@ -36,7 +36,7 @@
                             </div>
                             <div class="col-md-6">
                                 <x-vcms.settings :keys="['about.circle_image', 'about.circle_link']" label="Tombol" class="about-contact-now">
-                                    <a href="{{ $settings->get('about.circle_link') }}"><img src="{{ $settings->url('about.circle_image') }}" alt=""></a>
+                                    <a href="{{ $settings->get('about.circle_link') }}"><img src="{{ $settings->url('about.circle_image') }}" alt="" loading="lazy"></a>
                                 </x-vcms.settings>
                             </div>
                         </div>
@@ -72,7 +72,7 @@
                             <div class="vision-mission-item">
                                 <x-vcms.settings :keys="[$list . '.image']" label="Gambar" class="vision-mission-image">
                                     <figure class="image-anime reveal">
-                                        <img src="{{ $settings->url($list . '.image') }}" alt="{{ $list }}">
+                                        <img src="{{ $settings->url($list . '.image') }}" alt="{{ $list }}" loading="lazy">
                                     </figure>
                                 </x-vcms.settings>
 

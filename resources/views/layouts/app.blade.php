@@ -18,7 +18,7 @@
 
     <title>@yield('title')</title>
 
-	<link rel="shortcut icon" type="image/x-icon" href="{{ asset('images/logo-dikelolain-potrait.png') }}">
+	<link rel="icon" type="image/png" href="{{ asset('images/favicon-dikelolain.png') }}">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

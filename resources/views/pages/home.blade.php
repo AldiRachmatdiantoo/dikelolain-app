@@ -87,12 +87,12 @@
                                 id="service-{{ $service->id }}" role="tabpanel">
                                 <div class="service-box-image">
                                     <figure>
-                                        <img src="{{ $service->image_url }}" alt="{{ $service->name }}">
+                                        <img src="{{ $service->image_url }}" alt="{{ $service->name }}" loading="lazy">
                                     </figure>
                                 </div>
                                 <div class="service-box-item">
                                     <div class="icon-box">
-                                        <img src="{{ $service->icon_url }}" alt="Service Icon">
+                                        <img src="{{ $service->icon_url }}" alt="Service Icon" loading="lazy">
                                     </div>
                                     <div class="service-box-item-content">
                                         <h3><a href="{{ route('pages.service.single', $service->slug) }}">{{ $service->name }}</a></h3>
@@ -158,7 +158,7 @@
                 </div>
                 <div class="col-lg-4">
                     <x-vcms.settings :keys="['process.cta_image', 'process.cta_link']" label="Tombol" class="contact-now-circle">
-                        <a href="{{ $settings->get('process.cta_link') }}"><img src="{{ $settings->url('process.cta_image') }}" alt="Contact Circle"></a>
+                        <a href="{{ $settings->get('process.cta_link') }}"><img src="{{ $settings->url('process.cta_image') }}" alt="Contact Circle" loading="lazy"></a>
                     </x-vcms.settings>
                 </div>
             </div>
@@ -167,11 +167,11 @@
                 <div class="col-lg-6">
                     <x-vcms.settings :keys="['process.image', 'process.circle_image']" label="Gambar" class="how-it-work-images">
                         <div class="how-work-image-circle">
-                            <img src="{{ $settings->url('process.circle_image') }}" alt="Decorative Circle">
+                            <img src="{{ $settings->url('process.circle_image') }}" alt="Decorative Circle" loading="lazy">
                         </div>
                         <div class="how-it-work-image">
                             <figure class="image-anime">
-                                <img src="{{ $settings->url('process.image') }}" alt="Work Image">
+                                <img src="{{ $settings->url('process.image') }}" alt="Work Image" loading="lazy">
                             </figure>
                         </div>
                     </x-vcms.settings>

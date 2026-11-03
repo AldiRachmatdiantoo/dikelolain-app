@@ -30,7 +30,7 @@ class SettingService
     }
 
     /**
-     * @return array{type: string, label: string, default: string}
+     * @return array{type: string, label: string, default: string, original?: bool}
      */
     public function definition(string $key): array
     {
@@ -72,7 +72,7 @@ class SettingService
 
         if ($value instanceof UploadedFile) {
             $this->uploads->delete($this->stored()[$key] ?? null);
-            $value = $this->uploads->store($value, 'settings');
+            $value = $this->uploads->store($value, 'settings', optimize: !($this->definition($key)['original'] ?? false));
         } elseif ($type === 'rich_text') {
             $value = RichText::clean($value);
         }
