@@ -6,10 +6,12 @@ use App\Repositories\Contracts\ClientLogoRepositoryInterface;
 use App\Repositories\Contracts\FaqRepositoryInterface;
 use App\Repositories\Contracts\PageSettingRepositoryInterface;
 use App\Repositories\Contracts\TestimonialRepositoryInterface;
+use App\Repositories\Contracts\ToolRepositoryInterface;
 use App\Repositories\Eloquent\EloquentClientLogoRepository;
 use App\Repositories\Eloquent\EloquentFaqRepository;
 use App\Repositories\Eloquent\EloquentPageSettingRepository;
 use App\Repositories\Eloquent\EloquentTestimonialRepository;
+use App\Repositories\Eloquent\EloquentToolRepository;
 use Illuminate\Support\ServiceProvider;
 
 /**
@@ -25,5 +27,6 @@ class RepositoryServiceProvider extends ServiceProvider
         FaqRepositoryInterface::class => EloquentFaqRepository::class,
         TestimonialRepositoryInterface::class => EloquentTestimonialRepository::class,
         ClientLogoRepositoryInterface::class => EloquentClientLogoRepository::class,
+        ToolRepositoryInterface::class => EloquentToolRepository::class,
     ];
 }

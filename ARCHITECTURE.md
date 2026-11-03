@@ -45,7 +45,7 @@ Route ──► Controller ──► FormRequest (validasi)
 
 **Repository:** dipakai untuk semua entitas supaya polanya seragam. Interface di `Repositories/Contracts`, implementasi Eloquent di `Repositories/Eloquent`, binding di `RepositoryServiceProvider`. *(Masih bisa dilonggarkan untuk entitas sederhana; lihat keputusan K-2 di backlog.)*
 
-**Halaman gabungan:** halaman yang memakai banyak entitas (Home, About, dll) punya page service sendiri, misalnya `HomePageService::data()`, yang mengumpulkan semua data untuk halaman itu. Controller halaman cukup memanggil satu method.
+**Halaman gabungan:** halaman yang memakai banyak entitas (Home, About, dll) punya page service sendiri, misalnya `HomePageService::data()`, yang mengumpulkan semua data untuk halaman itu. Controller halaman cukup memanggil satu method. Section yang muncul di beberapa halaman (logo klien, tools) punya satu partial di `resources/views/partials/` dan satu method di `Pages/SectionData`, sehingga page service tidak mengulang kode.
 
 ---
 
@@ -63,7 +63,7 @@ app/
 │   ├── Requests/Admin/            StoreFaqRequest, UpdateFaqRequest, MoveRequest, UpdateSettingRequest, ...
 │   └── Resources/                 FaqResource, ...
 ├── Services/
-│   ├── Pages/                     HomePageService, AboutPageService, ...
+│   ├── Pages/                     HomePageService, AboutPageService, ..., SectionData (section bersama)
 │   ├── FaqService.php
 │   ├── SettingService.php         nilai tunggal (page_settings)
 │   └── ImageUploadService.php
@@ -102,9 +102,9 @@ Semua tabel daftar punya `id`, `sort_order` (int), `is_active` (bool, default tr
 | Tabel | Kolom utama | Dipakai di |
 |---|---|---|
 | `faqs` | `category` (general/technical/project/support), `question`, `answer` | FAQs, About (4 teratas) |
-| `testimonials` | `name`, `role`, `company`, `quote`, `photo_path`, `rating` | Home, Testimonials |
-| `client_logos` | `name`, `logo_path` | Home, Testimonials |
-| `tools` | `name`, `category`, `icon_path` | Home (creative tools) |
+| `testimonials` | `name`, `role`, `content`, `rating`, `logo`, `photo` | Testimonials |
+| `client_logos` | `logo`, `name` (teks alt) | Home, About |
+| `tools` | `name`, `category`, `icon` | Home, Services, Pricing, Testimonials (creative tools) |
 | `process_steps` | `title`, `description` | Home (how it works) |
 | `achievements` | `period`, `title`, `description` | Home |
 | `counters` | `number`, `suffix`, `label` | Home, CTA |

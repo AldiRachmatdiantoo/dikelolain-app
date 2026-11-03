@@ -4,11 +4,14 @@ use App\Http\Controllers\Admin\Api\ClientLogoController;
 use App\Http\Controllers\Admin\Api\FaqController;
 use App\Http\Controllers\Admin\Api\SettingController;
 use App\Http\Controllers\Admin\Api\TestimonialController;
+use App\Http\Controllers\Admin\Api\ToolController;
 use App\Http\Controllers\Admin\EditModeController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Pages\AboutPageController;
 use App\Http\Controllers\Pages\FaqPageController;
 use App\Http\Controllers\Pages\HomePageController;
+use App\Http\Controllers\Pages\PricingPageController;
+use App\Http\Controllers\Pages\ServicePageController;
 use App\Http\Controllers\Pages\TestimonialPageController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -23,10 +26,7 @@ Route::get('/', HomePageController::class)->name('home');
 
 Route::get('/about', AboutPageController::class)->name('about');
 
-Route::get('/services', function () {
-    $sections = App\Models\Section::with('contents.media')->active()->ordered()->get()->keyBy('key');
-    return view('pages.services', compact('sections'));
-})->name('services');
+Route::get('/services', ServicePageController::class)->name('services');
 
 Route::get('/contact', function () {
     $sections = App\Models\Section::with('contents.media')->active()->ordered()->get()->keyBy('key');
@@ -43,10 +43,7 @@ Route::get('/portfolio-experiment', function () {
     return view('pages.portfolio-experiment', compact('sections'));
 })->name('portfolio.experiment');
 
-Route::get('/pricing', function () {
-    $sections = App\Models\Section::with('contents.media')->active()->ordered()->get()->keyBy('key');
-    return view('pages.pricing', compact('sections'));
-})->name('pricing');
+Route::get('/pricing', PricingPageController::class)->name('pricing');
 
 Route::get('/faqs', FaqPageController::class)->name('faqs');
 
@@ -122,6 +119,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
                 'faqs' => FaqController::class,
                 'testimonials' => TestimonialController::class,
                 'client-logos' => ClientLogoController::class,
+                'tools' => ToolController::class,
             ];
             foreach ($lists as $uri => $controller) {
                 Route::get("/{$uri}", [$controller, 'index'])->name("{$uri}.index");

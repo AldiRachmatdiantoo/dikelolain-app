@@ -43,18 +43,6 @@ class SectionContentSeeder extends Seeder
             ['type' => 'video', 'src' => 'https://www.youtube.com/embed/YQHsXMglC9A', 'title' => 'Pop Music Video', 'desc' => 'Popular song MV.', 'link' => '/portfolio/single'],
         ];
         
-        // Data Default untuk Creative Tools (where $defaultTools comes from)
-        $defaultTools = [
-            ['name' => 'figma', 'cat' => 'Design tool', 'icon' => 'images/icon-creative-tools-1.svg'],
-            ['name' => 'framer', 'cat' => 'Design tool', 'icon' => 'images/icon-creative-tools-2.svg'],
-            ['name' => 'illustrator', 'cat' => 'Design tool', 'icon' => 'images/icon-creative-tools-3.svg'],
-            ['name' => 'adobe xd', 'cat' => 'Design tool', 'icon' => 'images/icon-creative-tools-4.svg'],
-            ['name' => 'indesign', 'cat' => 'Design tool', 'icon' => 'images/icon-creative-tools-5.svg'],
-            ['name' => 'photoshop', 'cat' => 'Design tool', 'icon' => 'images/icon-creative-tools-6.svg'],
-            ['name' => 'lightroom', 'cat' => 'Design tool', 'icon' => 'images/icon-creative-tools-7.svg'],
-            ['name' => 'incopy', 'cat' => 'Design tool', 'icon' => 'images/icon-creative-tools-8.svg'],
-        ];
-
         // Data Default untuk Section How It Works
         $defaultProcesses = [
             ['title' => 'Discovery & Strategy', 'desc' => 'We begin by getting to know you and your brand. Through in-depth conversations, research, and analysis.', 'active' => 'show'],
@@ -121,16 +109,6 @@ class SectionContentSeeder extends Seeder
                     ['key' => 'work_main_title', 'type' => 'text', 'value' => 'Our latest <span>Projects</span>', 'order' => 2], // KEY CHANGE: work-title_main_title -> work_main_title
                     ['key' => 'work_btn_text', 'type' => 'text', 'value' => 'view all portfolio', 'order' => 3], // KEY CHANGE: work-btn_button_text -> work_btn_text
                     ['key' => 'work_btn_link', 'type' => 'url', 'value' => '/portfolio', 'order' => 4], // KEY CHANGE: work-btn_button_link -> work_btn_link
-                ]
-            ],
-            // 5. CREATIVE TOOLS SECTION (Order 5)
-            [
-                'key' => 'creative-tools', 'name' => 'Creative Tools', 'order' => 5,
-                'contents' => [
-                    ['key' => 'tools_sub_title', 'type' => 'text', 'value' => 'creative toolkit', 'order' => 1], // KEY CHANGE: tools-title_sub_title -> tools_sub_title
-                    ['key' => 'tools_main_title', 'type' => 'text', 'value' => 'Our toolbox for <span>innovation</span>', 'order' => 2], // KEY CHANGE: tools-title_main_title -> tools_main_title
-                    ['key' => 'tools_btn_text', 'type' => 'text', 'value' => 'let\'s get started !', 'order' => 3], // KEY CHANGE: tools-btn_button_text -> tools_btn_text
-                    ['key' => 'tools_btn_link', 'type' => 'url', 'value' => '/contact', 'order' => 4], // KEY CHANGE: tools-btn_button_link -> tools_btn_link
                 ]
             ],
             // 6. HOW IT WORKS SECTION (Order 6)
@@ -259,27 +237,6 @@ class SectionContentSeeder extends Seeder
             }
         }
         
-        // ========================================
-        // 6. SEED LOOPED CONTENT (Tools List)
-        // ========================================
-        $toolsSection = Section::where('key', 'creative-tools')->first();
-        if ($toolsSection) {
-            $order = 5;
-            foreach ($defaultTools as $index => $tool) {
-                $baseKey = "tools-list-1_tool_{$index}";
-
-                $contents = [
-                    ['key' => $baseKey . '_name', 'type' => 'text', 'value' => $tool['name'], 'order' => $order++],
-                    ['key' => $baseKey . '_cat', 'type' => 'text', 'value' => $tool['cat'], 'order' => $order++],
-                    ['key' => $baseKey . '_icon', 'type' => 'image', 'value' => $tool['icon'], 'order' => $order++],
-                ];
-
-                foreach ($contents as $content) {
-                    $toolsSection->contents()->updateOrCreate(['key' => $content['key']], $content);
-                }
-            }
-        }
-
         // ========================================
         // 7. SEED LOOPED CONTENT (How It Works Process List)
         // ========================================
