@@ -21,6 +21,7 @@ class AboutPageService
             ...$this->sections->legacy(),
             ...$this->sections->settings(),
             ...$this->sections->clientLogos($editing),
+            ...$this->sections->achievements($editing),
             'faqs' => $this->faqs->highlights(4),
         ];
     }

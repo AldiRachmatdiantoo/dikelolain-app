@@ -45,7 +45,7 @@ Route ──► Controller ──► FormRequest (validasi)
 
 **Repository:** dipakai untuk semua entitas supaya polanya seragam. Interface di `Repositories/Contracts`, implementasi Eloquent di `Repositories/Eloquent`, binding di `RepositoryServiceProvider`. *(Masih bisa dilonggarkan untuk entitas sederhana; lihat keputusan K-2 di backlog.)*
 
-**Halaman gabungan:** halaman yang memakai banyak entitas (Home, About, dll) punya page service sendiri, misalnya `HomePageService::data()`, yang mengumpulkan semua data untuk halaman itu. Controller halaman cukup memanggil satu method. Section yang muncul di beberapa halaman (logo klien, tools) punya satu partial di `resources/views/partials/` dan satu method di `Pages/SectionData`, sehingga page service tidak mengulang kode.
+**Halaman gabungan:** halaman yang memakai banyak entitas (Home, About, dll) punya page service sendiri, misalnya `HomePageService::data()`, yang mengumpulkan semua data untuk halaman itu. Controller halaman cukup memanggil satu method. Section yang muncul di beberapa halaman (logo klien, tools, pencapaian) punya satu partial di `resources/views/partials/` dan satu method di `Pages/SectionData`, sehingga page service tidak mengulang kode.
 
 ---
 
@@ -106,7 +106,7 @@ Semua tabel daftar punya `id`, `sort_order` (int), `is_active` (bool, default tr
 | `client_logos` | `logo`, `name` (teks alt) | Home, About |
 | `tools` | `name`, `category`, `icon` | Home, Services, Pricing, Testimonials (creative tools) |
 | `process_steps` | `title`, `description` | Home (how it works) |
-| `achievements` | `period`, `title`, `description` | Home |
+| `achievements` | `period`, `title`, `description` | Home, About |
 | `counters` | `number`, `suffix`, `label` | Home, CTA |
 | `team_members` | `slug`, `name`, `role`, `photo_path`, `bio`, `email`, `phone`, link sosial | Home, About, Team |
 | `team_member_skills` | `team_member_id`, `name`, `percent` | Team detail |

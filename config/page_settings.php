@@ -14,6 +14,13 @@
 
 return [
 
+    // Achievements section (Home, About)
+    'achievements.sub_title' => ['type' => 'text', 'label' => 'Sub judul', 'default' => 'our achievements'],
+    'achievements.title' => ['type' => 'rich_text', 'label' => 'Judul', 'default' => 'Proud moments & <span>milestones</span>'],
+    'achievements.description' => ['type' => 'textarea', 'label' => 'Deskripsi', 'default' => "We're a full-service design agency specializing in branding, web design, and creative strategies that elevate businesses."],
+    'achievements.button_text' => ['type' => 'text', 'label' => 'Teks tombol', 'default' => "let's get started !"],
+    'achievements.button_link' => ['type' => 'url', 'label' => 'Link tombol', 'default' => '/contact'],
+
     // Client logos section (Home, About)
     'clients.sub_title' => ['type' => 'text', 'label' => 'Sub judul', 'default' => 'testimonials'],
     'clients.title' => ['type' => 'rich_text', 'label' => 'Judul', 'default' => 'Trusted by <span>Teams at</span>'],

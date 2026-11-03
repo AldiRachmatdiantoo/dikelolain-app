@@ -23,6 +23,7 @@ class HomePageService
             ...$this->sections->settings(),
             ...$this->sections->clientLogos($editing),
             ...$this->sections->tools($editing),
+            ...$this->sections->achievements($editing),
             'processSteps' => $this->processSteps->all(activeOnly: !$editing),
             'processStepFields' => $editing ? ProcessStepFields::definition() : [],
         ];

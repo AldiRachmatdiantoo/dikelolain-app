@@ -43,17 +43,6 @@ class SectionContentSeeder extends Seeder
             ['type' => 'video', 'src' => 'https://www.youtube.com/embed/YQHsXMglC9A', 'title' => 'Pop Music Video', 'desc' => 'Popular song MV.', 'link' => '/portfolio/single'],
         ];
         
-        // Data Default untuk Section Achievements
-        $defaultAchievements = [
-            ['year' => '2015 - 2016', 'name' => 'Best Design Award', 'desc' => 'We begin by getting to know you and your brand. Through in-depth.'],
-            ['year' => '2016 - 2017', 'name' => 'Dribble Winner', 'desc' => 'We begin by getting to know you and your brand. Through in-depth.'],
-            ['year' => '2017 - 2018', 'name' => 'Design Of The Year', 'desc' => 'We begin by getting to know you and your brand. Through in-depth.'],
-            ['year' => '2017 - 2018', 'name' => 'Graphic Design Winner', 'desc' => 'We begin by getting to know you and your brand. Through in-depth.'],
-            ['year' => '2018 - 2019', 'name' => 'Awward Winner', 'desc' => 'We begin by getting to know you and your brand. Through in-depth.'],
-            ['year' => '2019 - 2020', 'name' => 'Best Jury Award', 'desc' => 'We begin by getting to know you and your brand. Through in-depth.'],
-            ['year' => '2019 - 2020', 'name' => 'Creative Excellence', 'desc' => 'We begin by getting to know you and your brand. Through in-depth.'], // Tambahkan 1 lagi agar ada 7 achievement
-        ];
-
         // Data Default untuk Section CTA (Counters)
         $defaultCounters = [
             ['num' => '45', 'sym' => '+', 'label' => 'project completed'],
@@ -111,17 +100,6 @@ class SectionContentSeeder extends Seeder
                     ['key' => 'team_main_title', 'type' => 'text', 'value' => 'The Minds Behind <span>the Magic</span>', 'order' => 2], // KEY CHANGE: team-title_main_title -> team_main_title
                     ['key' => 'team_btn_text', 'type' => 'text', 'value' => 'all team members', 'order' => 3], // KEY CHANGE: team-btn_button_text -> team_btn_text
                     ['key' => 'team_btn_link', 'type' => 'url', 'value' => '/team', 'order' => 4], // KEY CHANGE: team-btn_button_link -> team_btn_link
-                ]
-            ],
-            // 8. ACHIEVEMENTS SECTION (Order 8)
-            [
-                'key' => 'achievements', 'name' => 'Achievements', 'order' => 8,
-                'contents' => [
-                    ['key' => 'achievements_sub_title', 'type' => 'text', 'value' => 'our achievements', 'order' => 1], // KEY CHANGE: achievements-title_sub_title -> achievements_sub_title
-                    ['key' => 'achievements_main_title', 'type' => 'text', 'value' => 'Proud moments & <span>milestones</span>', 'order' => 2], // KEY CHANGE: achievements-title_main_title -> achievements_main_title
-                    ['key' => 'achievements_description', 'type' => 'textarea', 'value' => 'We\'re a full-service design agency specializing in branding, web design, and creative strategies that elevate businesses.', 'order' => 3], // KEY CHANGE: achievements-title_description -> achievements_description
-                    ['key' => 'achievements_btn_text', 'type' => 'text', 'value' => 'let\'s get started !', 'order' => 4], // KEY CHANGE: achievements-btn_button_text -> achievements_btn_text
-                    ['key' => 'achievements_btn_link', 'type' => 'url', 'value' => '/contact', 'order' => 5], // KEY CHANGE: achievements-btn_button_link -> achievements_btn_link
                 ]
             ],
             // 9. CTA SECTION (Order 9)
@@ -215,30 +193,6 @@ class SectionContentSeeder extends Seeder
             }
         }
         
-        // ========================================
-        // 8. SEED LOOPED CONTENT (Achievement List)
-        // ========================================
-        $achievementsSection = Section::where('key', 'achievements')->first();
-        if ($achievementsSection) {
-            $order = 6;
-            // Gunakan $defaultAchievements yang sudah diubah di bagian atas jika Anda ingin 7 item.
-            // Jika Anda ingin tetap 6 item seperti aslinya, gunakan $defaultAchievements yang lama.
-            // Saya asumsikan Anda ingin menggunakan array $defaultAchievements yang telah didefinisikan.
-            foreach ($defaultAchievements as $index => $ach) {
-                $baseKey = "achievement-list-1_ach_{$index}";
-
-                $contents = [
-                    ['key' => $baseKey . '_year', 'type' => 'text', 'value' => $ach['year'], 'order' => $order++],
-                    ['key' => $baseKey . '_name', 'type' => 'text', 'value' => $ach['name'], 'order' => $order++],
-                    ['key' => $baseKey . '_desc', 'type' => 'textarea', 'value' => $ach['desc'], 'order' => $order++],
-                ];
-
-                foreach ($contents as $content) {
-                    $achievementsSection->contents()->updateOrCreate(['key' => $content['key']], $content);
-                }
-            }
-        }
-
         // ========================================
         // 10. SEED LOOPED CONTENT (CTA Counters)
         // ========================================

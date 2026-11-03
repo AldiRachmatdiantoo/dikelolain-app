@@ -3,9 +3,11 @@
 namespace App\Services\Pages;
 
 use App\Models\Section;
+use App\Services\AchievementService;
 use App\Services\ClientLogoService;
 use App\Services\SettingService;
 use App\Services\ToolService;
+use App\Vcms\Fields\AchievementFields;
 use App\Vcms\Fields\ClientLogoFields;
 use App\Vcms\Fields\ToolFields;
 use Illuminate\Support\Collection;
@@ -20,6 +22,7 @@ class SectionData
         private SettingService $settings,
         private ClientLogoService $clientLogos,
         private ToolService $tools,
+        private AchievementService $achievements,
     ) {
     }
 
@@ -60,6 +63,17 @@ class SectionData
         return [
             'tools' => $this->tools->all(activeOnly: !$editing),
             'toolFields' => $editing ? ToolFields::definition() : [],
+        ];
+    }
+
+    /**
+     * For partials/achievements.blade.php.
+     */
+    public function achievements(bool $editing): array
+    {
+        return [
+            'achievements' => $this->achievements->all(activeOnly: !$editing),
+            'achievementFields' => $editing ? AchievementFields::definition() : [],
         ];
     }
 }
