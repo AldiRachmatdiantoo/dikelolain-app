@@ -33,6 +33,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             SectionContentSeeder::class,
             FaqSeeder::class,
+            TestimonialSeeder::class,
         ]);
     }
 }

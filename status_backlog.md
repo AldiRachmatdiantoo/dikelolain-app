@@ -14,17 +14,17 @@
 
 **Mode:** eksekusi otomatis atas instruksi pemilik (3 Nov 2026): kerjakan PBI berurutan tanpa bertanya, uji setiap PBI (`php artisan test` + cek browser bila terlihat), commit + push per PBI, kendala dicatat di [kendala_backlog.md](kendala_backlog.md).
 
-**Sedang dikerjakan:** Epic 3, PBI-301 (Testimonial). Epic 0–2 selesai.
+**Sedang dikerjakan:** Epic 3, PBI-302 (Logo klien). Selesai: Epic 0–2, PBI-301.
 
-**Contoh pola entitas = FAQ.** Entitas berikutnya meniru file-file ini:
-- `database/migrations/2026_11_03_000002_create_faqs_table.php`, `app/Models/Faq.php` (scope `ordered`/`active`)
-- `app/Repositories/{Contracts/FaqRepositoryInterface,Eloquent/EloquentFaqRepository}.php` + binding di `RepositoryServiceProvider`
-- `app/Services/FaqService.php` (item baru di akhir, `move` lewat `setOrder`), `app/Services/Pages/FaqPageService.php`
-- `app/Http/Requests/Admin/{Store,Update}FaqRequest.php`, `MoveRequest` (bersama), `app/Http/Resources/FaqResource.php`
-- `app/Http/Controllers/Admin/Api/FaqController.php` + route di grup `admin/api`, `app/Http/Controllers/Pages/FaqPageController.php`
-- `app/Vcms/Fields/FaqFields.php`, view `pages/faqs.blade.php` (`<x-vcms.settings|item|add>`), `database/seeders/FaqSeeder.php`
-- Test: `tests/Feature/FaqApiTest.php`, `FaqPageTest.php`
-- Halaman yang masih memakai `$sections` lama ikut diberi page controller + page service seperti `AboutPageController` (data lama tetap dikirim sebagai `sections` sampai semua section-nya pindah).
+**Contoh pola entitas = Testimonial** (memakai kerangka daftar bersama, [ARCHITECTURE §7.1](ARCHITECTURE.md#71-kerangka-bersama-untuk-daftar-terurut)). Entitas berikutnya meniru file-file ini:
+- `database/migrations/2026_11_03_000003_create_testimonials_table.php`, `app/Models/Testimonial.php` (scope + accessor `logo_url`/`photo_url`)
+- `app/Repositories/{Contracts/TestimonialRepositoryInterface,Eloquent/EloquentTestimonialRepository}.php` + binding di `RepositoryServiceProvider`
+- `app/Services/TestimonialService.php` (`$images`), `app/Services/Pages/TestimonialPageService.php`
+- `app/Http/Requests/Admin/TestimonialRequest.php`, `app/Http/Resources/TestimonialResource.php`, `app/Http/Controllers/Admin/Api/TestimonialController.php` + satu baris di `$lists` (`routes/web.php`)
+- `app/Http/Controllers/Pages/TestimonialPageController.php`, `app/Vcms/Fields/TestimonialFields.php`, `database/seeders/TestimonialSeeder.php` (+ `DatabaseSeeder`)
+- Test: `tests/Feature/TestimonialApiTest.php` (pakai `ListApiContract`), `TestimonialPageTest.php`
+- Halaman yang masih memakai `$sections` lama diberi page controller + page service; data lama tetap dikirim sebagai `sections` sampai semua section-nya pindah.
+- Kode lama dipotong dengan skrip penanda (scratchpad `cut.php`/`swap.php`: hapus teks di antara dua penanda yang masing-masing harus unik), lalu `node --check public/js/admin-vcms.js` + `php -l`.
 
 **Catatan cek browser:** panel browser yang tersembunyi tidak menjalankan animasi/transisi. Modal Alpine (`x-transition`) dan elemen dengan `transition` dari template terlihat "macet" sampai panel dirender (misalnya diambil screenshot). Ini bukan bug. Screenshot panel kadang terpotong; untuk alur editor lebih andal cek lewat DOM/`fetch`.
 
@@ -34,10 +34,10 @@
 
 | Status | Jumlah | PBI |
 |---|---|---|
-| ✅ Selesai | 26 | **001–005** (seluruh Epic 0), **101–111** (seluruh Epic 1), **201–210** (seluruh Epic 2) |
+| ✅ Selesai | 27 | **001–005** (seluruh Epic 0), **101–111** (seluruh Epic 1), **201–210** (seluruh Epic 2), **301** |
 | ⏳ Sedang dikerjakan | 0 | – |
 | ⏸️ Menunggu keputusan | 2 | **504**, **507** (hosting, lihat [kendala_backlog.md](kendala_backlog.md) KD-1) |
-| ❌ Belum | 25 | Epic 3–5 |
+| ❌ Belum | 24 | Epic 3–5 |
 
 Total **53 PBI** dalam 6 epic:
 
@@ -46,7 +46,7 @@ Total **53 PBI** dalam 6 epic:
 | 0 | Persiapan | 001–005 | 5/5 ✅ |
 | 1 | Beres-beres tanpa risiko | 101–111 | 11/11 ✅ |
 | 2 | Fondasi VCMS baru + FAQ | 201–210 | 10/10 ✅ |
-| 3 | Migrasi entitas | 301–313 | 0/13 |
+| 3 | Migrasi entitas | 301–313 | 1/13 |
 | 4 | Pembersihan akhir | 401–406 | 0/6 |
 | 5 | Setelah rombak (fitur & rilis) | 501–508 | 0/8 |
 
@@ -124,7 +124,7 @@ Urutan dari yang paling sederhana. Setiap PBI mengikuti checklist [ARCHITECTURE 
 
 | PBI | Entitas | Tabel | Section lama | Halaman | Status |
 |---|---|---|---|---|---|
-| 301 | Testimonial | `testimonials` | `testimonials` (testimonial-list) | Home, Testimonials | ❌ |
+| 301 | Testimonial | `testimonials` | `testimonials` (testimonial-list) | Testimonials | ✅ 3 Nov 2026: kerangka daftar bersama dibuat ([ARCHITECTURE §7.1](ARCHITECTURE.md#71-kerangka-bersama-untuk-daftar-terurut)) dan FAQ dipindah ke kerangka itu. Upload foto/logo lewat editor dicek di browser. Section "testimonials" di Home/About ternyata berisi **logo klien**, jadi ikut PBI-302. Dihapus: 400 baris di `admin-vcms.js`, cabang `delete_testimonial`, daftar testimoni di `admin/pages/testimonials.blade.php` (diganti link ke mode edit). 120 test hijau |
 | 302 | Logo klien | `client_logos` | `trusted-clients`, client-logos, client-logo-slider | Home, Testimonials | ❌ |
 | 303 | Tools | `tools` | `creative-tools` (tools-list) | Home | ❌ |
 | 304 | Langkah proses | `process_steps` | `how-it-works` (process-list) | Home | ❌ |
@@ -269,3 +269,4 @@ Ringkasan hasil membaca kode di commit `02fa1fd` (isi sama dengan branch `back-e
 | 3 Nov 2026 | Epic 1 selesai (PBI-101–110): kode mati dihapus, upload aman, admin dari `.env`, error tidak bocor, 404 benar, `magiccursor` diperbaiki; keputusan baru K-9, K-10 |
 | 3 Nov 2026 | PBI-201–207 selesai: lapisan dasar, Vite + Alpine khusus editor, mode edit + bilah admin, komponen `<x-vcms.*>`, editor generik, `ImageUploadService`, `page_settings` + API; 84 test hijau |
 | 3 Nov 2026 | Epic 2 selesai (PBI-208–210): FAQ end to end di tabel `faqs`, halaman `/faqs` dan section FAQ About memakai data baru, kode FAQ lama dihapus; 101 test hijau |
+| 3 Nov 2026 | PBI-301 selesai: testimoni di tabel `testimonials`; kerangka daftar bersama (`ListRepository`, `ListService`, `ListController`, `ListItemRequest`, `ListApiContract`) dipakai FAQ dan testimoni; 120 test hijau |

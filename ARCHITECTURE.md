@@ -286,7 +286,7 @@ class FaqFields
 Setiap entitas dianggap selesai kalau semua poin ini terpenuhi:
 
 1. Migration tabel (dan tabel anak bila ada).
-2. Model dengan cast dan scope `ordered()`/`active()`.
+2. Model dengan cast dan scope `ordered()`/`active()`; accessor `*_url` untuk kolom gambar.
 3. Repository interface + implementasi Eloquent + binding.
 4. Service.
 5. FormRequest untuk tambah dan ubah (geser memakai `MoveRequest` bersama).
@@ -296,6 +296,19 @@ Setiap entitas dianggap selesai kalau semua poin ini terpenuhi:
 9. Seeder data demo dalam format baru.
 10. Test: feature test endpoint (wajib login, 422, tambah/ubah/hapus/urutkan) + halaman publik tampil.
 11. Key lama entitas ini **tidak disebut lagi** di view, `admin-vcms.js`, `ContentController`, maupun seeder lama, dan barisnya di `section_contents` sudah dihapus.
+
+### 7.1 Kerangka bersama untuk daftar terurut
+
+Hampir semua entitas berupa daftar dengan `sort_order` dan `is_active`. Logika yang sama ada di satu tempat, jadi file per entitas tinggal deklarasi:
+
+| Lapisan | Kelas dasar | Yang diisi per entitas |
+|---|---|---|
+| Repository | `Contracts\ListRepositoryInterface`, `Eloquent\EloquentListRepository` | `$model`; `$groupColumns` bila urutan per kelompok (FAQ: `['category']`, nanti `['service_id']`, ...) |
+| Service | `Services\ListService` (item baru di akhir kelompok, pindah kelompok → di akhir, geser, ganti/hapus file gambar) | `$images` = kolom gambar => folder upload; method khusus halaman (misalnya `FaqService::grouped()`) |
+| FormRequest | `Requests\Admin\ListItemRequest` (satu kelas untuk POST dan PATCH; di PATCH semua field otomatis `sometimes`) | `fields()` + `messages()` |
+| Controller | `Admin\Api\ListController` (index, store, update, destroy, move) | `$request`, `$resource`, `service()` |
+| Route | daftar `$lists` di `routes/web.php` (grup `admin/api`) | satu baris `'uri' => Controller::class` |
+| Test | `tests/Concerns/ListApiContract` (11 test: login, index, tambah di akhir, ubah sebagian, 422, hapus, 404, geser, ujung, arah) | `listUri()`, `makeItem()`, `validPayload()`, `requiredField()` + test khusus entitas |
 
 ---
 

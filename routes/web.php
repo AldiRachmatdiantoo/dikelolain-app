@@ -2,10 +2,12 @@
 
 use App\Http\Controllers\Admin\Api\FaqController;
 use App\Http\Controllers\Admin\Api\SettingController;
+use App\Http\Controllers\Admin\Api\TestimonialController;
 use App\Http\Controllers\Admin\EditModeController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Pages\AboutPageController;
 use App\Http\Controllers\Pages\FaqPageController;
+use App\Http\Controllers\Pages\TestimonialPageController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -51,10 +53,7 @@ Route::get('/team', function () {
     return view('pages.team', compact('sections'));
 })->name('team');
 
-Route::get('/testimonials', function () {
-    $sections = App\Models\Section::with('contents.media')->active()->ordered()->get()->keyBy('key');
-    return view('pages.testimonials', compact('sections'));
-})->name('testimonials');
+Route::get('/testimonials', TestimonialPageController::class)->name('testimonials');
 
 Route::prefix('pages')->name('pages.')->group(function () {
     Route::get('/service/{serviceId}', function ($serviceId) {
@@ -116,11 +115,18 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::get('/settings/{key}', [SettingController::class, 'show'])->name('settings.show');
             Route::patch('/settings/{key}', [SettingController::class, 'update'])->name('settings.update');
 
-            Route::get('/faqs', [FaqController::class, 'index'])->name('faqs.index');
-            Route::post('/faqs', [FaqController::class, 'store'])->name('faqs.store');
-            Route::patch('/faqs/{faq}', [FaqController::class, 'update'])->whereNumber('faq')->name('faqs.update');
-            Route::delete('/faqs/{faq}', [FaqController::class, 'destroy'])->whereNumber('faq')->name('faqs.destroy');
-            Route::post('/faqs/{faq}/move', [FaqController::class, 'move'])->whereNumber('faq')->name('faqs.move');
+            // Ordered lists: index, store, update, destroy, move (Admin\Api\ListController)
+            $lists = [
+                'faqs' => FaqController::class,
+                'testimonials' => TestimonialController::class,
+            ];
+            foreach ($lists as $uri => $controller) {
+                Route::get("/{$uri}", [$controller, 'index'])->name("{$uri}.index");
+                Route::post("/{$uri}", [$controller, 'store'])->name("{$uri}.store");
+                Route::patch("/{$uri}/{id}", [$controller, 'update'])->whereNumber('id')->name("{$uri}.update");
+                Route::delete("/{$uri}/{id}", [$controller, 'destroy'])->whereNumber('id')->name("{$uri}.destroy");
+                Route::post("/{$uri}/{id}/move", [$controller, 'move'])->whereNumber('id')->name("{$uri}.move");
+            }
         });
 
         // Dashboard

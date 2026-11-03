@@ -1158,116 +1158,6 @@
                 }
             });
 
-            // Testimonials Section: Add new testimonial button handler
-            // Unbind previous event listeners to prevent duplication
-            modalBody.off("click", ".add-testimonial-btn");
-            modalBody.on("click", ".add-testimonial-btn", function() {
-                const container = modalBody.find('.testimonials-container');
-                const existingItems = container.find(".testimonial-edit-item").length;
-                const newId = Date.now() + '_' + Math.random().toString(36).substr(2, 5);
-                const newIndex = existingItems + 1;
-                
-                const newTestimonialHtml = `
-                    <div class="testimonial-edit-item" style="background: #1a1a1a; padding: 20px; border-radius: 12px; margin-bottom: 15px; border: 1px solid #28a745;" data-testimonial-id="${newId}">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                            <span style="color: #28a745; font-weight: 600; font-size: 14px;">
-                                <i class="fa-solid fa-quote-left"></i> Testimonial #${newIndex} (Baru)
-                            </span>
-                            <button type="button" class="btn btn-sm btn-outline-danger delete-testimonial-btn" data-testimonial-id="${newId}" style="padding: 4px 10px; font-size: 12px;">
-                                <i class="fa-solid fa-trash"></i> Hapus
-                            </button>
-                        </div>
-                        
-                        <!-- Image Uploads -->
-                        <div class="row" style="margin-bottom: 15px;">
-                            <div class="col-md-6">
-                                <div class="vcms-form-group" style="margin-bottom: 0;">
-                                    <label style="font-size: 12px;"><i class="fa-solid fa-building"></i> Logo Perusahaan</label>
-                                    <div style="display: flex; gap: 10px; align-items: flex-start; margin-top: 5px;">
-                                        <div style="width: 60px; height: 60px; background: #252525; border-radius: 8px; overflow: hidden; border: 1px solid #444; flex-shrink: 0;">
-                                            <img id="testimonial-logo-preview-${newId}" src="images/client-logo-1.svg" style="width: 100%; height: 100%; object-fit: contain; padding: 5px;">
-                                        </div>
-                                        <div style="flex: 1;">
-                                            <input type="file" class="vcms-input" name="testimonial_${newId}_logo_file" accept="image/*" data-preview="testimonial-logo-preview-${newId}" style="font-size: 11px; padding: 6px;">
-                                            <input type="hidden" name="testimonial_${newId}_logo_current" value="images/client-logo-1.svg">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="vcms-form-group" style="margin-bottom: 0;">
-                                    <label style="font-size: 12px;"><i class="fa-solid fa-camera"></i> Foto Profile</label>
-                                    <div style="display: flex; gap: 10px; align-items: flex-start; margin-top: 5px;">
-                                        <div style="width: 60px; height: 60px; background: #252525; border-radius: 50%; overflow: hidden; border: 1px solid #444; flex-shrink: 0;">
-                                            <img id="testimonial-image-preview-${newId}" src="images/author-1.jpg" style="width: 100%; height: 100%; min-width: 60px; min-height: 60px; object-fit: cover; border-radius: 50%;">
-                                        </div>
-                                        <div style="flex: 1;">
-                                            <input type="file" class="vcms-input" name="testimonial_${newId}_image_file" accept="image/*" data-preview="testimonial-image-preview-${newId}" style="font-size: 11px; padding: 6px;">
-                                            <input type="hidden" name="testimonial_${newId}_image_current" value="images/author-1.jpg">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="vcms-form-group" style="margin-bottom: 12px;">
-                                    <label style="font-size: 12px;"><i class="fa-solid fa-user"></i> Nama</label>
-                                    <input type="text" class="vcms-input" name="testimonial_${newId}_name" value="" style="font-size: 13px;" placeholder="Nama client...">
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="vcms-form-group" style="margin-bottom: 12px;">
-                                    <label style="font-size: 12px;"><i class="fa-solid fa-briefcase"></i> Jabatan</label>
-                                    <input type="text" class="vcms-input" name="testimonial_${newId}_role" value="" style="font-size: 13px;" placeholder="CEO, Director, dll...">
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="vcms-form-group" style="margin-bottom: 12px;">
-                            <label style="font-size: 12px;"><i class="fa-solid fa-comment"></i> Isi Testimonial</label>
-                            <textarea class="vcms-input" name="testimonial_${newId}_content" rows="3" style="font-size: 13px;" placeholder="Isi testimonial..."></textarea>
-                        </div>
-                        
-                        <div class="vcms-form-group" style="margin-bottom: 0;">
-                            <label style="font-size: 12px;"><i class="fa-solid fa-star"></i> Rating</label>
-                            <select class="vcms-input" name="testimonial_${newId}_rating" style="font-size: 13px;">
-                                <option value="5" selected>5 Bintang</option>
-                                <option value="4">4 Bintang</option>
-                                <option value="3">3 Bintang</option>
-                                <option value="2">2 Bintang</option>
-                                <option value="1">1 Bintang</option>
-                            </select>
-                        </div>
-                    </div>
-                `;
-                
-                // Remove empty message if exists
-                container.find('p').remove();
-                container.append(newTestimonialHtml);
-                
-                // Scroll to new item
-                container.animate({ scrollTop: container[0].scrollHeight }, 300);
-            });
-
-            // Testimonials Section: Delete testimonial button handler
-            // Unbind previous event listeners to prevent duplication
-            modalBody.off("click", ".delete-testimonial-btn");
-            modalBody.on("click", ".delete-testimonial-btn", function() {
-                const testimonialId = $(this).data("testimonial-id");
-                const $item = $(this).closest(".testimonial-edit-item");
-                
-                if (confirm("Apakah Anda yakin ingin menghapus testimonial ini?")) {
-                    // Add hidden input to mark for deletion
-                    const deleteInput = `<input type="hidden" name="delete_testimonial_${testimonialId}" value="1">`;
-                    modalBody.append(deleteInput);
-                    $item.slideUp(200, function() {
-                        $(this).remove();
-                    });
-                }
-            });
-
             // Show modal
             console.log("Showing modal, modal element:", this.modal, "modal length:", this.modal.length);
             this.modal.addClass("active");
@@ -1383,9 +1273,6 @@
                 case "testimonials":
                     formHTML = this.generateTestimonialHeaderForm(element);
                     break;
-                case "testimonial-list":
-                    formHTML = this.generateTestimonialListForm(element);
-                    break;
                 case "footer":
                 case "footer-content":
                     formHTML = this.generateFooterForm(element);
@@ -1425,12 +1312,6 @@
                     break;
                 case "map-section":
                     formHTML = this.generateMapSectionForm(element);
-                    break;
-                case "testimonials-header":
-                    formHTML = this.generateTestimonialsHeaderForm(element);
-                    break;
-                case "testimonials-section":
-                    formHTML = this.generateTestimonialsSectionForm(element);
                     break;
                 default:
                     formHTML = this.generateGenericForm(element);
@@ -2138,135 +2019,6 @@
                             <iframe src="${self.escapeHTML(currentMapUrl)}" style="width: 100%; height: 100%; border: none;" allowfullscreen="" loading="lazy"></iframe>
                         </div>
                     </div>
-                </div>
-            `;
-        },
-
-        // Generator untuk Testimonials Header Form
-        generateTestimonialsHeaderForm: function (element) {
-            const self = this;
-            const currentTitle = element.find("h1").text().trim() || "Testimonials";
-            
-            return `
-                <div style="margin-bottom: 20px;">
-                    <h4 style="color: #ffcc01; margin-bottom: 15px;"><i class="fa-solid fa-heading"></i> Page Header</h4>
-                    
-                    <div style="background: #252525; padding: 20px; border-radius: 12px;">
-                        <div class="vcms-form-group" style="margin: 0;">
-                            <label>Header Title</label>
-                            <input type="text" class="vcms-input" name="title" value="${self.escapeHTML(currentTitle)}">
-                        </div>
-                    </div>
-                </div>
-            `;
-        },
-
-        // Generator untuk Testimonials Section Form
-        generateTestimonialsSectionForm: function (element) {
-            const self = this;
-            
-            // Get all testimonials from the page
-            const testimonialItems = element.find('.testimonial-item[data-testimonial-id]');
-            let testimonialsHtml = '';
-            
-            testimonialItems.each(function(index) {
-                const $item = $(this);
-                const testimonialId = $item.data('testimonial-id') || (index + 1);
-                const name = $item.find('.author-content h3').text().trim();
-                const role = $item.find('.author-content p').text().trim();
-                const content = $item.find('.testimonial-content p').text().trim();
-                const logo = $item.find('.testimonial-logo-img img').attr('src') || 'images/client-logo-1.svg';
-                const image = $item.find('.author-image img').attr('src') || 'images/author-1.jpg';
-                const rating = $item.find('.testimonial-rating .fa-star:not(.text-muted)').length || 5;
-                
-                testimonialsHtml += `
-                    <div class="testimonial-edit-item" style="background: #1a1a1a; padding: 20px; border-radius: 12px; margin-bottom: 15px; border: 1px solid #333;" data-testimonial-id="${testimonialId}">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                            <span style="color: #ffcc01; font-weight: 600; font-size: 14px;">
-                                <i class="fa-solid fa-quote-left"></i> Testimonial #${index + 1}
-                            </span>
-                            <button type="button" class="btn btn-sm btn-outline-danger delete-testimonial-btn" data-testimonial-id="${testimonialId}" style="padding: 4px 10px; font-size: 12px;">
-                                <i class="fa-solid fa-trash"></i> Hapus
-                            </button>
-                        </div>
-                        
-                        <!-- Image Uploads -->
-                        <div class="row" style="margin-bottom: 15px;">
-                            <div class="col-md-6">
-                                <div class="vcms-form-group" style="margin-bottom: 0;">
-                                    <label style="font-size: 12px;"><i class="fa-solid fa-building"></i> Logo Perusahaan</label>
-                                    <div style="display: flex; gap: 10px; align-items: flex-start; margin-top: 5px;">
-                                        <div style="width: 60px; height: 60px; background: #252525; border-radius: 8px; overflow: hidden; border: 1px solid #444; flex-shrink: 0;">
-                                            <img id="testimonial-logo-preview-${testimonialId}" src="${logo}" style="width: 100%; height: 100%; object-fit: contain; padding: 5px;">
-                                        </div>
-                                        <div style="flex: 1;">
-                                            <input type="file" class="vcms-input" name="testimonial_${testimonialId}_logo_file" accept="image/*" data-preview="testimonial-logo-preview-${testimonialId}" style="font-size: 11px; padding: 6px;">
-                                            <input type="hidden" name="testimonial_${testimonialId}_logo_current" value="${self.escapeHTML(logo)}">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="vcms-form-group" style="margin-bottom: 0;">
-                                    <label style="font-size: 12px;"><i class="fa-solid fa-camera"></i> Foto Profile</label>
-                                    <div style="display: flex; gap: 10px; align-items: flex-start; margin-top: 5px;">
-                                        <div style="width: 60px; height: 60px; background: #252525; border-radius: 50%; overflow: hidden; border: 1px solid #444; flex-shrink: 0;">
-                                            <img id="testimonial-image-preview-${testimonialId}" src="${image}" style="width: 100%; height: 100%; min-width: 60px; min-height: 60px; object-fit: cover; border-radius: 50%;">
-                                        </div>
-                                        <div style="flex: 1;">
-                                            <input type="file" class="vcms-input" name="testimonial_${testimonialId}_image_file" accept="image/*" data-preview="testimonial-image-preview-${testimonialId}" style="font-size: 11px; padding: 6px;">
-                                            <input type="hidden" name="testimonial_${testimonialId}_image_current" value="${self.escapeHTML(image)}">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="vcms-form-group" style="margin-bottom: 12px;">
-                                    <label style="font-size: 12px;"><i class="fa-solid fa-user"></i> Nama</label>
-                                    <input type="text" class="vcms-input" name="testimonial_${testimonialId}_name" value="${self.escapeHTML(name)}" style="font-size: 13px;">
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="vcms-form-group" style="margin-bottom: 12px;">
-                                    <label style="font-size: 12px;"><i class="fa-solid fa-briefcase"></i> Jabatan</label>
-                                    <input type="text" class="vcms-input" name="testimonial_${testimonialId}_role" value="${self.escapeHTML(role)}" style="font-size: 13px;">
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="vcms-form-group" style="margin-bottom: 12px;">
-                            <label style="font-size: 12px;"><i class="fa-solid fa-comment"></i> Isi Testimonial</label>
-                            <textarea class="vcms-input" name="testimonial_${testimonialId}_content" rows="3" style="font-size: 13px;">${self.escapeHTML(content)}</textarea>
-                        </div>
-                        
-                        <div class="vcms-form-group" style="margin-bottom: 0;">
-                            <label style="font-size: 12px;"><i class="fa-solid fa-star"></i> Rating</label>
-                            <select class="vcms-input" name="testimonial_${testimonialId}_rating" style="font-size: 13px;">
-                                <option value="1" ${rating == 1 ? 'selected' : ''}>1 Bintang</option>
-                                <option value="2" ${rating == 2 ? 'selected' : ''}>2 Bintang</option>
-                                <option value="3" ${rating == 3 ? 'selected' : ''}>3 Bintang</option>
-                                <option value="4" ${rating == 4 ? 'selected' : ''}>4 Bintang</option>
-                                <option value="5" ${rating == 5 ? 'selected' : ''}>5 Bintang</option>
-                            </select>
-                        </div>
-                    </div>
-                `;
-            });
-            
-            return `
-                <div style="margin-bottom: 20px;">
-                    <h4 style="color: #ffcc01; margin-bottom: 15px;"><i class="fa-solid fa-comments"></i> Kelola Testimonials</h4>
-                    
-                    <div class="testimonials-container" style="max-height: 500px; overflow-y: auto; padding-right: 10px;">
-                        ${testimonialsHtml || '<p style="color: #888; text-align: center; padding: 30px;">Belum ada testimonial</p>'}
-                    </div>
-                    
-                    <button type="button" class="btn btn-outline-success btn-sm add-testimonial-btn" style="width: 100%; margin-top: 15px; padding: 10px;">
-                        <i class="fa-solid fa-plus"></i> Tambah Testimonial Baru
-                    </button>
                 </div>
             `;
         },
@@ -4436,109 +4188,6 @@
                 </div>
             `;
         },
-        generateTestimonialListForm: function (element) {
-            let listHTML = "";
-            const self = this;
-
-            // Loop setiap slide testimonial
-            element
-                .find(".swiper-slide .testimonial-item")
-                .each(function (index) {
-                    const item = $(this);
-                    const name = item.find(".author-content h3").text().trim();
-                    const role = item.find(".author-content p").text().trim();
-                    const review = item
-                        .find(".testimonial-content p")
-                        .text()
-                        .trim();
-                    const stars = item.find(
-                        ".testimonial-rating .fa-star"
-                    ).length; // Hitung jumlah bintang
-
-                    // Ambil gambar user dan logo perusahaan
-                    const userImg =
-                        item.find(".author-image img").attr("src") || "";
-                    const companyLogo =
-                        item.find(".testimonial-logo-img img").attr("src") ||
-                        "";
-
-                    listHTML += `
-                    <div class="vcms-list-item-box" style="background: #252525; border: 1px solid #3a3a3a; padding: 20px; border-radius: 12px; margin-bottom: 20px;">
-                        
-                        <div style="border-bottom: 1px solid #3a3a3a; margin-bottom: 15px; padding-bottom: 10px; font-weight: 700; color: #ffcc01;">
-                            Testimonial #${index + 1}
-                        </div>
-
-                        <div class="row" style="display: flex; gap: 15px;">
-                            <div class="vcms-form-group" style="flex: 1;">
-                                <label>Client Name</label>
-                                <input type="text" class="vcms-input" name="testi_${index}_name" value="${self.escapeHTML(
-                        name
-                    )}">
-                            </div>
-                            <div class="vcms-form-group" style="flex: 1;">
-                                <label>Position / Role</label>
-                                <input type="text" class="vcms-input" name="testi_${index}_role" value="${self.escapeHTML(
-                        role
-                    )}">
-                            </div>
-                        </div>
-
-                        <div class="vcms-form-group">
-                            <label>Review Text</label>
-                            <textarea class="vcms-textarea" name="testi_${index}_review" rows="3">${self.escapeHTML(
-                        review
-                    )}</textarea>
-                        </div>
-
-                        <div class="vcms-form-group">
-                            <label>Rating (Stars)</label>
-                            <select class="vcms-select" name="testi_${index}_stars">
-                                <option value="5" ${
-                                    stars == 5 ? "selected" : ""
-                                }>5 Stars</option>
-                                <option value="4" ${
-                                    stars == 4 ? "selected" : ""
-                                }>4 Stars</option>
-                                <option value="3" ${
-                                    stars == 3 ? "selected" : ""
-                                }>3 Stars</option>
-                            </select>
-                        </div>
-
-                        <div class="row" style="display: flex; gap: 15px; margin-top: 15px;">
-                            <div class="vcms-form-group" style="flex: 1;">
-                                <label>User Photo</label>
-                                <div style="display: flex; align-items: center; gap: 10px;">
-                                    <img src="${userImg}" style="width: 30px; height: 30px; border-radius: 50%; border: 2px solid #ffcc01;">
-                                    <input type="file" class="vcms-input" name="testi_${index}_img">
-                                </div>
-                            </div>
-                            <div class="vcms-form-group" style="flex: 1;">
-                                <label>Company Logo</label>
-                                <div style="display: flex; align-items: center; gap: 10px;">
-                                    <img src="${companyLogo}" style="width: 30px; height: 30px; object-fit: contain;">
-                                    <input type="file" class="vcms-input" style="font-size: 0.8em;" name="testi_${index}_logo">
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                `;
-                });
-
-            return `
-                <div class="alert alert-secondary" style="font-size: 0.9em; margin-bottom: 15px;">
-                    Editing <strong>${
-                        element.find(".swiper-slide .testimonial-item").length
-                    } testimonials</strong>.
-                </div>
-
-                <div class="vcms-scroll-wrapper" style="max-height: 65vh; overflow-y: auto; padding-right: 5px;">
-                    ${listHTML}
-                </div>
-            `;
-        },
         // Generator untuk Header Section Testimonials
         generateTestimonialHeaderForm: function (element) {
             // Kita cari elemen section-title karena itulah target kita
@@ -4824,16 +4473,6 @@
                                 value: "pending_upload", // Will be updated with file path on server
                                 type: "image",
                             });
-                        } else if (name.match(/^testimonial_(.+)_(logo|image)_file$/)) {
-                            // Special handling for testimonial image file upload
-                            const matches = name.match(/^testimonial_(.+)_(logo|image)_file$/);
-                            const testimonialId = matches[1];
-                            const imageType = matches[2]; // logo or image
-                            contentData.push({
-                                key: "testimonial-list-1_testimonial_" + testimonialId + "_" + imageType,
-                                value: "pending_upload",
-                                type: "image",
-                            });
                         } else if (name.match(/^tool_(.+)_icon_file$/)) {
                             // Special handling for tool icon file upload
                             const toolId = name.match(/^tool_(.+)_icon_file$/)[1];
@@ -4935,15 +4574,6 @@
                             type: "delete_pricing_feature",
                         });
                         console.log("Delete pricing feature:", planId, featureIndex);
-                    } else if (name.startsWith("delete_testimonial_")) {
-                        // Handle testimonial deletion
-                        const testimonialId = name.replace("delete_testimonial_", "");
-                        contentData.push({
-                            key: "testimonial-list-1_testimonial_" + testimonialId,
-                            value: testimonialId,
-                            type: "delete_testimonial",
-                        });
-                        console.log("Delete testimonial:", testimonialId);
                     } else if (name.startsWith("reset_")) {
                         // Handle reset to default - send with type "reset" so server knows to delete old media
                         const fieldName = name.replace("reset_", "");
@@ -5080,24 +4710,6 @@
                                 type: "image",
                             });
                         }
-                    } else if (name.match(/^testimonial_(.+)_(logo|image)_current$/)) {
-                        // Handle testimonial image current value
-                        const matches = name.match(/^testimonial_(.+)_(logo|image)_current$/);
-                        const testimonialId = matches[1];
-                        const imageType = matches[2]; // logo or image
-                        const fileInputName = `testimonial_${testimonialId}_${imageType}_file`;
-                        const fileInput = $(`input[name="${fileInputName}"]`);
-                        const hasNewFile = fileInput.length > 0 && fileInput[0].files && fileInput[0].files.length > 0;
-                        
-                        if (!hasNewFile && value) {
-                            // No new file uploaded, save current value
-                            contentData.push({
-                                key: "testimonial-list-1_testimonial_" + testimonialId + "_" + imageType,
-                                value: value,
-                                type: "image",
-                            });
-                            console.log("Saving current testimonial " + imageType + ":", testimonialId, "->", value);
-                        }
                     } else if (name.match(/^service_(.+)_image$/)) {
                         // Handle service image current value - skip if file is being uploaded
                         const serviceId = name.match(/^service_(.+)_image$/)[1];
@@ -5175,18 +4787,6 @@
                             } else if (name.match(/^cnt_(\d+)_(num|sym|label)$/)) {
                                 // cnt_0_num -> cta-counters_cnt_0_num
                                 finalKey = "cta-counters_" + name;
-                            } else {
-                                // fallback to normal behavior
-                                finalKey = itemId + "_" + name;
-                            }
-                        } else if (sectionKey === "testimonials") {
-                            // Special handling for Testimonials section
-                            if (name.match(/^testimonial_(.+)_(name|role|content|rating|logo|image)$/)) {
-                                // testimonial_123_name -> testimonial-list-1_testimonial_123_name
-                                const matches = name.match(/^testimonial_(.+)_(name|role|content|rating|logo|image)$/);
-                                const testimonialId = matches[1];
-                                const field = matches[2];
-                                finalKey = "testimonial-list-1_testimonial_" + testimonialId + "_" + field;
                             } else {
                                 // fallback to normal behavior
                                 finalKey = itemId + "_" + name;

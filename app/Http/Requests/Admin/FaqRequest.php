@@ -3,17 +3,11 @@
 namespace App\Http\Requests\Admin;
 
 use App\Models\Faq;
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class StoreFaqRequest extends FormRequest
+class FaqRequest extends ListItemRequest
 {
-    public function authorize(): bool
-    {
-        return true;
-    }
-
-    public function rules(): array
+    protected function fields(): array
     {
         return [
             'category' => ['required', Rule::in(array_keys(Faq::CATEGORIES))],

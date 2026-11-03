@@ -624,24 +624,6 @@ class ContentController extends Controller
                     continue;
                 }
 
-                // Handle testimonial deletion
-                if ($contentType === 'delete_testimonial') {
-                    $testimonialId = $contentData['value'];
-                    
-                    // Build the key pattern (e.g., testimonial-list-1_testimonial_123_*)
-                    $keyPattern = 'testimonial-list-1_testimonial_' . $testimonialId . '_%';
-                    
-                    // Delete all fields for this testimonial
-                    $deletedCount = $section->contents()->where('key', 'like', $keyPattern)->delete();
-                    
-                    \Illuminate\Support\Facades\Log::info('Testimonial deleted', [
-                        'testimonial_id' => $testimonialId,
-                        'key_pattern' => $keyPattern,
-                        'deleted_count' => $deletedCount,
-                    ]);
-                    continue;
-                }
-
                 // Handle tool deletion
                 if ($contentType === 'delete_tool') {
                     $toolId = $contentData['value'];

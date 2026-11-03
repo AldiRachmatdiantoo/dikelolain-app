@@ -18,44 +18,6 @@
     // Page Header data
     $headerTitle = getTestimonialContent($sections, 'testimonials-header', 'testimonials-header-1_title', 'Testimonials');
     $headerBreadcrumb = getTestimonialContent($sections, 'testimonials-header', 'testimonials-header-1_breadcrumb', 'Testimonials');
-
-    // Get testimonials from database
-    $testimonials = [];
-    $testimonialSection = collect($sections)->firstWhere('key', 'testimonials');
-    if ($testimonialSection && isset($testimonialSection['contents'])) {
-        $testimonialIds = [];
-        foreach ($testimonialSection['contents'] as $content) {
-            if (preg_match('/testimonial-list-1_testimonial_(.+)_name$/', $content['key'], $matches)) {
-                $testimonialIds[$matches[1]] = true;
-            }
-        }
-        foreach (array_keys($testimonialIds) as $id) {
-            $name = getTestimonialContent($sections, 'testimonials', "testimonial-list-1_testimonial_{$id}_name", '');
-            if (!empty($name)) {
-                $testimonials[] = [
-                    'id' => $id,
-                    'name' => $name,
-                    'role' => getTestimonialContent($sections, 'testimonials', "testimonial-list-1_testimonial_{$id}_role", 'CEO'),
-                    'content' => getTestimonialContent($sections, 'testimonials', "testimonial-list-1_testimonial_{$id}_content", ''),
-                    'rating' => getTestimonialContent($sections, 'testimonials', "testimonial-list-1_testimonial_{$id}_rating", '5'),
-                    'logo' => getTestimonialContent($sections, 'testimonials', "testimonial-list-1_testimonial_{$id}_logo", 'images/client-logo-1.svg'),
-                    'image' => getTestimonialContent($sections, 'testimonials', "testimonial-list-1_testimonial_{$id}_image", 'images/author-1.jpg'),
-                ];
-            }
-        }
-    }
-
-    // Default testimonials if database is empty
-    if (empty($testimonials)) {
-        $testimonials = [
-            ['id' => '1', 'name' => 'eleanor pena', 'role' => 'co founder', 'content' => 'The creativity and professionalism shown by Dikelolain exceeded our expectations. Their design transformed our brand, and the results speak for themselves.', 'rating' => '5', 'logo' => 'images/client-logo-1.svg', 'image' => 'images/author-1.jpg'],
-            ['id' => '2', 'name' => 'esther howard', 'role' => 'director', 'content' => 'Working with Dikelolain has been an absolute pleasure. Their creativity and attention to detail truly brought our vision to life.', 'rating' => '5', 'logo' => 'images/client-logo-2.svg', 'image' => 'images/author-2.jpg'],
-            ['id' => '3', 'name' => 'arlene mccoy', 'role' => 'CEO', 'content' => 'We couldn\'t be happier with the final result and have received glowing feedback from both our team and users. Dikelolain is a true professional.', 'rating' => '5', 'logo' => 'images/client-logo-3.svg', 'image' => 'images/author-3.jpg'],
-            ['id' => '4', 'name' => 'savannah nguyen', 'role' => 'co founder', 'content' => 'The creativity and professionalism shown by Dikelolain exceeded our expectations. Their design transformed our brand, and the results speak for themselves.', 'rating' => '5', 'logo' => 'images/client-logo-1.svg', 'image' => 'images/author-4.jpg'],
-            ['id' => '5', 'name' => 'kristin watson', 'role' => 'director', 'content' => 'Working with Dikelolain has been an absolute pleasure. Their creativity and attention to detail truly brought our vision to life.', 'rating' => '5', 'logo' => 'images/client-logo-2.svg', 'image' => 'images/author-5.jpg'],
-            ['id' => '6', 'name' => 'jane cooper', 'role' => 'CEO', 'content' => 'We couldn\'t be happier with the final result and have received glowing feedback from both our team and users. Dikelolain is a true professional.', 'rating' => '5', 'logo' => 'images/client-logo-3.svg', 'image' => 'images/author-6.jpg'],
-        ];
-    }
 @endphp
 
 @section('content')
@@ -69,43 +31,47 @@
     <div class="page-testimonial">
         <div class="container">
             <div class="row">
-                @foreach($testimonials as $index => $testimonial)
-                    @php
-                        $delayValue = $index * 0.2;
-                        $rating = intval($testimonial['rating']);
-                    @endphp
+                @foreach ($testimonials as $testimonial)
                     <div class="col-lg-4 col-md-6">
                         <!-- Testimonial Item Start -->
-                        <div class="testimonial-item wow fadeInUp" @if($delayValue > 0) data-wow-delay="{{ $delayValue }}s" @endif>
+                        <x-vcms.item resource="testimonials" :item="$testimonial" :fields="$testimonialFields" label="testimoni"
+                            class="testimonial-item wow fadeInUp {{ $testimonial->is_active ? '' : 'vcms-hidden' }}"
+                            :data-wow-delay="$loop->index ? ($loop->index * 0.2) . 's' : null">
                             <div class="testimonial-header">
                                 <div class="testimonial-logo-img">
-                                    <img src="{{ asset($testimonial['logo']) }}" alt="">
+                                    @if ($testimonial->logo)
+                                        <img src="{{ $testimonial->logo_url }}" alt="">
+                                    @endif
                                 </div>
                                 <div class="testimonial-rating">
-                                    @for($i = 1; $i <= 5; $i++)
-                                        <i class="fa-solid fa-star" @if($i > $rating) style="opacity: 0.3;" @endif></i>
+                                    @for ($i = 1; $i <= 5; $i++)
+                                        <i class="fa-solid fa-star" @if ($i > $testimonial->rating) style="opacity: 0.3;" @endif></i>
                                     @endfor
                                 </div>
                             </div>
                             <div class="testimonial-content">
-                                <p>{{ $testimonial['content'] }}</p>
+                                <p>{{ $testimonial->content }}</p>
                             </div>
                             <div class="testimonial-author">
-                                <div class="author-image">
-                                    <figure class="image-anime">
-                                        <img src="{{ asset($testimonial['image']) }}" alt="">
-                                    </figure>
-                                </div>
+                                @if ($testimonial->photo)
+                                    <div class="author-image">
+                                        <figure class="image-anime">
+                                            <img src="{{ $testimonial->photo_url }}" alt="">
+                                        </figure>
+                                    </div>
+                                @endif
                                 <div class="author-content">
-                                    <h3>{{ $testimonial['name'] }}</h3>
-                                    <p>{{ $testimonial['role'] }}</p>
+                                    <h3>{{ $testimonial->name }}</h3>
+                                    <p>{{ $testimonial->role }}</p>
                                 </div>
                             </div>
-                        </div>
+                        </x-vcms.item>
                         <!-- Testimonial Item End -->
                     </div>
                 @endforeach
             </div>
+
+            <x-vcms.add resource="testimonials" :fields="$testimonialFields" label="testimoni" :defaults="['rating' => 5]" />
         </div>
     </div>
     <!-- Page Testimonials End -->
