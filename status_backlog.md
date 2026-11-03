@@ -14,7 +14,7 @@
 
 **Mode:** eksekusi otomatis atas instruksi pemilik (3 Nov 2026): kerjakan PBI berurutan tanpa bertanya, uji setiap PBI (`php artisan test` + cek browser bila terlihat), commit + push per PBI, kendala dicatat di [kendala_backlog.md](kendala_backlog.md).
 
-**Sedang dikerjakan:** Epic 3, PBI-302 (Logo klien). Selesai: Epic 0–2, PBI-301.
+**Sedang dikerjakan:** Epic 3, PBI-303 (Tools). Selesai: Epic 0–2, PBI-301–302.
 
 **Contoh pola entitas = Testimonial** (memakai kerangka daftar bersama, [ARCHITECTURE §7.1](ARCHITECTURE.md#71-kerangka-bersama-untuk-daftar-terurut)). Entitas berikutnya meniru file-file ini:
 - `database/migrations/2026_11_03_000003_create_testimonials_table.php`, `app/Models/Testimonial.php` (scope + accessor `logo_url`/`photo_url`)
@@ -34,10 +34,10 @@
 
 | Status | Jumlah | PBI |
 |---|---|---|
-| ✅ Selesai | 27 | **001–005** (seluruh Epic 0), **101–111** (seluruh Epic 1), **201–210** (seluruh Epic 2), **301** |
+| ✅ Selesai | 28 | **001–005** (seluruh Epic 0), **101–111** (seluruh Epic 1), **201–210** (seluruh Epic 2), **301–302** |
 | ⏳ Sedang dikerjakan | 0 | – |
 | ⏸️ Menunggu keputusan | 2 | **504**, **507** (hosting, lihat [kendala_backlog.md](kendala_backlog.md) KD-1) |
-| ❌ Belum | 24 | Epic 3–5 |
+| ❌ Belum | 23 | Epic 3–5 |
 
 Total **53 PBI** dalam 6 epic:
 
@@ -46,7 +46,7 @@ Total **53 PBI** dalam 6 epic:
 | 0 | Persiapan | 001–005 | 5/5 ✅ |
 | 1 | Beres-beres tanpa risiko | 101–111 | 11/11 ✅ |
 | 2 | Fondasi VCMS baru + FAQ | 201–210 | 10/10 ✅ |
-| 3 | Migrasi entitas | 301–313 | 1/13 |
+| 3 | Migrasi entitas | 301–313 | 2/13 |
 | 4 | Pembersihan akhir | 401–406 | 0/6 |
 | 5 | Setelah rombak (fitur & rilis) | 501–508 | 0/8 |
 
@@ -68,6 +68,7 @@ Total **53 PBI** dalam 6 epic:
 | K-8 | **Tanpa Redis.** Kalau perlu cache, pakai facade `Cache` dengan driver `database`/`file` dan key eksplisit (tanpa `Cache::tags()`); pindah ke Redis nanti cukup ubah `CACHE_STORE` | Infrastruktur rilis | – | ✅ Disepakati 3 Nov 2026, aturan di [ARCHITECTURE §10](ARCHITECTURE.md#10-performa--cache) |
 | K-9 | Halaman `/portfolio-experiment` (slider horizontal, ditautkan dari banner "Try Our New Horizontal Slider!" di Portfolio): pertahankan sebagai alternatif, jadikan tampilan utama, atau hapus? | PBI-309 (satu atau dua view portofolio) | Dipertahankan apa adanya | ✅ Default dipakai 3 Nov 2026: dipertahankan, ikut memakai data baru |
 | K-10 | Upload SVG ditolak (SVG bisa berisi script). Logo/ikon SVG bawaan template di `public/images` tetap tampil | Admin harus upload logo sebagai PNG/WebP | – | ✅ Diterapkan 3 Nov 2026 (PBI-104); bisa ditinjau ulang bila logo klien wajib SVG (perlu sanitasi SVG) |
+| K-11 | Kode editor lama (`admin-vcms.js`, `ContentController`, `admin/pages/*`) **tidak dipotong per entitas**; dihapus sekaligus di Epic 4. Pembersihan per entitas cukup di view publik dan `SectionContentSeeder` | Lebih sedikit kerja dan risiko memotong file 6.000 baris berulang kali; selama Epic 3 editor lama masih menampilkan section yang sudah pindah (lihat catatan transisi di kendala_backlog) | – | ✅ Diputuskan 3 Nov 2026 (eksekusi otomatis) mulai PBI-302; FAQ dan testimoni sudah terlanjur dipotong |
 
 ---
 
@@ -125,7 +126,7 @@ Urutan dari yang paling sederhana. Setiap PBI mengikuti checklist [ARCHITECTURE 
 | PBI | Entitas | Tabel | Section lama | Halaman | Status |
 |---|---|---|---|---|---|
 | 301 | Testimonial | `testimonials` | `testimonials` (testimonial-list) | Testimonials | ✅ 3 Nov 2026: kerangka daftar bersama dibuat ([ARCHITECTURE §7.1](ARCHITECTURE.md#71-kerangka-bersama-untuk-daftar-terurut)) dan FAQ dipindah ke kerangka itu. Upload foto/logo lewat editor dicek di browser. Section "testimonials" di Home/About ternyata berisi **logo klien**, jadi ikut PBI-302. Dihapus: 400 baris di `admin-vcms.js`, cabang `delete_testimonial`, daftar testimoni di `admin/pages/testimonials.blade.php` (diganti link ke mode edit). 120 test hijau |
-| 302 | Logo klien | `client_logos` | `trusted-clients`, client-logos, client-logo-slider | Home, Testimonials | ❌ |
+| 302 | Logo klien | `client_logos` | `testimonials` (client-logos-2, judul section), `trusted-clients` | Home, About | ✅ 3 Nov 2026: section dipakai bersama lewat `partials/client-logos.blade.php`; judul jadi setting `clients.*`. Home dan About kini lewat `HomePageController`/`AboutPageController` + page service (`HomeController` lama dihapus). Bersih-bersih: seed `trusted-clients` (tidak pernah dibaca view mana pun) dan blok logo yang sudah di-comment di About dihapus. 136 test hijau |
 | 303 | Tools | `tools` | `creative-tools` (tools-list) | Home | ❌ |
 | 304 | Langkah proses | `process_steps` | `how-it-works` (process-list) | Home | ❌ |
 | 305 | Pencapaian | `achievements` | `achievements` (achievement-list) | Home | ❌ |
@@ -270,3 +271,4 @@ Ringkasan hasil membaca kode di commit `02fa1fd` (isi sama dengan branch `back-e
 | 3 Nov 2026 | PBI-201–207 selesai: lapisan dasar, Vite + Alpine khusus editor, mode edit + bilah admin, komponen `<x-vcms.*>`, editor generik, `ImageUploadService`, `page_settings` + API; 84 test hijau |
 | 3 Nov 2026 | Epic 2 selesai (PBI-208–210): FAQ end to end di tabel `faqs`, halaman `/faqs` dan section FAQ About memakai data baru, kode FAQ lama dihapus; 101 test hijau |
 | 3 Nov 2026 | PBI-301 selesai: testimoni di tabel `testimonials`; kerangka daftar bersama (`ListRepository`, `ListService`, `ListController`, `ListItemRequest`, `ListApiContract`) dipakai FAQ dan testimoni; 120 test hijau |
+| 3 Nov 2026 | PBI-302 selesai: logo klien di tabel `client_logos`, section bersama Home/About; keputusan K-11 (editor lama dihapus sekaligus di Epic 4); 136 test hijau |

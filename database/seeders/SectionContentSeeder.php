@@ -81,15 +81,6 @@ class SectionContentSeeder extends Seeder
             ['num' => '100', 'sym' => '%', 'label' => 'client satisfaction'],
         ];
 
-        // Data Default untuk Section Testimonials (Client Logos Slider)
-        $defaultClients = [
-            ['logo1' => 'images/client-logo-1.svg', 'logo2' => 'images/client-logo-2.svg'],
-            ['logo1' => 'images/client-logo-3.svg', 'logo2' => 'images/client-logo-4.svg'],
-            ['logo1' => 'images/client-logo-5.svg', 'logo2' => 'images/client-logo-1.svg'],
-            ['logo1' => 'images/client-logo-2.svg', 'logo2' => 'images/client-logo-3.svg'],
-            ['logo1' => 'images/client-logo-4.svg', 'logo2' => 'images/client-logo-5.svg'],
-        ];
-        
         // ========================================
         // 2. CORE SECTION DEFINITION (Keys di sini disesuaikan)
         // ========================================
@@ -110,18 +101,6 @@ class SectionContentSeeder extends Seeder
                     ['key' => 'hero-images-1_image_3', 'type' => 'image', 'value' => 'images/hero-img-3.jpg', 'order' => 8],
                     ['key' => 'hero-images-1_image_4', 'type' => 'image', 'value' => 'images/hero-img-4.jpg', 'order' => 9],
                     ['key' => 'hero-images-1_image_5', 'type' => 'image', 'value' => 'images/hero-img-5.jpg', 'order' => 10],
-                ]
-            ],
-            // 2. TRUSTED CLIENTS SECTION (Order 2)
-            [
-                'key' => 'trusted-clients', 'name' => 'Trusted Clients', 'order' => 2,
-                'contents' => [
-                    ['key' => 'trusted-title_trusted_title', 'type' => 'text', 'value' => 'trusted by teams at', 'order' => 1],
-                    ['key' => 'client-logos-1_client_logo_1', 'type' => 'image', 'value' => 'images/client-logo-1.svg', 'order' => 2],
-                    ['key' => 'client-logos-1_client_logo_2', 'type' => 'image', 'value' => 'images/client-logo-2.svg', 'order' => 3],
-                    ['key' => 'client-logos-1_client_logo_3', 'type' => 'image', 'value' => 'images/client-logo-3.svg', 'order' => 4],
-                    ['key' => 'client-logos-1_client_logo_4', 'type' => 'image', 'value' => 'images/client-logo-4.svg', 'order' => 5],
-                    ['key' => 'client-logos-1_client_logo_5', 'type' => 'image', 'value' => 'images/client-logo-1.svg', 'order' => 6],
                 ]
             ],
             // 3. SERVICES SECTION (Order 3)
@@ -197,15 +176,6 @@ class SectionContentSeeder extends Seeder
                     
                     ['key' => 'cta-circle-img_image_file', 'type' => 'image', 'value' => 'images/cta-contact-circle.png', 'order' => 5],
                     ['key' => 'cta-circle-img_link_url', 'type' => 'url', 'value' => '/contact', 'order' => 6],
-                ]
-            ],
-            // 10. TESTIMONIALS/CLIENTS SECTION (Order 10)
-            [
-                'key' => 'testimonials', 'name' => 'Testimonials & Clients', 'order' => 10,
-                'contents' => [
-                    ['key' => 'testimonials_sub_title', 'type' => 'text', 'value' => 'testimonials', 'order' => 1], // KEY CHANGE: testimonial-title_sub_title -> testimonials_sub_title
-                    ['key' => 'testimonials_main_title', 'type' => 'text', 'value' => 'Trusted by <span>Teams at</span>', 'order' => 2], // KEY CHANGE: testimonial-title_main_title -> testimonials_main_title
-                    ['key' => 'trusted_section_title_text', 'type' => 'text', 'value' => 'Our Clients', 'order' => 3], // KEY CHANGE: trusted-title-2_text_content -> trusted-title_text_content
                 ]
             ],
         ];
@@ -373,26 +343,6 @@ class SectionContentSeeder extends Seeder
 
                 foreach ($contents as $content) {
                     $ctaSection->contents()->updateOrCreate(['key' => $content['key']], $content);
-                }
-            }
-        }
-
-        // ========================================
-        // 11. SEED LOOPED CONTENT (Client Logos Slider - Testimonials Section)
-        // ========================================
-        $testimonialsSection = Section::where('key', 'testimonials')->first();
-        if ($testimonialsSection) {
-            $order = 4; // Starts after core testimonial titles
-            foreach ($defaultClients as $index => $clientPair) {
-                $baseKey = "client-logos-2";
-
-                $contents = [
-                    ['key' => $baseKey . "_logo_a_{$index}", 'type' => 'image', 'value' => $clientPair['logo1'], 'order' => $order++],
-                    ['key' => $baseKey . "_logo_b_{$index}", 'type' => 'image', 'value' => $clientPair['logo2'], 'order' => $order++],
-                ];
-
-                foreach ($contents as $content) {
-                    $testimonialsSection->contents()->updateOrCreate(['key' => $content['key']], $content);
                 }
             }
         }

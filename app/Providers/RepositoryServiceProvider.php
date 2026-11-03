@@ -2,9 +2,11 @@
 
 namespace App\Providers;
 
+use App\Repositories\Contracts\ClientLogoRepositoryInterface;
 use App\Repositories\Contracts\FaqRepositoryInterface;
 use App\Repositories\Contracts\PageSettingRepositoryInterface;
 use App\Repositories\Contracts\TestimonialRepositoryInterface;
+use App\Repositories\Eloquent\EloquentClientLogoRepository;
 use App\Repositories\Eloquent\EloquentFaqRepository;
 use App\Repositories\Eloquent\EloquentPageSettingRepository;
 use App\Repositories\Eloquent\EloquentTestimonialRepository;
@@ -22,5 +24,6 @@ class RepositoryServiceProvider extends ServiceProvider
         PageSettingRepositoryInterface::class => EloquentPageSettingRepository::class,
         FaqRepositoryInterface::class => EloquentFaqRepository::class,
         TestimonialRepositoryInterface::class => EloquentTestimonialRepository::class,
+        ClientLogoRepositoryInterface::class => EloquentClientLogoRepository::class,
     ];
 }

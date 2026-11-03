@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\Api\ClientLogoController;
 use App\Http\Controllers\Admin\Api\FaqController;
 use App\Http\Controllers\Admin\Api\SettingController;
 use App\Http\Controllers\Admin\Api\TestimonialController;
@@ -7,6 +8,7 @@ use App\Http\Controllers\Admin\EditModeController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Pages\AboutPageController;
 use App\Http\Controllers\Pages\FaqPageController;
+use App\Http\Controllers\Pages\HomePageController;
 use App\Http\Controllers\Pages\TestimonialPageController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -17,7 +19,7 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 
-Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/', HomePageController::class)->name('home');
 
 Route::get('/about', AboutPageController::class)->name('about');
 
@@ -119,6 +121,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
             $lists = [
                 'faqs' => FaqController::class,
                 'testimonials' => TestimonialController::class,
+                'client-logos' => ClientLogoController::class,
             ];
             foreach ($lists as $uri => $controller) {
                 Route::get("/{$uri}", [$controller, 'index'])->name("{$uri}.index");

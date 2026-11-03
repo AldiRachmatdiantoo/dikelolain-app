@@ -295,7 +295,7 @@ Setiap entitas dianggap selesai kalau semua poin ini terpenuhi:
 8. View publik memakai data dari service dan komponen `<x-vcms.*>`.
 9. Seeder data demo dalam format baru.
 10. Test: feature test endpoint (wajib login, 422, tambah/ubah/hapus/urutkan) + halaman publik tampil.
-11. Key lama entitas ini **tidak disebut lagi** di view, `admin-vcms.js`, `ContentController`, maupun seeder lama, dan barisnya di `section_contents` sudah dihapus.
+11. Key lama entitas ini **tidak disebut lagi** di view publik maupun `SectionContentSeeder`. Editor lama (`admin-vcms.js`, `ContentController`, `admin/pages/*`) dihapus sekaligus di Epic 4 (keputusan K-11), jadi tidak dipotong per entitas.
 
 ### 7.1 Kerangka bersama untuk daftar terurut
 
