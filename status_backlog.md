@@ -14,7 +14,7 @@
 
 **Mode:** eksekusi otomatis atas instruksi pemilik (3 Nov 2026): kerjakan PBI berurutan tanpa bertanya, uji setiap PBI (`php artisan test` + cek browser bila terlihat), commit + push per PBI, kendala dicatat di [kendala_backlog.md](kendala_backlog.md).
 
-**Sedang dikerjakan:** tidak ada. **Semua PBI yang bisa dikerjakan tanpa pemilik sudah selesai** (Epic 0–4, lalu 501, 503, 506, 509). Sisanya menunggu pemilik: 502 konten asli (KD-2), 504 dan 507 hosting (KD-1). PBI-508 (cache) belum perlu, 505 belum diisi. Lanjutkan begitu salah satu kendala di [kendala_backlog.md](kendala_backlog.md) terjawab. Selesai: Epic 0–4 (rombak arsitektur tuntas). Tabel dan model konten lama sudah tidak ada; cadangan isi lamanya di `storage/app/private/backups/` (lihat kendala_backlog).
+**Sedang dikerjakan:** tidak ada. **Semua PBI yang bisa dikerjakan tanpa pemilik sudah selesai** (Epic 0–4, lalu 501, 503, 506, 509). Sisanya menunggu pemilik: 502 konten asli (KD-2), 504 dan 507 hosting (KD-1). PBI-510 (akun admin berlapis) dan 511 (frontend lebih ringan) sudah dicatat, belum dikerjakan: tunggu aba-aba pemilik. PBI-508 (cache) belum perlu, 505 belum diisi. Lanjutkan begitu salah satu kendala di [kendala_backlog.md](kendala_backlog.md) terjawab. Selesai: Epic 0–4 (rombak arsitektur tuntas). Tabel dan model konten lama sudah tidak ada; cadangan isi lamanya di `storage/app/private/backups/` (lihat kendala_backlog).
 
 **Contoh pola entitas = Testimonial** (memakai kerangka daftar bersama, [ARCHITECTURE §7.1](ARCHITECTURE.md#71-kerangka-bersama-untuk-daftar-terurut)). Entitas berikutnya meniru file-file ini:
 - `database/migrations/2026_11_03_000003_create_testimonials_table.php`, `app/Models/Testimonial.php` (scope + accessor `logo_url`/`photo_url`)
@@ -38,7 +38,7 @@
 | ✅ Selesai | 49 | **001–005** (seluruh Epic 0), **101–111** (seluruh Epic 1), **201–210** (seluruh Epic 2), **301–313** (seluruh Epic 3), **401–406** (seluruh Epic 4), **501**, **503**, **506**, **509** |
 | ⏳ Sedang dikerjakan | 0 | – |
 | ⏸️ Menunggu pemilik | 3 | **502** (konten asli, KD-2), **504**, **507** (hosting, lihat [kendala_backlog.md](kendala_backlog.md) KD-1) |
-| ❌ Belum | 2 | **505** (belum diisi), **508** (cache, hanya bila perlu) |
+| ❌ Belum | 4 | **505** (belum diisi), **508** (cache, hanya bila perlu), **510** (akun admin berlapis), **511** (frontend lebih ringan) |
 
 Total **53 PBI** dalam 6 epic:
 
@@ -49,7 +49,7 @@ Total **53 PBI** dalam 6 epic:
 | 2 | Fondasi VCMS baru + FAQ | 201–210 | 10/10 ✅ |
 | 3 | Migrasi entitas | 301–313 | 13/13 ✅ |
 | 4 | Pembersihan akhir | 401–406 | 6/6 ✅ |
-| 5 | Setelah rombak (fitur & rilis) | 501–509 | 4/9 |
+| 5 | Setelah rombak (fitur & rilis) | 501–511 | 4/11 |
 
 **Urutan wajib:** Epic 0 → 1 → 2 → 3 → 4. Fitur baru (Epic 5) baru dikerjakan setelah Epic 4, kecuali yang tidak menyentuh model konten (lihat [PBI-501](#epic-5-setelah-rombak-fitur--rilis)).
 
@@ -153,19 +153,21 @@ Urutan dari yang paling sederhana. Setiap PBI mengikuti checklist [ARCHITECTURE 
 
 ### Epic 5: Setelah rombak (fitur & rilis)
 
-Belum dirinci. Diisi setelah Epic 4.
+Fitur dan persiapan rilis setelah rombak arsitektur. PBI-509 sampai 511 ditambahkan selama eksekusi.
 
 | PBI | Judul | Status | Catatan |
 |---|---|---|---|
 | 501 | Meta SEO + sitemap | ✅ | 3 Nov 2026: deskripsi per halaman utama (`seo.{route}.description`) dan gambar pratinjau (`seo.image`) di `page_settings`, diedit lewat tombol **SEO** di bilah admin; `SeoComposer` mengisi `meta description`, `og:*`, `canonical`; detail layanan/anggota tim memakai ringkasannya sendiri; 404 diberi `noindex`; `/sitemap.xml` (halaman utama + layanan dan anggota aktif) dan `/robots.txt` dinamis (file `public/robots.txt` dihapus). Meta `keywords` lama dibuang. Test: `SeoTest` (15). Form kontak dipisah ke PBI-509 |
 | 509 | Form kontak disimpan ke database / dikirim email (dipisah dari PBI-501) | ✅ | 3 Nov 2026, keputusan pemilik (KD-3): **database + WhatsApp**. Form menyimpan pesan ke tabel `contact_messages` (`POST /contact`, maks 5 kirim/menit per pengunjung, kolom jebakan tersembunyi untuk bot), lalu membuka WhatsApp dengan isi yang sama seperti dulu. Input tidak valid ditampilkan di bawah field; bila penyimpanan gagal karena hal lain, WhatsApp tetap dibuka. Panel admin: menu **Pesan Masuk** (`/admin/messages`) dengan jumlah belum dibaca di sidebar dan dashboard, tandai dibaca/belum, hapus, tombol "Balas via WhatsApp" (nomor 08… otomatis jadi 628…). Handler bawaan template ke `form-process.php` (file yang tidak ada) dan `validator.min.js` dihapus; validasi kini dari browser + server. Test: `ContactMessageTest` (14) |
 | 506 | Gambar & video: kompres gambar ke WebP, `loading="lazy"` di bawah layar, video hero disimpan sendiri | ✅ | 3 Nov 2026. **Temuan:** 50 JPG template hanya placeholder kecil (±8 KB, diganti di PBI-502), jadi yang dikonversi hanya 14 PNG besar yang benar-benar tampil: logo 3500 px yang tampil setinggi 45 px kini WebP 720 px, latar testimoni, lingkaran dekoratif, bentuk latar CSS, gambar 404, avatar admin (±960 KB → ±290 KB). Favicon kini PNG 192 px (dulu 1500 px). PNG lama dihapus, logo PNG beresolusi tinggi tetap disimpan sebagai master. **Upload baru** JPG/PNG/WebP otomatis diperkecil ke sisi terpanjang 2000 px dan disimpan sebagai WebP (foto HP diputar sesuai EXIF; GIF dan video tidak diubah; `seo.image` tetap format asli lewat `'original' => true`); uji nyata: PNG 3,2 MB → WebP 51 KB. `loading="lazy"` di 17 tag gambar di bawah layar (hero, logo header, slider Swiper tidak). Bonus: gambar 404 rusak di URL bertingkat (path relatif), kini `asset()`. Video hero tidak diunduh dari server demo: diganti pemilik lewat tombol Hero di mode edit (lihat KD-2). Test: `ImageUploadTest` (6), `TemplateAssetsTest` (4) |
-| 507 | Optimasi rilis: `php artisan optimize`, OPcache di server | ⏸️ | Menunggu K-3 |
+| 507 | Optimasi rilis: `php artisan optimize`, OPcache di server, kompresi gzip/brotli dan header cache untuk file statis (CSS, JS, gambar, font) | ⏸️ | Menunggu K-3. `php artisan serve` lokal tidak mengompres apa pun; `public/.htaccess` belum punya aturan gzip/cache. Caranya bergantung server (Apache: `.htaccess`, Nginx: konfigurasi server) |
 | 508 | Cache data per halaman (`Cache::rememberForever('page.home')`, dihapus saat admin menyimpan) | ❌ | Hanya bila PBI-313 + 506 + 507 belum cukup; tanpa Redis (K-8). Dilewati 3 Nov 2026: baru bisa dinilai setelah ada hosting (507) |
 | 502 | Ganti konten demo template dengan konten asli (video Awaiken, link YouTube acak, award 2015–2020, logo klien contoh, nama tim) | ⏸️ | Menunggu konten dari pemilik (KD-2). Semua isi bisa diganti sendiri lewat mode edit |
 | 503 | Branding: `<html lang="id">`, meta author/description, judul halaman | ✅ | 3 Nov 2026: `lang` situs publik mengikuti `APP_LOCALE` (`id` di `.env.example`; `.env` lokal masih `en`, ubah bila perlu), halaman admin `lang="id"`; meta author "Dikelolain" (description sudah di PBI-501); semua judul berpola "Halaman - Dikelolain" (Home: "Dikelolain - Creative Agency", 404: "Page Not Found - Dikelolain", login: "Login - Dikelolain VCMS"). Teks default footer yang menyebut "Rovex" (nama template) diganti deskripsi Dikelolain. Kredit template di kepala `custom.css` sengaja dibiarkan (lisensi). Test: `BrandingTest` (16) |
 | 504 | Deploy | ⏸️ | Menunggu K-3 |
 | 505 | Fitur baru (diisi kemudian) | ❌ | |
+| 510 | Akun admin mengikuti pola berlapis: `ProfileController` (ubah profil, ubah password) dan `AuthController` (login) | ❌ | Dicatat 3 Nov 2026 atas permintaan pemilik, dikerjakan nanti. Sekarang validasi masih `$request->validate()` di controller dan user disimpan langsung (`$request->user()->update()`). Target: FormRequest (`UpdateProfileRequest`, `UpdatePasswordRequest`, `LoginRequest`), `AccountService`, `UserRepositoryInterface` + implementasi Eloquent, plus test. Bagian konten lain sudah berlapis semua |
+| 511 | Frontend lebih ringan | ❌ | Hasil ukur Home 3 Nov 2026 (pengunjung baru, tanpa cache): 59 request, ±1,75 MB aset lokal belum dikompres (17 file JS, 10 file CSS), **ditambah** 6 video YouTube yang langsung dimuat dan video hero 12,3 MB dari server demo. Rencana: (1) video YouTube di Home/Portfolio jadi thumbnail, pemutar baru dimuat saat diklik; (2) hapus plugin yang tidak dipakai: `jquery.mb.YTPlayer` (63 KB), `parallaxie`, `magnific-popup` (+ CSS); (3) `isotope` hanya dimuat di Portfolio; (4) satukan dan perkecil CSS/JS template. Yang sudah ringan: gambar WebP + lazy (506), query per halaman (Epic 3), aset editor hanya untuk admin (202), `validator.js` dihapus (509). Kompresi gzip dan header cache ada di PBI-507 (bergantung hosting) |
 
 ---
 
@@ -295,3 +297,4 @@ Ringkasan hasil membaca kode di commit `02fa1fd` (isi sama dengan branch `back-e
 | 3 Nov 2026 | PBI-506 selesai: PNG besar template jadi WebP seukuran tampilan, upload baru otomatis diperkecil + WebP, `loading="lazy"` di gambar bawah layar; 391 test hijau |
 | 3 Nov 2026 | PBI-503 selesai: `lang`, author, dan judul halaman berlabel Dikelolain; semua PBI yang tidak menunggu pemilik selesai; 407 test hijau |
 | 3 Nov 2026 | PBI-509 selesai (KD-3: database + WhatsApp): pesan form kontak tersimpan dan dibaca di menu Pesan Masuk, pengunjung tetap diarahkan ke WhatsApp; 423 test hijau |
+| 3 Nov 2026 | PBI-510 (akun admin berlapis) dan 511 (frontend lebih ringan, dari hasil ukur Home) dicatat; PBI-507 diperluas dengan gzip dan header cache |
