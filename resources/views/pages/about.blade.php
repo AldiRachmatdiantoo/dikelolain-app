@@ -2,95 +2,42 @@
 
 @section('title', 'About Us - Dikelolain')
 
-@php
-if (!function_exists('getAboutContent')) {
-    function getAboutContent($sections, $sectionKey, $contentKey, $default = '') {
-        $section = collect($sections)->get($sectionKey);
-        if (!$section || !isset($section->contents)) {
-            return $default;
-        }
-        $content = $section->contents->firstWhere('key', $contentKey);
-        return $content ? $content->value : $default;
-    }
-}
-
-// Page Header - uses about-header section
-$headerTitle = getAboutContent($sections, 'about-header', 'about-header-1_title', 'About our <span>journey</span>');
-$headerBreadcrumb = getAboutContent($sections, 'about-header', 'about-header-1_breadcrumb', 'About Us');
-
-
-// About Us Section - uses about-us section with about-us-1_* keys (matching admin)
-$aboutImg = getAboutContent($sections, 'about-us', 'about-us-1_image', 'images/about-img.jpg');
-$aboutSubTitle = getAboutContent($sections, 'about-us', 'about-us-1_sub_title', 'about us');
-$aboutMainTitle = getAboutContent($sections, 'about-us', 'about-us-1_main_title', 'A team of <span>creative thinkers</span>');
-$aboutDesc = getAboutContent($sections, 'about-us', 'about-us-1_description', 'We\'re a full-service design agency specializing in branding, web design, and creative strategies that elevate businesses.');
-
-// Get list items dynamically from database
-$infoItems = [];
-$defaultInfoItems = [
-    'Creativity and Innovation',
-    'Client-Centricity',
-    'Integrity and Transparency',
-    'Excellence and Quality',
-];
-
-if (isset($sections['about-us'])) {
-    foreach ($sections['about-us']->contents as $content) {
-        if (preg_match('/^about-us-1_list_item_(\d+)$/', $content->key, $matches)) {
-            $infoItems[(int)$matches[1]] = $content->value;
-        }
-    }
-}
-
-// Use defaults if no items in database
-if (empty($infoItems)) {
-    foreach ($defaultInfoItems as $idx => $item) {
-        $infoItems[$idx] = $item;
-    }
-}
-ksort($infoItems);
-@endphp
-
 @section('content')
 
-    <x-page-header title="{!! $headerTitle !!}">
-        <li class="breadcrumb-item active" aria-current="page">{!! $headerBreadcrumb !!}</li>
-    </x-page-header>
+    <x-vcms.settings :keys="['about.header.title', 'about.header.breadcrumb']" label="Header">
+        <x-page-header :title="$settings->get('about.header.title')">
+            <li class="breadcrumb-item active" aria-current="page">{{ $settings->get('about.header.breadcrumb') }}</li>
+        </x-page-header>
+    </x-vcms.settings>
 <div class="page-about-us">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-6">
-                    <div class="about-us-img">
+                    <x-vcms.settings :keys="['about.image']" label="Gambar" class="about-us-img">
                         <figure class="image-anime reveal">
-                            <img src="{{ asset($aboutImg) }}" alt="">
+                            <img src="{{ $settings->url('about.image') }}" alt="">
                         </figure>
-                     </div>
+                    </x-vcms.settings>
                 </div>
 
                 <div class="col-lg-6">
                     <div class="about-us-content">
-                        <div class="section-title">
-                            <h3 class="wow fadeInUp">{{ $aboutSubTitle }}</h3>
-                            <h2 class="text-anime-style-2" data-cursor="-opaque">{!! $aboutMainTitle !!}</h2>
-                            <p class="wow fadeInUp" data-wow-delay="0.2s">{{ $aboutDesc }}</p>
-                        </div>
+                        <x-vcms.settings :keys="['about.sub_title', 'about.title', 'about.description']" label="Judul" class="section-title">
+                            <h3 class="wow fadeInUp">{{ $settings->get('about.sub_title') }}</h3>
+                            <h2 class="text-anime-style-2" data-cursor="-opaque">{!! $settings->get('about.title') !!}</h2>
+                            <p class="wow fadeInUp" data-wow-delay="0.2s">{{ $settings->get('about.description') }}</p>
+                        </x-vcms.settings>
 
                         <div class="row align-items-center">
                             <div class="col-md-6">
                                 <div class="about-us-info-list wow fadeInUp" data-wow-delay="0.4s">
-                                    <ul>
-                                        @foreach($infoItems as $item)
-                                            @if(!empty($item))
-                                                <li>{{ $item }}</li>
-                                            @endif
-                                        @endforeach
-                                    </ul>
+                                    @include('partials.page-list', ['list' => 'about'])
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <div class="about-contact-now">
-                                    <a href="{{ route('contact') }}"><img src="{{ asset('images/contact-circle.png') }}" alt=""></a>
-                                </div>
+                                <x-vcms.settings :keys="['about.circle_image', 'about.circle_link']" label="Tombol" class="about-contact-now">
+                                    <a href="{{ $settings->get('about.circle_link') }}"><img src="{{ $settings->url('about.circle_image') }}" alt=""></a>
+                                </x-vcms.settings>
                             </div>
                         </div>
                     </div>
@@ -120,87 +67,26 @@ ksort($infoItems);
                 <div class="col-lg-12">
                     <!-- Vision Mission Box Start -->
                     <div class="vision-mission-box">
-                        @php
-                            // Vision Mission items configuration
-                            $visionMissionItems = [
-                                [
-                                    'key' => 'vision',
-                                    'default_sub_title' => 'our vision',
-                                    'default_title' => 'Driving the Future of <span>Creativity</span>',
-                                    'default_desc' => 'We\'re a full-service design agency specializing in branding, web design, and creative strategies that elevate businesses.',
-                                    'default_image' => 'images/our-vision-img.jpg',
-                                    'default_list' => ['Creativity and Innovation', 'Client-Centricity', 'Integrity and Transparency', 'Excellence and Quality'],
-                                ],
-                                [
-                                    'key' => 'mission',
-                                    'default_sub_title' => 'our mission',
-                                    'default_title' => 'Bringing ideas to life through <span>creativity</span>',
-                                    'default_desc' => 'We\'re a full-service design agency specializing in branding, web design, and creative strategies that elevate businesses.',
-                                    'default_image' => 'images/our-mission-img.jpg',
-                                    'default_list' => ['Creativity and Innovation', 'Client-Centricity', 'Integrity and Transparency', 'Excellence and Quality'],
-                                ],
-                            ];
-                        @endphp
-
-                        @foreach($visionMissionItems as $item)
-                            @php
-                                $itemKey = $item['key'];
-                                $subTitle = getAboutContent($sections, 'vision-mission', "vision-mission-1_{$itemKey}_sub_title", $item['default_sub_title']);
-                                $mainTitle = getAboutContent($sections, 'vision-mission', "vision-mission-1_{$itemKey}_title", $item['default_title']);
-                                $description = getAboutContent($sections, 'vision-mission', "vision-mission-1_{$itemKey}_description", $item['default_desc']);
-                                $image = getAboutContent($sections, 'vision-mission', "vision-mission-1_{$itemKey}_image", $item['default_image']);
-
-                                // Get list items dynamically from database
-                                $listItems = [];
-                                if (isset($sections['vision-mission'])) {
-                                    foreach ($sections['vision-mission']->contents as $content) {
-                                        if (preg_match('/^vision-mission-1_' . $itemKey . '_list_(\d+)$/', $content->key, $matches)) {
-                                            $listItems[(int)$matches[1]] = $content->value;
-                                        }
-                                    }
-                                }
-
-                                // Use defaults if no items in database
-                                if (empty($listItems)) {
-                                    foreach ($item['default_list'] as $idx => $listItem) {
-                                        $listItems[$idx] = $listItem;
-                                    }
-                                }
-                                ksort($listItems);
-                            @endphp
+                        @foreach (['vision', 'mission'] as $list)
                             <!-- Vision Mission Item Start -->
                             <div class="vision-mission-item">
-                                <!-- Vision Mission image Start -->
-                                <div class="vision-mission-image">
+                                <x-vcms.settings :keys="[$list . '.image']" label="Gambar" class="vision-mission-image">
                                     <figure class="image-anime reveal">
-                                        <img src="{{ asset($image) }}" alt="{{ $itemKey }}">
+                                        <img src="{{ $settings->url($list . '.image') }}" alt="{{ $list }}">
                                     </figure>
-                                </div>
-                                <!-- Vision Mission image End -->
+                                </x-vcms.settings>
 
-                                <!-- Vision Mission Content Start -->
                                 <div class="vision-mission-content">
-                                    <!-- Section Title Start -->
-                                    <div class="section-title">
-                                        <h3 class="wow fadeInUp">{{ $subTitle }}</h3>
-                                        <h2 class="text-anime-style-2" data-cursor="-opaque">{!! $mainTitle !!}</h2>
-                                        <p class="wow fadeInUp" data-wow-delay="0.2s">{{ $description }}</p>
-                                    </div>
-                                    <!-- Section Title End -->
+                                    <x-vcms.settings :keys="[$list . '.sub_title', $list . '.title', $list . '.description']" label="Judul" class="section-title">
+                                        <h3 class="wow fadeInUp">{{ $settings->get($list . '.sub_title') }}</h3>
+                                        <h2 class="text-anime-style-2" data-cursor="-opaque">{!! $settings->get($list . '.title') !!}</h2>
+                                        <p class="wow fadeInUp" data-wow-delay="0.2s">{{ $settings->get($list . '.description') }}</p>
+                                    </x-vcms.settings>
 
-                                    <!-- Vision Mission List Start -->
                                     <div class="vision-mission-list wow fadeInUp" data-wow-delay="0.4s">
-                                        <ul>
-                                            @foreach($listItems as $listItem)
-                                                @if(!empty($listItem))
-                                                    <li>{{ $listItem }}</li>
-                                                @endif
-                                            @endforeach
-                                        </ul>
+                                        @include('partials.page-list')
                                     </div>
-                                    <!-- Vision Mission List End -->
                                 </div>
-                                <!-- Vision Mission Content End -->
                             </div>
                             <!-- Vision Mission Item End -->
                         @endforeach

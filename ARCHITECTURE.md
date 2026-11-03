@@ -117,7 +117,7 @@ Semua tabel daftar punya `id`, `sort_order` (int), `is_active` (bool, default tr
 | `projects` | `title`, `description`, `media_type` (video/image), `video_url` (YouTube), `image`, `link` (opsional, http/https) | Home (our work: 6 video + 6 desain), Portfolio, Portfolio experiment |
 | `pricing_plans` | `name`, `price` (teks bebas), `period`, `is_featured`, `button_text` (kosong = tanpa tombol), `button_link` | Pricing |
 | `pricing_features` | `pricing_plan_id`, `text` | Pricing |
-| `page_list_items` | `page`, `group` (about_list, vision, mission, pricing_benefits), `text`, `icon_path` | About, Pricing |
+| `page_list_items` | `list_key` (about, vision, mission, pricing_benefits), `text`, `icon` (hanya dipakai keuntungan Pricing) | About, Pricing |
 
 > Kolom di atas adalah **rancangan**. Saat mengerjakan tiap entitas, kolomnya dicocokkan dulu dengan field yang benar-benar dipakai di seeder dan view lama.
 

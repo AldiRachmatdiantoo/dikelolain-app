@@ -43,6 +43,7 @@ class DatabaseSeeder extends Seeder
             ServiceSeeder::class,
             ProjectSeeder::class,
             PricingPlanSeeder::class,
+            PageListItemSeeder::class,
         ]);
     }
 }

@@ -2,31 +2,6 @@
 
 @section('title', 'Dikelolain - Pricing')
 
-@php
-    // Helper function to get content from database
-    if (!function_exists('getPricingContent')) {
-        function getPricingContent($sections, $sectionKey, $contentKey, $default = '') {
-            $section = collect($sections)->firstWhere('key', $sectionKey);
-            if (!$section || !isset($section['contents'])) {
-                return $default;
-            }
-            $content = collect($section['contents'])->firstWhere('key', $contentKey);
-            return $content ? $content['value'] : $default;
-        }
-    }
-
-    // Benefits data (moves to page_list_items in PBI-311)
-    $benefits = [];
-    for ($i = 1; $i <= 3; $i++) {
-        $defaultIcons = ['images/icon-pricing-benefit-1.svg', 'images/icon-pricing-benefit-2.svg', 'images/icon-pricing-benefit-3.svg'];
-        $defaultTexts = ['Get 30 day free trial', 'No any hidden fees pay', 'You can cancel anytime'];
-        $benefits[] = [
-            'icon' => getPricingContent($sections, 'pricing', "pricing-benefits_benefit_{$i}_icon", $defaultIcons[$i-1]),
-            'text' => getPricingContent($sections, 'pricing', "pricing-benefits_benefit_{$i}_text", $defaultTexts[$i-1])
-        ];
-    }
-@endphp
-
 @section('content')
 
     <!-- Page Header -->
@@ -91,10 +66,12 @@
                     <!-- Pricing Benefit List Start -->
                     <div class="pricing-benefit-list wow fadeInUp" data-wow-delay="0.6s">
                         <ul>
-                            @foreach($benefits as $benefit)
-                                <li><img src="{{ asset($benefit['icon']) }}" alt="">{{ $benefit['text'] }}</li>
+                            @foreach ($benefits as $benefit)
+                                <x-vcms.item resource="page-list-items" :item="$benefit" :fields="$benefitFields" label="keuntungan" tag="li"
+                                    class="{{ $benefit->is_active ? '' : 'vcms-hidden' }}">@if (filled($benefit->icon))<img src="{{ $benefit->icon_url }}" alt="">@endif{{ $benefit->text }}</x-vcms.item>
                             @endforeach
                         </ul>
+                        <x-vcms.add resource="page-list-items" :fields="$benefitFields" label="keuntungan" :defaults="['list_key' => 'pricing_benefits']" />
                     </div>
                     <!-- Pricing Benefit List End -->
                 </div>

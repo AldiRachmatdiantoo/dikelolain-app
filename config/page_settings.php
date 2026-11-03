@@ -14,6 +14,24 @@
 
 return [
 
+    // About page: header, about us section, vision and mission (their bullet lists are page_list_items)
+    'about.header.title' => ['type' => 'rich_text', 'label' => 'Judul header', 'default' => 'About our <span>journey</span>'],
+    'about.header.breadcrumb' => ['type' => 'text', 'label' => 'Breadcrumb', 'default' => 'About Us'],
+    'about.image' => ['type' => 'image', 'label' => 'Gambar', 'default' => 'images/about-img.jpg'],
+    'about.sub_title' => ['type' => 'text', 'label' => 'Sub judul', 'default' => 'about us'],
+    'about.title' => ['type' => 'rich_text', 'label' => 'Judul', 'default' => 'A team of <span>creative thinkers</span>'],
+    'about.description' => ['type' => 'textarea', 'label' => 'Deskripsi', 'default' => 'We\'re a full-service design agency specializing in branding, web design, and creative strategies that elevate businesses.'],
+    'about.circle_image' => ['type' => 'image', 'label' => 'Gambar tombol bulat', 'default' => 'images/contact-circle.png'],
+    'about.circle_link' => ['type' => 'url', 'label' => 'Link tombol bulat', 'default' => '/contact'],
+    'vision.image' => ['type' => 'image', 'label' => 'Gambar', 'default' => 'images/our-vision-img.jpg'],
+    'vision.sub_title' => ['type' => 'text', 'label' => 'Sub judul', 'default' => 'our vision'],
+    'vision.title' => ['type' => 'rich_text', 'label' => 'Judul', 'default' => 'Driving the Future of <span>Creativity</span>'],
+    'vision.description' => ['type' => 'textarea', 'label' => 'Deskripsi', 'default' => 'We\'re a full-service design agency specializing in branding, web design, and creative strategies that elevate businesses.'],
+    'mission.image' => ['type' => 'image', 'label' => 'Gambar', 'default' => 'images/our-mission-img.jpg'],
+    'mission.sub_title' => ['type' => 'text', 'label' => 'Sub judul', 'default' => 'our mission'],
+    'mission.title' => ['type' => 'rich_text', 'label' => 'Judul', 'default' => 'Bringing ideas to life through <span>creativity</span>'],
+    'mission.description' => ['type' => 'textarea', 'label' => 'Deskripsi', 'default' => 'We\'re a full-service design agency specializing in branding, web design, and creative strategies that elevate businesses.'],
+
     // Achievements section (Home, About)
     'achievements.sub_title' => ['type' => 'text', 'label' => 'Sub judul', 'default' => 'our achievements'],
     'achievements.title' => ['type' => 'rich_text', 'label' => 'Judul', 'default' => 'Proud moments & <span>milestones</span>'],

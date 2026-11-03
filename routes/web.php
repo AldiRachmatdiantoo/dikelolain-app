@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\Api\AchievementController;
 use App\Http\Controllers\Admin\Api\ClientLogoController;
 use App\Http\Controllers\Admin\Api\CounterController;
 use App\Http\Controllers\Admin\Api\FaqController;
+use App\Http\Controllers\Admin\Api\PageListItemController;
 use App\Http\Controllers\Admin\Api\PricingFeatureController;
 use App\Http\Controllers\Admin\Api\PricingPlanController;
 use App\Http\Controllers\Admin\Api\ProcessStepController;
@@ -132,6 +133,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
                 'projects' => ProjectController::class,
                 'pricing-plans' => PricingPlanController::class,
                 'pricing-features' => PricingFeatureController::class,
+                'page-list-items' => PageListItemController::class,
             ];
             foreach ($lists as $uri => $controller) {
                 Route::get("/{$uri}", [$controller, 'index'])->name("{$uri}.index");
