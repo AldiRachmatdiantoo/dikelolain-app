@@ -8,6 +8,9 @@ use App\Repositories\Contracts\CounterRepositoryInterface;
 use App\Repositories\Contracts\FaqRepositoryInterface;
 use App\Repositories\Contracts\PageSettingRepositoryInterface;
 use App\Repositories\Contracts\ProcessStepRepositoryInterface;
+use App\Repositories\Contracts\TeamMemberExpertiseRepositoryInterface;
+use App\Repositories\Contracts\TeamMemberRepositoryInterface;
+use App\Repositories\Contracts\TeamMemberSkillRepositoryInterface;
 use App\Repositories\Contracts\TestimonialRepositoryInterface;
 use App\Repositories\Contracts\ToolRepositoryInterface;
 use App\Repositories\Eloquent\EloquentAchievementRepository;
@@ -16,6 +19,9 @@ use App\Repositories\Eloquent\EloquentCounterRepository;
 use App\Repositories\Eloquent\EloquentFaqRepository;
 use App\Repositories\Eloquent\EloquentPageSettingRepository;
 use App\Repositories\Eloquent\EloquentProcessStepRepository;
+use App\Repositories\Eloquent\EloquentTeamMemberExpertiseRepository;
+use App\Repositories\Eloquent\EloquentTeamMemberRepository;
+use App\Repositories\Eloquent\EloquentTeamMemberSkillRepository;
 use App\Repositories\Eloquent\EloquentTestimonialRepository;
 use App\Repositories\Eloquent\EloquentToolRepository;
 use Illuminate\Support\ServiceProvider;
@@ -37,5 +43,8 @@ class RepositoryServiceProvider extends ServiceProvider
         ProcessStepRepositoryInterface::class => EloquentProcessStepRepository::class,
         AchievementRepositoryInterface::class => EloquentAchievementRepository::class,
         CounterRepositoryInterface::class => EloquentCounterRepository::class,
+        TeamMemberRepositoryInterface::class => EloquentTeamMemberRepository::class,
+        TeamMemberSkillRepositoryInterface::class => EloquentTeamMemberSkillRepository::class,
+        TeamMemberExpertiseRepositoryInterface::class => EloquentTeamMemberExpertiseRepository::class,
     ];
 }

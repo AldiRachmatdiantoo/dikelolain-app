@@ -44,7 +44,7 @@
                     <p class="vcms-form-error" x-show="message" x-text="message"></p>
 
                     <template x-for="field in fields" :key="field.name">
-                        <div class="vcms-field">
+                        <div class="vcms-field" x-show="field.type !== 'hidden'">
                             <label :for="'vcms-' + field.name" x-text="field.label"></label>
 
                             <template x-if="['text', 'url', 'email', 'video'].includes(field.type)">

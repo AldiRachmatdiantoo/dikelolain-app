@@ -39,6 +39,7 @@ class DatabaseSeeder extends Seeder
             ProcessStepSeeder::class,
             AchievementSeeder::class,
             CounterSeeder::class,
+            TeamMemberSeeder::class,
         ]);
     }
 }

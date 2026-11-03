@@ -7,10 +7,12 @@ use App\Services\AchievementService;
 use App\Services\ClientLogoService;
 use App\Services\CounterService;
 use App\Services\SettingService;
+use App\Services\TeamMemberService;
 use App\Services\ToolService;
 use App\Vcms\Fields\AchievementFields;
 use App\Vcms\Fields\ClientLogoFields;
 use App\Vcms\Fields\CounterFields;
+use App\Vcms\Fields\TeamMemberFields;
 use App\Vcms\Fields\ToolFields;
 use Illuminate\Support\Collection;
 
@@ -26,6 +28,7 @@ class SectionData
         private ToolService $tools,
         private AchievementService $achievements,
         private CounterService $counters,
+        private TeamMemberService $teamMembers,
     ) {
     }
 
@@ -88,6 +91,17 @@ class SectionData
         return [
             'counters' => $this->counters->all(activeOnly: !$editing),
             'counterFields' => $editing ? CounterFields::definition() : [],
+        ];
+    }
+
+    /**
+     * For partials/team.blade.php: the first four active members (all of them are on /team).
+     */
+    public function team(bool $editing): array
+    {
+        return [
+            'teamMembers' => $this->teamMembers->highlights(4),
+            'teamMemberFields' => $editing ? TeamMemberFields::definition() : [],
         ];
     }
 }

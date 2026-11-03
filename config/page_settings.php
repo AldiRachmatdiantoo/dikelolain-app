@@ -31,6 +31,14 @@ return [
     'clients.title' => ['type' => 'rich_text', 'label' => 'Judul', 'default' => 'Trusted by <span>Teams at</span>'],
     'clients.box_title' => ['type' => 'text', 'label' => 'Judul kotak logo', 'default' => 'Our Clients'],
 
+    // Team section (Home, About) and Team page
+    'team.sub_title' => ['type' => 'text', 'label' => 'Sub judul', 'default' => 'our team'],
+    'team.title' => ['type' => 'rich_text', 'label' => 'Judul', 'default' => 'The Minds Behind <span>the Magic</span>'],
+    'team.button_text' => ['type' => 'text', 'label' => 'Teks tombol', 'default' => 'all team members'],
+    'team.button_link' => ['type' => 'url', 'label' => 'Link tombol', 'default' => '/team'],
+    'team.header.title' => ['type' => 'rich_text', 'label' => 'Judul header', 'default' => 'The minds behind <span>the magic</span>'],
+    'team.header.breadcrumb' => ['type' => 'text', 'label' => 'Breadcrumb', 'default' => 'Our Team'],
+
     // Creative tools section (Home, Services, Pricing, Testimonials)
     'tools.sub_title' => ['type' => 'text', 'label' => 'Sub judul', 'default' => 'creative toolkit'],
     'tools.title' => ['type' => 'rich_text', 'label' => 'Judul', 'default' => 'Our toolbox for <span>innovation</span>'],

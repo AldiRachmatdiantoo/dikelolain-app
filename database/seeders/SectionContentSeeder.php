@@ -85,16 +85,6 @@ class SectionContentSeeder extends Seeder
                     ['key' => 'work_btn_link', 'type' => 'url', 'value' => '/portfolio', 'order' => 4], // KEY CHANGE: work-btn_button_link -> work_btn_link
                 ]
             ],
-            // 7. OUR TEAM SECTION (Order 7)
-            [
-                'key' => 'our-team', 'name' => 'Our Team', 'order' => 7,
-                'contents' => [
-                    ['key' => 'team_sub_title', 'type' => 'text', 'value' => 'our team', 'order' => 1], // KEY CHANGE: team-title_sub_title -> team_sub_title
-                    ['key' => 'team_main_title', 'type' => 'text', 'value' => 'The Minds Behind <span>the Magic</span>', 'order' => 2], // KEY CHANGE: team-title_main_title -> team_main_title
-                    ['key' => 'team_btn_text', 'type' => 'text', 'value' => 'all team members', 'order' => 3], // KEY CHANGE: team-btn_button_text -> team_btn_text
-                    ['key' => 'team_btn_link', 'type' => 'url', 'value' => '/team', 'order' => 4], // KEY CHANGE: team-btn_button_link -> team_btn_link
-                ]
-            ],
         ];
 
         // 3. Iterate and seed core sections

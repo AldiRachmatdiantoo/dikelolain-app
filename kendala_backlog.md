@@ -13,4 +13,4 @@
 ## Catatan masa transisi
 
 - Selama Epic 2–3, halaman editor lama (`/admin/pages/*`) masih menampilkan section yang **sudah dipindah** ke struktur baru. Mengedit section itu di editor lama tidak lagi berpengaruh ke website. Edit section yang sudah dipindah lewat **mode edit** di halaman publik. Editor lama dihapus di Epic 4.
-- Sudah dipindah: **FAQ** (halaman `/faqs` dan section FAQ di About), **testimoni** (`/testimonials`), **logo klien** (Home, About), **tools** (Home, Services, Pricing, Testimonials), **langkah proses** (Home), **pencapaian** (Home, About), **angka CTA** (Home, About). `/admin/pages/faqs` sudah dihapus; menu "FAQs Page" di sidebar admin membuka mode edit `/faqs`.
+- Sudah dipindah: **FAQ** (halaman `/faqs` dan section FAQ di About), **testimoni** (`/testimonials`), **logo klien** (Home, About), **tools** (Home, Services, Pricing, Testimonials), **langkah proses** (Home), **pencapaian** (Home, About), **angka CTA** (Home, About), **tim** (Home, About, Team, detail anggota). `/admin/pages/faqs` sudah dihapus; menu "FAQs Page" di sidebar admin membuka mode edit `/faqs`.

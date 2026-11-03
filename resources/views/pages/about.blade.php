@@ -105,78 +105,9 @@ ksort($infoItems);
     @include('partials.cta')
     <!-- CTA Section End -->
 
-    <div class="our-team">
-        <div class="container">
-            <div class="row section-row align-items-center">
-                <div class="col-lg-8">
-                    <!-- Section Title Start -->
-                    <div class="section-title">
-                        <h3 class="wow fadeInUp">our team</h3>
-                        <h2 class="text-anime-style-2" data-cursor="-opaque">The minds behind <span>the magic</span></h2>
-                    </div>
-                    <!-- Section Title End -->
-                </div>
-
-                <div class="col-lg-4">
-                    <!-- Section Button Start -->
-                    <div class="section-btn wow fadeInUp" data-wow-delay="0.2s">
-                        <a href="{{ route('team') }}" class="btn-default">all team members</a>
-                    </div>
-                    <!-- Section Button End -->
-                </div>
-            </div>
-
-            <div class="row">
-                @php
-                    // Hitung jumlah member dari database
-                    $teamCount = 0;
-                    if (isset($sections['our-team'])) {
-                        foreach ($sections['our-team']->contents as $content) {
-                            if (preg_match('/^team-list-1_member_(\d+)_name$/', $content->key, $matches)) {
-                                $teamCount = max($teamCount, (int)$matches[1] + 1);
-                            }
-                        }
-                    }
-                    // About page menampilkan maksimal 4 member
-                    $displayCount = min($teamCount, 4);
-                @endphp
-
-                @if ($displayCount === 0)
-                    <div class="col-12 text-center py-5">
-                        <p style="color: #888;">No team members yet.</p>
-                    </div>
-                @endif
-
-                @for ($index = 0; $index < $displayCount; $index++)
-                    @php
-                        $memberName = getAboutContent($sections, 'our-team', "team-list-1_member_{$index}_name", 'Team Member');
-                        $memberRole = getAboutContent($sections, 'our-team', "team-list-1_member_{$index}_role", 'Position');
-                        $memberImg = getAboutContent($sections, 'our-team', "team-list-1_member_{$index}_img", 'images/team-1.jpg');
-                        $memberLink = route('pages.team.single', ['index' => $index]);
-                    @endphp
-                    <div class="col-lg-3 col-md-6">
-                        <div class="team-item wow fadeInUp" data-wow-delay="{{ 0.2 * $index }}s">
-                            <div class="team-image">
-                                <a href="{{ $memberLink }}" data-cursor-text="View">
-                                    <figure class="image-anime">
-                                        <img src="{{ asset($memberImg) }}" alt="{{ $memberName }}">
-                                    </figure>
-                                </a>
-                            </div>
-                            <div class="team-body">
-                                <div class="team-content">
-                                    <h3><a href="{{ $memberLink }}">{{ $memberName }}</a></h3>
-                                </div>
-                                <div class="team-social-list">
-                                    <span>{{ $memberRole }}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                @endfor
-            </div>
-        </div>
-    </div>
+    <!-- Our Team Section Start -->
+    @include('partials.team')
+    <!-- Our Team Section End -->
 
     <!-- Our Achievements Section Start -->
     @include('partials.achievements')

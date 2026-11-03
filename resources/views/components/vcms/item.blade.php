@@ -1,5 +1,5 @@
 {{-- One item of a list (FAQ, testimonial, ...): edit, move, delete. Renders the same element for visitors. --}}
-@props(['resource', 'item', 'fields', 'label' => 'item', 'tag' => 'div', 'movable' => true])
+@props(['resource', 'item', 'fields', 'label' => 'item', 'tag' => 'div', 'movable' => true, 'deletable' => true])
 @php
     $editing = \App\Vcms\EditMode::active();
     $payload = $editing ? [
@@ -17,7 +17,9 @@
                 <button type="button" class="vcms-btn" data-vcms-action="up" title="Naikkan">&#8593;</button>
                 <button type="button" class="vcms-btn" data-vcms-action="down" title="Turunkan">&#8595;</button>
             @endif
-            <button type="button" class="vcms-btn vcms-btn-danger" data-vcms-action="delete" title="Hapus {{ $label }}">&#10005;</button>
+            @if ($deletable)
+                <button type="button" class="vcms-btn vcms-btn-danger" data-vcms-action="delete" title="Hapus {{ $label }}">&#10005;</button>
+            @endif
         </span>
     @endif
     {{ $slot }}

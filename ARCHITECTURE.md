@@ -108,7 +108,7 @@ Semua tabel daftar punya `id`, `sort_order` (int), `is_active` (bool, default tr
 | `process_steps` | `title`, `description` | Home (how it works) |
 | `achievements` | `period`, `title`, `description` | Home, About |
 | `counters` | `number` (teks digit, boleh `.`/`,`), `suffix`, `label` | Home, About (section CTA) |
-| `team_members` | `slug`, `name`, `role`, `photo_path`, `bio`, `email`, `phone`, link sosial | Home, About, Team |
+| `team_members` | `slug` (dibuat sekali dari nama), `name`, `role`, `photo`, `experience`, `about`, `expertise_intro`, `skills_intro` | Home, About (4 pertama), Team, Team detail |
 | `team_member_skills` | `team_member_id`, `name`, `percent` | Team detail |
 | `team_member_expertises` | `team_member_id`, `name` | Team detail |
 | `services` | `slug`, `number`, `name`, `summary`, `description`, `image_path` | Home, Services |
@@ -272,7 +272,8 @@ class FaqFields
 ### 6.4 Editor JS
 
 - Satu editor generik dengan **Alpine.js** + `fetch`, di `resources/js/vcms/`, dibundel Vite dan hanya dimuat saat mode edit.
-- Editor membaca `data-vcms`, membuat form dari definisi field (text, textarea, rich_text, select, image, video, url, email, number, toggle), mengirim ke endpoint, lalu **memuat ulang halaman**. Error 422 ditampilkan di bawah field-nya.
+- Editor membaca `data-vcms`, membuat form dari definisi field (text, textarea, rich_text, select, image, video, url, email, number, toggle, hidden), mengirim ke endpoint, lalu **memuat ulang halaman**. Error 422 ditampilkan di bawah field-nya.
+- `hidden` tidak tampil di form tetapi ikut dikirim, misalnya `team_member_id` saat menambah skill (nilainya dari `:defaults` pada `<x-vcms.add>`). `<x-vcms.item>` punya `:movable="false"` dan `:deletable="false"` untuk item yang tidak boleh digeser/dihapus dari tempat itu (misalnya anggota di halaman detailnya sendiri).
 - Settings: satu `PATCH` per field yang berubah. Item: satu `POST`/`PATCH` berisi semua field; gambar hanya dikirim bila dipilih file baru.
 - Klik tombol editor ditangkap di fase capture, jadi tidak ikut membuka accordion, slider, atau link template.
 - Tidak ada pengetahuan khusus per entitas di JS. Menambah entitas baru = definisi field + endpoint, tanpa mengubah JS.

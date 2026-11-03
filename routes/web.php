@@ -6,6 +6,9 @@ use App\Http\Controllers\Admin\Api\CounterController;
 use App\Http\Controllers\Admin\Api\FaqController;
 use App\Http\Controllers\Admin\Api\ProcessStepController;
 use App\Http\Controllers\Admin\Api\SettingController;
+use App\Http\Controllers\Admin\Api\TeamMemberController;
+use App\Http\Controllers\Admin\Api\TeamMemberExpertiseController;
+use App\Http\Controllers\Admin\Api\TeamMemberSkillController;
 use App\Http\Controllers\Admin\Api\TestimonialController;
 use App\Http\Controllers\Admin\Api\ToolController;
 use App\Http\Controllers\Admin\EditModeController;
@@ -15,6 +18,8 @@ use App\Http\Controllers\Pages\FaqPageController;
 use App\Http\Controllers\Pages\HomePageController;
 use App\Http\Controllers\Pages\PricingPageController;
 use App\Http\Controllers\Pages\ServicePageController;
+use App\Http\Controllers\Pages\TeamMemberPageController;
+use App\Http\Controllers\Pages\TeamPageController;
 use App\Http\Controllers\Pages\TestimonialPageController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -50,10 +55,7 @@ Route::get('/pricing', PricingPageController::class)->name('pricing');
 
 Route::get('/faqs', FaqPageController::class)->name('faqs');
 
-Route::get('/team', function () {
-    $sections = App\Models\Section::with('contents.media')->active()->ordered()->get()->keyBy('key');
-    return view('pages.team', compact('sections'));
-})->name('team');
+Route::get('/team', TeamPageController::class)->name('team');
 
 Route::get('/testimonials', TestimonialPageController::class)->name('testimonials');
 
@@ -63,10 +65,7 @@ Route::prefix('pages')->name('pages.')->group(function () {
         return view('pages.service-single', compact('sections', 'serviceId'));
     })->name('service.single');
 
-    Route::get('/team/{index}', function ($index) {
-        $sections = App\Models\Section::with('contents.media')->active()->ordered()->get()->keyBy('key');
-        return view('pages.team-single', compact('sections', 'index'));
-    })->name('team.single');
+    Route::get('/team/{slug}', TeamMemberPageController::class)->name('team.single');
 });
 
 // Anda mungkin perlu memperbarui logika 'active' di header.blade.php
@@ -126,6 +125,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
                 'process-steps' => ProcessStepController::class,
                 'achievements' => AchievementController::class,
                 'counters' => CounterController::class,
+                'team-members' => TeamMemberController::class,
+                'team-member-skills' => TeamMemberSkillController::class,
+                'team-member-expertises' => TeamMemberExpertiseController::class,
             ];
             foreach ($lists as $uri => $controller) {
                 Route::get("/{$uri}", [$controller, 'index'])->name("{$uri}.index");

@@ -25,6 +25,7 @@ class HomePageService
             ...$this->sections->tools($editing),
             ...$this->sections->achievements($editing),
             ...$this->sections->counters($editing),
+            ...$this->sections->team($editing),
             'processSteps' => $this->processSteps->all(activeOnly: !$editing),
             'processStepFields' => $editing ? ProcessStepFields::definition() : [],
         ];

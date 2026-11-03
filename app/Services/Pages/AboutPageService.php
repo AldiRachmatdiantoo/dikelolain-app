@@ -23,6 +23,7 @@ class AboutPageService
             ...$this->sections->clientLogos($editing),
             ...$this->sections->achievements($editing),
             ...$this->sections->counters($editing),
+            ...$this->sections->team($editing),
             'faqs' => $this->faqs->highlights(4),
         ];
     }
