@@ -154,7 +154,7 @@ Dipakai untuk: judul dan deskripsi hero, header setiap halaman, judul section, C
 - Validasi di rule `App\Rules\MediaUpload`: tipe dideteksi dari **isi file**, JPG/PNG/GIF/WebP maks. 10 MB, MP4/WebM maks. 50 MB, SVG ditolak (K-10).
 - `ImageUploadService` memberi nama acak dengan ekstensi dari isi file, dan hanya menghapus file di bawah `storage/uploads/` saat diganti.
 - Video boleh berupa URL atau file MP4/WebM.
-- Tabel `media` dan media library tidak dipakai lagi.
+- Tabel `media` dan media library sudah dihapus (PBI-405).
 
 ### 4.4 Tabel yang tetap
 
@@ -162,7 +162,7 @@ Dipakai untuk: judul dan deskripsi hero, header setiap halaman, judul section, C
 
 ### 4.5 Tabel yang dihapus di akhir
 
-`sections`, `section_contents`, `media`.
+`sections`, `section_contents`, `media`: sudah di-drop oleh migration `2026_11_03_000014_drop_legacy_content_tables` (PBI-405).
 
 ### 4.6 Index
 
