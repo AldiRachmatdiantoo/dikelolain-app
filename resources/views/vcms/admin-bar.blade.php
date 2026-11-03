@@ -1,7 +1,8 @@
 {{-- Floating bar for a logged-in admin on the public pages, plus the editor in edit mode. --}}
 @php $editing = \App\Vcms\EditMode::active(); @endphp
 <style>
-    .vcms-bar { position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%); z-index: 10000; display: flex; align-items: center; gap: 6px; padding: 6px; background: #161616; border: 1px solid #333; border-radius: 999px; box-shadow: 0 8px 30px rgba(0,0,0,.45); font: 600 13px/1 "Montserrat", sans-serif; }
+    .vcms-bar { position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%); z-index: 10000; display: flex; align-items: center; gap: 6px; padding: 6px; background: #161616; border: 1px solid #333; border-radius: 999px; box-shadow: 0 8px 30px rgba(0,0,0,.45); font: 600 13px/1 "Montserrat", sans-serif; white-space: nowrap; }
+    @media (max-width: 575px) { .vcms-bar-label { display: none; } }
     .vcms-bar form { margin: 0; }
     .vcms-bar-label { color: #ffcc01; padding: 0 10px; letter-spacing: .5px; }
     .vcms-bar a, .vcms-bar button { display: inline-block; padding: 9px 14px; border-radius: 999px; border: 0; background: #2a2a2a; color: #eee; text-decoration: none; cursor: pointer; font: inherit; }

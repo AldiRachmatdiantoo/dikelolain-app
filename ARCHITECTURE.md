@@ -101,7 +101,7 @@ Semua tabel daftar punya `id`, `sort_order` (int), `is_active` (bool, default tr
 
 | Tabel | Kolom utama | Dipakai di |
 |---|---|---|
-| `faqs` | `category` (general/technical/project/support/pricing), `question`, `answer` | FAQs, Pricing |
+| `faqs` | `category` (general/technical/project/support), `question`, `answer` | FAQs, About (4 teratas) |
 | `testimonials` | `name`, `role`, `company`, `quote`, `photo_path`, `rating` | Home, Testimonials |
 | `client_logos` | `name`, `logo_path` | Home, Testimonials |
 | `tools` | `name`, `category`, `icon_path` | Home (creative tools) |

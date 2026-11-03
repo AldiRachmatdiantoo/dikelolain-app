@@ -624,28 +624,6 @@ class ContentController extends Controller
                     continue;
                 }
 
-                // Handle FAQ deletion
-                if ($contentType === 'delete_faq') {
-                    $value = $contentData['value']; // format: general|1 or technical|2 (using | as separator)
-                    $parts = explode('|', $value);
-                    $categoryId = $parts[0] ?? '';
-                    $faqIndex = $parts[1] ?? '';
-                    
-                    // Build the key pattern (e.g., faq-list-1_general_faq_1_*)
-                    $keyPattern = 'faq-list-1_' . $categoryId . '_faq_' . $faqIndex . '_%';
-                    
-                    // Delete both question and answer
-                    $deletedCount = $section->contents()->where('key', 'like', $keyPattern)->delete();
-                    
-                    \Illuminate\Support\Facades\Log::info('FAQ deleted', [
-                        'category_id' => $categoryId,
-                        'faq_index' => $faqIndex,
-                        'key_pattern' => $keyPattern,
-                        'deleted_count' => $deletedCount,
-                    ]);
-                    continue;
-                }
-
                 // Handle testimonial deletion
                 if ($contentType === 'delete_testimonial') {
                     $testimonialId = $contentData['value'];

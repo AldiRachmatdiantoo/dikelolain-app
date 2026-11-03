@@ -73,8 +73,8 @@
                 </a>
             </li>
 
-            <li class="menu-item {{ request()->routeIs('admin.pages.faqs') ? 'active' : '' }}">
-                <a href="{{ route('admin.pages.faqs') }}">
+            <li class="menu-item">
+                <a href="{{ route('admin.edit-mode.on', ['to' => '/faqs']) }}">
                     <i class="fa-solid fa-circle-question"></i>
                     <span>FAQs Page</span>
                 </a>

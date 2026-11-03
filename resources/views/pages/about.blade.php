@@ -571,67 +571,14 @@ ksort($infoItems);
     <!-- Our Testimonial Section End -->
 
     <!-- Our Faqs Section Start -->
-    @php
-        // FAQ Section Title
-        $headerTitle = getAboutContent($sections, 'faqs-header', 'faqs-header-1_title', 'FAQs');
-        $headerBreadcrumb = getAboutContent($sections, 'faqs-header', 'faqs-header-1_breadcrumb', 'FAQs');
-
-        // Get FAQs from database - collect from all categories (max 4 FAQs)
-        $aboutFaqs = [];
-        $defaultFaqs = [
-            ['question' => 'What services does your agency provide?', 'answer' => 'We specialize in including graphic design, branding, website design and development, UX/UI design, social media marketing, digital advertising, video production, and content creation.'],
-            ['question' => 'Who are your typical clients?', 'answer' => 'We work with businesses of all sizes, from startups and small businesses to large enterprises. Our clients span industries such as technology, retail, hospitality, healthcare, and more.'],
-            ['question' => 'How long does a typical project take?', 'answer' => 'The timeline depends on the scope and complexity of the project. Smaller projects may take 2-4 weeks, while larger ones can take several months. We\'ll provide an estimated timeline after discussing your needs.'],
-            ['question' => 'What is your pricing structure?', 'answer' => 'We offer customized pricing based on the specific requirements of each project. After our initial consultation, we\'ll provide a detailed proposal with a breakdown of costs.'],
-        ];
-
-        // Try to get FAQs from database (faqs section)
-        if (isset($sections['faqs'])) {
-            $faqSection = $sections['faqs'];
-            $categoryIds = ['general', 'technical', 'project', 'support']; // 4 categories
-
-            foreach ($categoryIds as $catId) {
-                if (count($aboutFaqs) >= 4) break; // Limit to 4 FAQs
-
-                foreach ($faqSection->contents as $content) {
-                    if (count($aboutFaqs) >= 4) break;
-
-                    if (preg_match('/faq-list-1_' . $catId . '_faq_(.+)_question$/', $content->key, $matches)) {
-                        $faqId = $matches[1];
-                        $answerContent = $faqSection->contents->firstWhere('key', "faq-list-1_{$catId}_faq_{$faqId}_answer");
-                        $answer = $answerContent ? $answerContent->value : '';
-
-                        if (!empty($content->value) && !empty($answer)) {
-                            $aboutFaqs[] = [
-                                'id' => count($aboutFaqs) + 1,
-                                'question' => $content->value,
-                                'answer' => $answer
-                            ];
-                        }
-                    }
-                }
-            }
-        }
-
-        // Use default FAQs if no data in database
-        if (empty($aboutFaqs)) {
-            foreach ($defaultFaqs as $idx => $faq) {
-                $aboutFaqs[] = [
-                    'id' => $idx + 1,
-                    'question' => $faq['question'],
-                    'answer' => $faq['answer']
-                ];
-            }
-        }
-    @endphp
     <div class="our-faqs">
         <div class="container">
             <div class="row section-row align-items-center">
                 <div class="col-lg-9">
                     <!-- Section Title Start -->
                     <div class="section-title">
-                        <h3 class="wow fadeInUp">{{ $headerBreadcrumb }}</h3>
-                        <h2 class="text-anime-style-2" data-cursor="-opaque">{!! $headerTitle !!}</h2>
+                        <h3 class="wow fadeInUp">{{ $settings->get('faqs.header.breadcrumb') }}</h3>
+                        <h2 class="text-anime-style-2" data-cursor="-opaque">{!! $settings->get('faqs.header.title') !!}</h2>
                     </div>
                     <!-- Section Title End -->
                 </div>
@@ -651,28 +598,28 @@ ksort($infoItems);
                     <div class="our-faq-section">
                         <!-- FAQ Accordion Start -->
                         <div class="faq-accordion" id="accordion">
-                            @foreach($aboutFaqs as $index => $faq)
+                            @foreach ($faqs as $index => $faq)
                                 @php
                                     $delayValue = $index * 0.2;
                                     $isFirst = $index === 0;
                                 @endphp
                                 <!-- FAQ Item Start -->
                                 <div class="accordion-item wow fadeInUp" @if($delayValue > 0) data-wow-delay="{{ $delayValue }}s" @endif>
-                                    <h2 class="accordion-header" id="heading{{ $faq['id'] }}">
+                                    <h2 class="accordion-header" id="heading-about-faq-{{ $faq->id }}">
                                         <button class="accordion-button {{ !$isFirst ? 'collapsed' : '' }}" type="button"
                                             data-bs-toggle="collapse"
-                                            data-bs-target="#collapse{{ $faq['id'] }}"
+                                            data-bs-target="#collapse-about-faq-{{ $faq->id }}"
                                             aria-expanded="{{ $isFirst ? 'true' : 'false' }}"
-                                            aria-controls="collapse{{ $faq['id'] }}">
-                                            {{ $faq['question'] }}
+                                            aria-controls="collapse-about-faq-{{ $faq->id }}">
+                                            {{ $faq->question }}
                                         </button>
                                     </h2>
-                                    <div id="collapse{{ $faq['id'] }}"
+                                    <div id="collapse-about-faq-{{ $faq->id }}"
                                         class="accordion-collapse collapse {{ $isFirst ? 'show' : '' }}"
-                                        aria-labelledby="heading{{ $faq['id'] }}"
+                                        aria-labelledby="heading-about-faq-{{ $faq->id }}"
                                         data-bs-parent="#accordion">
                                         <div class="accordion-body">
-                                            <p>{{ $faq['answer'] }}</p>
+                                            <p>{{ $faq->answer }}</p>
                                         </div>
                                     </div>
                                 </div>

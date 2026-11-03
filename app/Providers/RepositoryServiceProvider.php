@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Repositories\Contracts\FaqRepositoryInterface;
 use App\Repositories\Contracts\PageSettingRepositoryInterface;
+use App\Repositories\Eloquent\EloquentFaqRepository;
 use App\Repositories\Eloquent\EloquentPageSettingRepository;
 use Illuminate\Support\ServiceProvider;
 
@@ -16,5 +18,6 @@ class RepositoryServiceProvider extends ServiceProvider
      */
     public array $bindings = [
         PageSettingRepositoryInterface::class => EloquentPageSettingRepository::class,
+        FaqRepositoryInterface::class => EloquentFaqRepository::class,
     ];
 }

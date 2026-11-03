@@ -14,15 +14,19 @@
 
 **Mode:** eksekusi otomatis atas instruksi pemilik (3 Nov 2026): kerjakan PBI berurutan tanpa bertanya, uji setiap PBI (`php artisan test` + cek browser bila terlihat), commit + push per PBI, kendala dicatat di [kendala_backlog.md](kendala_backlog.md).
 
-**Sedang dikerjakan:** Epic 2, PBI-208–210 (FAQ end to end). Selesai: 201–207 (fondasi VCMS, desain akhirnya di [ARCHITECTURE §4.2, §5, §6](ARCHITECTURE.md#6-vcms-editor-inline)).
+**Sedang dikerjakan:** Epic 3, PBI-301 (Testimonial). Epic 0–2 selesai.
 
-**Rencana FAQ:**
-- Tabel `faqs` (`category`, `question`, `answer`, `sort_order`, `is_active`; index `(category, is_active, sort_order)`); kategori tetap empat (general, technical, project, support), judulnya berupa setting `faqs.category.*`.
-- `FaqService`: item baru masuk paling akhir di kategorinya; `move` bertukar dengan tetangga dalam kategori yang sama.
-- `FaqSeeder` berisi 13 FAQ bawaan yang sekarang hardcoded di `pages/faqs.blade.php`.
-- Setelah halaman baru jalan: hapus `admin/pages/faqs.blade.php`, route `admin.pages.faqs`, bagian FAQ di `admin-vcms.js` dan `batchUpdate`; link sidebar admin → mode edit `/faqs`.
+**Contoh pola entitas = FAQ.** Entitas berikutnya meniru file-file ini:
+- `database/migrations/2026_11_03_000002_create_faqs_table.php`, `app/Models/Faq.php` (scope `ordered`/`active`)
+- `app/Repositories/{Contracts/FaqRepositoryInterface,Eloquent/EloquentFaqRepository}.php` + binding di `RepositoryServiceProvider`
+- `app/Services/FaqService.php` (item baru di akhir, `move` lewat `setOrder`), `app/Services/Pages/FaqPageService.php`
+- `app/Http/Requests/Admin/{Store,Update}FaqRequest.php`, `MoveRequest` (bersama), `app/Http/Resources/FaqResource.php`
+- `app/Http/Controllers/Admin/Api/FaqController.php` + route di grup `admin/api`, `app/Http/Controllers/Pages/FaqPageController.php`
+- `app/Vcms/Fields/FaqFields.php`, view `pages/faqs.blade.php` (`<x-vcms.settings|item|add>`), `database/seeders/FaqSeeder.php`
+- Test: `tests/Feature/FaqApiTest.php`, `FaqPageTest.php`
+- Halaman yang masih memakai `$sections` lama ikut diberi page controller + page service seperti `AboutPageController` (data lama tetap dikirim sebagai `sections` sampai semua section-nya pindah).
 
-**Catatan cek browser:** panel browser yang tersembunyi tidak menjalankan animasi, jadi modal Alpine (`x-transition`) terlihat tetap `display: none` sampai panel dirender (misalnya diambil screenshot). Ini bukan bug.
+**Catatan cek browser:** panel browser yang tersembunyi tidak menjalankan animasi/transisi. Modal Alpine (`x-transition`) dan elemen dengan `transition` dari template terlihat "macet" sampai panel dirender (misalnya diambil screenshot). Ini bukan bug. Screenshot panel kadang terpotong; untuk alur editor lebih andal cek lewat DOM/`fetch`.
 
 ---
 
@@ -30,8 +34,8 @@
 
 | Status | Jumlah | PBI |
 |---|---|---|
-| ✅ Selesai | 23 | **001–005** (seluruh Epic 0), **101–111** (seluruh Epic 1), **201–207** |
-| ⏳ Sedang dikerjakan | 3 | **208–210** (FAQ) |
+| ✅ Selesai | 26 | **001–005** (seluruh Epic 0), **101–111** (seluruh Epic 1), **201–210** (seluruh Epic 2) |
+| ⏳ Sedang dikerjakan | 0 | – |
 | ⏸️ Menunggu keputusan | 2 | **504**, **507** (hosting, lihat [kendala_backlog.md](kendala_backlog.md) KD-1) |
 | ❌ Belum | 25 | Epic 3–5 |
 
@@ -41,7 +45,7 @@ Total **53 PBI** dalam 6 epic:
 |---|---|---|---|
 | 0 | Persiapan | 001–005 | 5/5 ✅ |
 | 1 | Beres-beres tanpa risiko | 101–111 | 11/11 ✅ |
-| 2 | Fondasi VCMS baru + FAQ | 201–210 | 7/10 |
+| 2 | Fondasi VCMS baru + FAQ | 201–210 | 10/10 ✅ |
 | 3 | Migrasi entitas | 301–313 | 0/13 |
 | 4 | Pembersihan akhir | 401–406 | 0/6 |
 | 5 | Setelah rombak (fitur & rilis) | 501–508 | 0/8 |
@@ -110,9 +114,9 @@ Entitas pertama sekaligus pembuktian pola. Setelah epic ini, entitas lain tingga
 | 205 | Editor JS generik: modal, tipe field (text, textarea, rich_text, select, image, video, url, email, number, toggle), tambah, ubah, hapus, geser | ✅ | 3 Nov 2026: `resources/js/vcms/editor.js` (Alpine) + `resources/css/vcms.css`; urutan memakai `POST {id}/move` naik/turun, bukan reorder daftar id. Dicek di browser: modal tampil, simpan → reload, `onclick` dibuang. Tambah/hapus/geser diuji bersama FAQ (PBI-208) |
 | 206 | `ImageUploadService` | ✅ | 3 Nov 2026: simpan ke `storage/uploads/{folder}/{acak}.{ext}`, hapus file lama hanya di bawah `storage/uploads/`; validasi tetap di rule `MediaUpload` (kini bisa khusus gambar / khusus video) |
 | 207 | Tabel `page_settings` + `SettingService` + endpoint `settings/{key}` + sanitasi `rich_text` | ✅ | 3 Nov 2026: tipe/label/default di `config/page_settings.php`, tabel hanya menyimpan nilai yang diubah (kosong = default). Test `SettingApiTest` (12) + `RichTextTest` (7). Bug ditemukan saat test: key bertitik tidak terbaca lewat dot notation `config()` → kini dicari di array |
-| 208 | **FAQ**: tabel `faqs`, model, repository, service, request, controller API, resource, definisi field, seeder | ❌ | Kategori: general, technical, project, support |
-| 209 | Halaman `/faqs` memakai data baru + komponen VCMS; header FAQ pindah ke `page_settings` | ❌ | |
-| 210 | Test FAQ + hapus key FAQ lama dari `admin-vcms.js`, `batchUpdate`, `admin/pages/faqs.blade.php` | ❌ | Definition of done: [ARCHITECTURE §7](ARCHITECTURE.md#7-pola-per-entitas-checklist) |
+| 208 | **FAQ**: tabel `faqs`, model, repository, service, request, controller API, resource, definisi field, seeder | ✅ | 3 Nov 2026: API `GET/POST /admin/api/faqs`, `PATCH/DELETE /admin/api/faqs/{id}`, `POST /admin/api/faqs/{id}/move`; `FaqSeeder` berisi 13 FAQ bawaan. FAQ bisa disembunyikan (`is_active`): pengunjung tidak melihatnya, admin melihatnya redup dengan label "Disembunyikan" |
+| 209 | Halaman `/faqs` memakai data baru + komponen VCMS; header FAQ pindah ke `page_settings` | ✅ | 3 Nov 2026: `FaqPageController` + `FaqPageService`; header, judul kategori, dan kotak kontak berupa setting. Kategori tanpa FAQ aktif disembunyikan dari pengunjung. Section FAQ di **About** ikut pindah (4 FAQ aktif pertama) lewat `AboutPageController` + `AboutPageService` |
+| 210 | Test FAQ + hapus key FAQ lama dari `admin-vcms.js`, `batchUpdate`, `admin/pages/faqs.blade.php` | ✅ | 3 Nov 2026: `FaqApiTest` (13) + `FaqPageTest` (6), total 101 test hijau. Dihapus: `admin/pages/faqs.blade.php` + route, 372 baris FAQ di `admin-vcms.js`, cabang `delete_faq` di `ContentController`, blok FAQ yang sudah di-comment di `admin/pages/pricing.blade.php` (key `pricing-faqs` tidak pernah tampil di website). Link sidebar admin "FAQs Page" → mode edit `/faqs`. Dicek di browser: tambah, edit, geser, sembunyikan, hapus |
 
 ### Epic 3: Migrasi entitas
 
@@ -264,3 +268,4 @@ Ringkasan hasil membaca kode di commit `02fa1fd` (isi sama dengan branch `back-e
 | 3 Nov 2026 | PBI-002 selesai: smoke test 47 hijau; PBI-111 ditemukan dan diperbaiki |
 | 3 Nov 2026 | Epic 1 selesai (PBI-101–110): kode mati dihapus, upload aman, admin dari `.env`, error tidak bocor, 404 benar, `magiccursor` diperbaiki; keputusan baru K-9, K-10 |
 | 3 Nov 2026 | PBI-201–207 selesai: lapisan dasar, Vite + Alpine khusus editor, mode edit + bilah admin, komponen `<x-vcms.*>`, editor generik, `ImageUploadService`, `page_settings` + API; 84 test hijau |
+| 3 Nov 2026 | Epic 2 selesai (PBI-208–210): FAQ end to end di tabel `faqs`, halaman `/faqs` dan section FAQ About memakai data baru, kode FAQ lama dihapus; 101 test hijau |

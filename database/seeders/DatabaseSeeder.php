@@ -32,6 +32,7 @@ class DatabaseSeeder extends Seeder
         // Seed VCMS sections and content
         $this->call([
             SectionContentSeeder::class,
+            FaqSeeder::class,
         ]);
     }
 }

@@ -1,8 +1,11 @@
 <?php
 
+use App\Http\Controllers\Admin\Api\FaqController;
 use App\Http\Controllers\Admin\Api\SettingController;
 use App\Http\Controllers\Admin\EditModeController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Pages\AboutPageController;
+use App\Http\Controllers\Pages\FaqPageController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -14,10 +17,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::get('/about', function () {
-    $sections = App\Models\Section::with('contents.media')->active()->ordered()->get()->keyBy('key');
-    return view('pages.about', compact('sections'));
-})->name('about');
+Route::get('/about', AboutPageController::class)->name('about');
 
 Route::get('/services', function () {
     $sections = App\Models\Section::with('contents.media')->active()->ordered()->get()->keyBy('key');
@@ -44,10 +44,7 @@ Route::get('/pricing', function () {
     return view('pages.pricing', compact('sections'));
 })->name('pricing');
 
-Route::get('/faqs', function () {
-    $sections = App\Models\Section::with('contents.media')->active()->ordered()->get()->keyBy('key');
-    return view('pages.faqs', compact('sections'));
-})->name('faqs');
+Route::get('/faqs', FaqPageController::class)->name('faqs');
 
 Route::get('/team', function () {
     $sections = App\Models\Section::with('contents.media')->active()->ordered()->get()->keyBy('key');
@@ -118,6 +115,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::prefix('api')->name('api.')->group(function () {
             Route::get('/settings/{key}', [SettingController::class, 'show'])->name('settings.show');
             Route::patch('/settings/{key}', [SettingController::class, 'update'])->name('settings.update');
+
+            Route::get('/faqs', [FaqController::class, 'index'])->name('faqs.index');
+            Route::post('/faqs', [FaqController::class, 'store'])->name('faqs.store');
+            Route::patch('/faqs/{faq}', [FaqController::class, 'update'])->whereNumber('faq')->name('faqs.update');
+            Route::delete('/faqs/{faq}', [FaqController::class, 'destroy'])->whereNumber('faq')->name('faqs.destroy');
+            Route::post('/faqs/{faq}/move', [FaqController::class, 'move'])->whereNumber('faq')->name('faqs.move');
         });
 
         // Dashboard
@@ -183,11 +186,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
                 $sections = App\Models\Section::with('contents.media')->active()->ordered()->get()->keyBy('key');
                 return view('admin.pages.contact', compact('sections'));
             })->name('contact');
-
-            Route::get('/faqs', function () {
-                $sections = App\Models\Section::with('contents.media')->active()->ordered()->get()->keyBy('key');
-                return view('admin.pages.faqs', compact('sections'));
-            })->name('faqs');
 
             Route::get('/testimonials', function () {
                 $sections = App\Models\Section::with('contents.media')->active()->ordered()->get()->keyBy('key');

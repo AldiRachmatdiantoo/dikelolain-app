@@ -55,7 +55,6 @@ class SmokeTest extends TestCase
             'team' => ['/admin/pages/team'],
             'pricing' => ['/admin/pages/pricing'],
             'contact' => ['/admin/pages/contact'],
-            'faqs' => ['/admin/pages/faqs'],
             'testimonials' => ['/admin/pages/testimonials'],
             'profile' => ['/admin/profile-detail'],
             'reset password' => ['/admin/reset-password'],

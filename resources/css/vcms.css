@@ -49,6 +49,21 @@
 
 .vcms-toolbar .vcms-btn { padding: 6px 9px; }
 
+/* Item hidden from visitors (is_active off): only listed in edit mode. */
+/* !important: the template's wow/animate.css animations end on opacity 1 with fill-mode both. */
+.vcms-hidden { opacity: .45 !important; }
+.vcms-hidden::after {
+    content: "Disembunyikan";
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    background: #2a2a2a;
+    color: #ffcc01;
+    font: 600 11px/1.4 "Montserrat", sans-serif;
+}
+
 .vcms-add { margin: 16px 0; }
 .vcms-add-btn { width: 100%; padding: 14px; border: 2px dashed #ffcc01; background: rgba(255, 204, 1, .08); color: #ffcc01; box-shadow: none; }
 .vcms-add-btn:hover { background: rgba(255, 204, 1, .18); }
