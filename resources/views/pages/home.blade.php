@@ -373,101 +373,58 @@
         <div class="container">
             <div class="row section-row align-items-center">
                 <div class="col-lg-8">
-                    <div class="section-title">
-                        @php
-                            $howSubTitle = getContent($sections, 'how-it-works', 'how_sub_title', 'how we work');
-                            $howMainTitle = getContent($sections, 'how-it-works', 'how_main_title', 'Our methodology for <span>success</span>');
-                        @endphp
-                        <h3 class="wow fadeInUp">{{ $howSubTitle }}</h3>
-                        <h2 class="text-anime-style-2" data-cursor="-opaque">{!! $howMainTitle !!}</h2>
-                    </div>
+                    <x-vcms.settings :keys="['process.sub_title', 'process.title']" label="Judul" class="section-title">
+                        <h3 class="wow fadeInUp">{{ $settings->get('process.sub_title') }}</h3>
+                        <h2 class="text-anime-style-2" data-cursor="-opaque">{!! $settings->get('process.title') !!}</h2>
+                    </x-vcms.settings>
                 </div>
                 <div class="col-lg-4">
-                    <div class="contact-now-circle">
-                        @php
-                            $ctaImg = getContent($sections, 'how-it-works', 'how-cta-btn_image_file', 'images/contact-circle-yellow.png');
-                            $ctaLink = getContent($sections, 'how-it-works', 'how-cta-btn_link_url', route('contact'));
-                        @endphp
-                        <a href="{{ $ctaLink }}"><img src="{{ asset($ctaImg) }}" alt="Contact Circle"></a>
-                    </div>
+                    <x-vcms.settings :keys="['process.cta_image', 'process.cta_link']" label="Tombol" class="contact-now-circle">
+                        <a href="{{ $settings->get('process.cta_link') }}"><img src="{{ $settings->url('process.cta_image') }}" alt="Contact Circle"></a>
+                    </x-vcms.settings>
                 </div>
             </div>
 
             <div class="row align-items-center">
                 <div class="col-lg-6">
-                    <div class="how-it-work-images">
-                        @php
-                            $circleDeco = getContent($sections, 'how-it-works', 'how-images_circle_deco', 'images/how-work-image-circle.png');
-                            $mainWorkImg = getContent($sections, 'how-it-works', 'how-images_main_image', 'images/how-it-work-image.jpg');
-                        @endphp
+                    <x-vcms.settings :keys="['process.image', 'process.circle_image']" label="Gambar" class="how-it-work-images">
                         <div class="how-work-image-circle">
-                            <img src="{{ asset($circleDeco) }}" alt="Decorative Circle">
+                            <img src="{{ $settings->url('process.circle_image') }}" alt="Decorative Circle">
                         </div>
                         <div class="how-it-work-image">
                             <figure class="image-anime">
-                                <img src="{{ asset($mainWorkImg) }}" alt="Work Image">
+                                <img src="{{ $settings->url('process.image') }}" alt="Work Image">
                             </figure>
                         </div>
-                    </div>
+                    </x-vcms.settings>
                 </div>
 
                 <div class="col-lg-6">
                     <div class="work-faq-accordion" id="workaccordion">
-                        @php
-                            // Get processes from database dynamically
-                            $processes = [];
-                            $howSection = collect($sections)->firstWhere('key', 'how-it-works');
-
-                            if ($howSection && isset($howSection['contents'])) {
-                                $processIds = [];
-                                foreach ($howSection['contents'] as $content) {
-                                    if (preg_match('/process-list-1_step_(.+)_title$/', $content['key'], $matches)) {
-                                        $processIds[$matches[1]] = $content['value'];
-                                    }
-                                }
-                                foreach ($processIds as $id => $title) {
-                                    $processes[] = ['id' => $id, 'title' => $title];
-                                }
-                            }
-
-                            // Fallback to defaults if no data in database
-                            if (empty($processes)) {
-                                $processes = [
-                                    ['id' => '0', 'title' => '01. Discovery & Strategy'],
-                                    ['id' => '1', 'title' => '02. Concept Development'],
-                                    ['id' => '2', 'title' => '03. Design & Iteration'],
-                                    ['id' => '3', 'title' => '04. Development & Execution'],
-                                ];
-                            }
-                        @endphp
-
-                        @foreach ($processes as $index => $process)
-                            @php
-                                $processId = $process['id'];
-                                $processTitle = getContent($sections, 'how-it-works', "process-list-1_step_{$processId}_title", $process['title']);
-                                $processDesc = getContent($sections, 'how-it-works', "process-list-1_step_{$processId}_desc", 'We begin by getting to know you and your brand. Through in-depth conversations, research, and analysis.');
-                                $isFirst = $index === 0;
-                            @endphp
-                            <div class="work-accordion-item wow fadeInUp" data-wow-delay="{{ 0.2 * $index }}s">
-                                <h2 class="accordion-header" id="heading{{ $processId }}">
-                                    <button class="accordion-button {{ $isFirst ? '' : 'collapsed' }}"
+                        @foreach ($processSteps as $step)
+                            <x-vcms.item resource="process-steps" :item="$step" :fields="$processStepFields" label="langkah"
+                                class="work-accordion-item wow fadeInUp {{ $step->is_active ? '' : 'vcms-hidden' }}" data-wow-delay="{{ 0.2 * $loop->index }}s">
+                                <h2 class="accordion-header" id="process-heading-{{ $step->id }}">
+                                    <button class="accordion-button {{ $loop->first ? '' : 'collapsed' }}"
                                         type="button" data-bs-toggle="collapse"
-                                        data-bs-target="#collapse{{ $processId }}"
-                                        aria-expanded="{{ $isFirst ? 'true' : 'false' }}"
-                                        aria-controls="collapse{{ $processId }}">
-                                        {!! $processTitle !!}
+                                        data-bs-target="#process-{{ $step->id }}"
+                                        aria-expanded="{{ $loop->first ? 'true' : 'false' }}"
+                                        aria-controls="process-{{ $step->id }}">
+                                        {{ str_pad($loop->iteration, 2, '0', STR_PAD_LEFT) }}. {{ $step->title }}
                                     </button>
                                 </h2>
-                                <div id="collapse{{ $processId }}"
-                                    class="accordion-collapse collapse {{ $isFirst ? 'show' : '' }}"
-                                    aria-labelledby="heading{{ $processId }}" data-bs-parent="#workaccordion">
+                                <div id="process-{{ $step->id }}"
+                                    class="accordion-collapse collapse {{ $loop->first ? 'show' : '' }}"
+                                    aria-labelledby="process-heading-{{ $step->id }}" data-bs-parent="#workaccordion">
                                     <div class="accordion-body">
-                                        <p>{{ $processDesc }}</p>
+                                        <p>{{ $step->description }}</p>
                                     </div>
                                 </div>
-                            </div>
+                            </x-vcms.item>
                         @endforeach
                     </div>
+
+                    <x-vcms.add resource="process-steps" :fields="$processStepFields" label="langkah" />
                 </div>
             </div>
         </div>

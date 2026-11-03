@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\Api\ClientLogoController;
 use App\Http\Controllers\Admin\Api\FaqController;
+use App\Http\Controllers\Admin\Api\ProcessStepController;
 use App\Http\Controllers\Admin\Api\SettingController;
 use App\Http\Controllers\Admin\Api\TestimonialController;
 use App\Http\Controllers\Admin\Api\ToolController;
@@ -120,6 +121,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
                 'testimonials' => TestimonialController::class,
                 'client-logos' => ClientLogoController::class,
                 'tools' => ToolController::class,
+                'process-steps' => ProcessStepController::class,
             ];
             foreach ($lists as $uri => $controller) {
                 Route::get("/{$uri}", [$controller, 'index'])->name("{$uri}.index");

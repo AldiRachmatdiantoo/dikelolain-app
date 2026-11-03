@@ -25,6 +25,14 @@ return [
     'tools.button_text' => ['type' => 'text', 'label' => 'Teks tombol', 'default' => "let's get started !"],
     'tools.button_link' => ['type' => 'url', 'label' => 'Link tombol', 'default' => '/contact'],
 
+    // How we work section (Home)
+    'process.sub_title' => ['type' => 'text', 'label' => 'Sub judul', 'default' => 'how we work'],
+    'process.title' => ['type' => 'rich_text', 'label' => 'Judul', 'default' => 'Our methodology for <span>success</span>'],
+    'process.cta_image' => ['type' => 'image', 'label' => 'Gambar tombol bulat', 'default' => 'images/contact-circle-yellow.png'],
+    'process.cta_link' => ['type' => 'url', 'label' => 'Link tombol bulat', 'default' => '/contact'],
+    'process.image' => ['type' => 'image', 'label' => 'Gambar utama', 'default' => 'images/how-it-work-image.jpg'],
+    'process.circle_image' => ['type' => 'image', 'label' => 'Gambar lingkaran dekorasi', 'default' => 'images/how-work-image-circle.png'],
+
     // FAQs page
     'faqs.header.title' => ['type' => 'rich_text', 'label' => 'Judul header', 'default' => 'FAQs'],
     'faqs.header.breadcrumb' => ['type' => 'text', 'label' => 'Breadcrumb', 'default' => 'FAQs'],

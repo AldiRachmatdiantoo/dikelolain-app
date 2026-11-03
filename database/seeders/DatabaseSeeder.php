@@ -36,6 +36,7 @@ class DatabaseSeeder extends Seeder
             TestimonialSeeder::class,
             ClientLogoSeeder::class,
             ToolSeeder::class,
+            ProcessStepSeeder::class,
         ]);
     }
 }

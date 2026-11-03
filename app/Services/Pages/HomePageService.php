@@ -2,10 +2,15 @@
 
 namespace App\Services\Pages;
 
+use App\Services\ProcessStepService;
+use App\Vcms\Fields\ProcessStepFields;
+
 class HomePageService
 {
-    public function __construct(private SectionData $sections)
-    {
+    public function __construct(
+        private SectionData $sections,
+        private ProcessStepService $processSteps,
+    ) {
     }
 
     /**
@@ -18,6 +23,8 @@ class HomePageService
             ...$this->sections->settings(),
             ...$this->sections->clientLogos($editing),
             ...$this->sections->tools($editing),
+            'processSteps' => $this->processSteps->all(activeOnly: !$editing),
+            'processStepFields' => $editing ? ProcessStepFields::definition() : [],
         ];
     }
 }

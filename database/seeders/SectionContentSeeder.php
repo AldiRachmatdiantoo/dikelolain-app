@@ -43,14 +43,6 @@ class SectionContentSeeder extends Seeder
             ['type' => 'video', 'src' => 'https://www.youtube.com/embed/YQHsXMglC9A', 'title' => 'Pop Music Video', 'desc' => 'Popular song MV.', 'link' => '/portfolio/single'],
         ];
         
-        // Data Default untuk Section How It Works
-        $defaultProcesses = [
-            ['title' => 'Discovery & Strategy', 'desc' => 'We begin by getting to know you and your brand. Through in-depth conversations, research, and analysis.', 'active' => 'show'],
-            ['title' => 'Concept Development', 'desc' => 'We begin by getting to know you and your brand. Through in-depth conversations, research, and analysis.', 'active' => ''],
-            ['title' => 'Design & Iteration', 'desc' => 'We begin by getting to know you and your brand. Through in-depth conversations, research, and analysis.', 'active' => ''],
-            ['title' => 'Development & Execution', 'desc' => 'We begin by getting to know you and your brand. Through in-depth conversations, research, and analysis.', 'active' => ''],
-        ];
-
         // Data Default untuk Section Achievements
         $defaultAchievements = [
             ['year' => '2015 - 2016', 'name' => 'Best Design Award', 'desc' => 'We begin by getting to know you and your brand. Through in-depth.'],
@@ -109,20 +101,6 @@ class SectionContentSeeder extends Seeder
                     ['key' => 'work_main_title', 'type' => 'text', 'value' => 'Our latest <span>Projects</span>', 'order' => 2], // KEY CHANGE: work-title_main_title -> work_main_title
                     ['key' => 'work_btn_text', 'type' => 'text', 'value' => 'view all portfolio', 'order' => 3], // KEY CHANGE: work-btn_button_text -> work_btn_text
                     ['key' => 'work_btn_link', 'type' => 'url', 'value' => '/portfolio', 'order' => 4], // KEY CHANGE: work-btn_button_link -> work_btn_link
-                ]
-            ],
-            // 6. HOW IT WORKS SECTION (Order 6)
-            [
-                'key' => 'how-it-works', 'name' => 'How It Works', 'order' => 6,
-                'contents' => [
-                    ['key' => 'how_sub_title', 'type' => 'text', 'value' => 'how we work', 'order' => 1], // KEY CHANGE: how-title_sub_title -> how_sub_title
-                    ['key' => 'how_main_title', 'type' => 'text', 'value' => 'Our methodology for <span>success</span>', 'order' => 2], // KEY CHANGE: how-title_main_title -> how_main_title
-                    
-                    ['key' => 'how-cta-btn_image_file', 'type' => 'image', 'value' => 'images/contact-circle-yellow.png', 'order' => 3],
-                    ['key' => 'how-cta-btn_link_url', 'type' => 'url', 'value' => '/contact', 'order' => 4],
-
-                    ['key' => 'how-images_circle_deco', 'type' => 'image', 'value' => 'images/how-work-image-circle.png', 'order' => 5],
-                    ['key' => 'how-images_main_image', 'type' => 'image', 'value' => 'images/how-it-work-image.jpg', 'order' => 6],
                 ]
             ],
             // 7. OUR TEAM SECTION (Order 7)
@@ -233,28 +211,6 @@ class SectionContentSeeder extends Seeder
 
                 foreach ($contents as $content) {
                     $workSection->contents()->updateOrCreate(['key' => $content['key']], $content);
-                }
-            }
-        }
-        
-        // ========================================
-        // 7. SEED LOOPED CONTENT (How It Works Process List)
-        // ========================================
-        $howSection = Section::where('key', 'how-it-works')->first();
-        if ($howSection) {
-            $order = 7;
-            foreach ($defaultProcesses as $index => $process) {
-                $baseKey = "process-list-1_step_{$index}";
-                $processTitle = ($index < 9 ? '0' . ($index + 1) : $index + 1) . '. ' . $process['title']; // Format title: 01. Discovery & Strategy
-
-                $contents = [
-                    ['key' => $baseKey . '_title', 'type' => 'text', 'value' => $processTitle, 'order' => $order++], // Diberi prefix nomor di seeder
-                    ['key' => $baseKey . '_desc', 'type' => 'textarea', 'value' => $process['desc'], 'order' => $order++],
-                    ['key' => $baseKey . '_active', 'type' => 'text', 'value' => $process['active'], 'order' => $order++],
-                ];
-
-                foreach ($contents as $content) {
-                    $howSection->contents()->updateOrCreate(['key' => $content['key']], $content);
                 }
             }
         }
