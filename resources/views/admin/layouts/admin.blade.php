@@ -23,8 +23,8 @@
 	<link rel="stylesheet" href="{{ asset('css/mousecursor.css') }}">
 	<link href="{{ asset('css/custom.css') }}" rel="stylesheet" media="screen">
     
-    <!-- Admin VCMS Custom CSS -->
-    <link rel="stylesheet" href="{{ asset('css/admin-vcms.css') }}">
+    <!-- Admin panel layout (sidebar, topbar) -->
+    <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
 
     @stack('styles')
 </head>
@@ -78,24 +78,6 @@
     </div>
     <!-- Admin Wrapper End -->
 
-    <!-- Edit Modal (Global) -->
-    <div class="vcms-edit-modal" id="vcmsEditModal">
-        <div class="vcms-edit-modal-overlay"></div>
-        <div class="vcms-edit-modal-content">
-            <div class="vcms-edit-modal-header">
-                <h3>Edit Content</h3>
-                <button class="vcms-modal-close">&times;</button>
-            </div>
-            <div class="vcms-edit-modal-body">
-                <!-- Dynamic form will be loaded here -->
-            </div>
-            <div class="vcms-edit-modal-footer">
-                <button class="btn-cancel">Cancel</button>
-                <button class="btn-save-modal">Save</button>
-            </div>
-        </div>
-    </div>
-
     <!-- Portfolio Detail Modal (Global) -->
     <div class="portfolio-modal" id="portfolioModal">
         <div class="portfolio-modal-overlay"></div>
@@ -147,8 +129,8 @@
     <script src="{{ asset('js/wow.min.js') }}"></script>
     <script src="{{ asset('js/function.js') }}"></script>
     
-    <!-- Admin VCMS Custom JS -->
-    <script src="{{ asset('js/admin-vcms.js') }}"></script>
+    <!-- Admin panel sidebar -->
+    <script src="{{ asset('js/admin.js') }}"></script>
 
     <!-- Portfolio Modal Script -->
     <script>

@@ -196,5 +196,4 @@
 @endsection
 
 @push('scripts')
-    <script src="{{ asset('js/admin-vcms.js') }}"></script>
 @endpush

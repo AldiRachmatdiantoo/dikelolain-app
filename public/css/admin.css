@@ -1,0 +1,492 @@
+/* =========================================
+   DIKELOLAIN - ADMIN PANEL (sidebar, topbar, layout)
+   ========================================= */
+
+:root {
+    --default-font: "Montserrat", sans-serif;
+}
+/* Admin Body */
+.admin-body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    font-family: var(--default-font);
+}
+
+/* =========================================
+   ADMIN WRAPPER & LAYOUT
+   ========================================= */
+.admin-wrapper {
+    display: flex;
+    min-height: 100vh;
+    background: #161616;
+}
+
+/* =========================================
+   ADMIN SIDEBAR
+   ========================================= */
+.admin-sidebar {
+    width: 280px;
+    background: #1a1a1a;
+    color: #fff;
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    z-index: 1000;
+    transition: all 0.3s ease;
+}
+
+.admin-sidebar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.admin-sidebar::-webkit-scrollbar-track {
+    background: #2a2a2a;
+}
+
+.admin-sidebar::-webkit-scrollbar-thumb {
+    background: #FFD700;
+    border-radius: 3px;
+}
+
+/* Sidebar Header */
+.sidebar-header {
+    padding: 25px 20px;
+    border-bottom: 1px solid #2a2a2a;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.sidebar-logo img {
+    max-width: 140px;
+    height: auto;
+}
+
+.sidebar-header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 8px;
+}
+
+.vcms-badge {
+    background: #FFD700;
+    color: #1a1a1a;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: inline-block;
+}
+
+/* Sidebar Burger Button */
+.sidebar-burger {
+    background: transparent;
+    border: 1px solid #444;
+    color: #fff;
+    padding: 8px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.sidebar-burger:hover {
+    background: #FFD700;
+    color: #1a1a1a;
+    border-color: #FFD700;
+}
+
+.sidebar-burger i {
+    font-size: 14px;
+}
+
+/* Topbar Burger Button (hidden by default, shown in fullscreen) */
+.sidebar-burger-topbar {
+    display: none;
+    background: transparent;
+    border: 1px solid #ddd;
+    color: #333;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-right: 15px;
+}
+
+.sidebar-burger-topbar:hover {
+    background: #FFD700;
+    color: #1a1a1a;
+    border-color: #FFD700;
+}
+
+.sidebar-burger-topbar i {
+    font-size: 16px;
+}
+
+/* Fullscreen Mode */
+.admin-wrapper.fullscreen .admin-sidebar {
+    transform: translateX(-100%);
+}
+
+.admin-wrapper.fullscreen .admin-content-area {
+    margin-left: 0;
+    width: 100%;
+}
+
+.admin-wrapper.fullscreen .sidebar-burger-topbar {
+    display: block;
+}
+
+/* Sidebar Menu */
+.sidebar-menu {
+    padding: 20px 0;
+    flex: 1;
+    overflow-y: auto;
+}
+
+.sidebar-menu::-webkit-scrollbar {
+    width: 6px;
+}
+
+.sidebar-menu::-webkit-scrollbar-track {
+    background: #2a2a2a;
+}
+
+.sidebar-menu::-webkit-scrollbar-thumb {
+    background: #FFD700;
+    border-radius: 3px;
+}
+
+.sidebar-menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.menu-section {
+    padding: 20px 20px 10px;
+    margin-top: 10px;
+}
+
+.menu-section span {
+    color: #888;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.menu-item {
+    margin: 0;
+}
+
+.menu-item a {
+    display: flex;
+    align-items: center;
+    padding: 12px 20px;
+    color: #ccc;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.menu-item a:hover {
+    background: #2a2a2a;
+    color: #FFD700;
+    padding-left: 25px;
+}
+
+.menu-item.active a {
+    background: #2a2a2a;
+    color: #FFD700;
+    border-left: 3px solid #FFD700;
+}
+
+.menu-item a i {
+    margin-right: 12px;
+    font-size: 16px;
+    width: 20px;
+    text-align: center;
+}
+
+.menu-item a span {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.menu-logout {
+    margin-top: 20px;
+    border-top: 1px solid #2a2a2a;
+    padding-top: 10px;
+}
+
+/* Sidebar Footer */
+.sidebar-footer {
+    padding: 15px 20px;
+    border-top: 1px solid #2a2a2a;
+    background: #1a1a1a;
+    flex-shrink: 0;
+}
+
+.admin-user-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.user-details {
+    flex: 1;
+}
+
+.logout-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #2a2a2a;
+    border: none;
+    color: #ccc;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.logout-btn:hover {
+    background: #ff4444;
+    color: #fff;
+    transform: scale(1.1);
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid #FFD700;
+    display: flex;
+    background-color: black;
+    align-items: center;
+    justify-content: center;
+}
+
+.user-avatar img {
+    width:  40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.user-details h4 {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+}
+
+.user-details p {
+    margin: 0;
+    font-size: 12px;
+    color: #888;
+}
+
+/* =========================================
+   ADMIN CONTENT AREA
+   ========================================= */
+.admin-content-area {
+    margin-left: 280px;
+    width: calc(100% - 280px);
+    min-height: 100vh;
+    background: #161616;
+}
+
+/* Admin Topbar */
+.admin-topbar {
+    background: #fff;
+    border-bottom: 1px solid #e5e5e5;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.admin-topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.sidebar-toggle {
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: #333;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.sidebar-toggle:hover {
+    background: #f5f5f5;
+}
+
+.page-title {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+    color: #333;
+}
+
+.admin-topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.vcms-mode-indicator {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #FFD700;
+    color: #1a1a1a;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.vcms-mode-indicator i {
+    font-size: 14px;
+}
+
+.admin-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-preview {
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #f5f5f5;
+    color: #333;
+    border: 1px solid #e5e5e5;
+}
+
+.btn-preview:hover {
+    background: #e5e5e5;
+}
+
+/* =========================================
+   VCMS PREVIEW CONTAINER
+   ========================================= */
+.vcms-preview-container {
+    padding: 30px;
+    background: #161616;
+}
+
+/* =========================================
+   RESPONSIVE
+   ========================================= */
+@media (max-width: 1024px) {
+    .admin-sidebar {
+        transform: translateX(-100%);
+        z-index: 1001;
+    }
+    
+    .admin-sidebar.active {
+        transform: translateX(0);
+    }
+    
+    .admin-content-area {
+        margin-left: 0;
+        width: 100%;
+    }
+    
+    /* Mobile: Hide sidebar burger, show topbar burger */
+    .sidebar-burger {
+        display: none;
+    }
+    
+    .sidebar-burger-topbar {
+        display: block;
+    }
+    
+    /* Override fullscreen mode behavior for mobile */
+    .admin-wrapper.fullscreen .admin-sidebar {
+        transform: translateX(-100%);
+    }
+    
+    .admin-wrapper.fullscreen .admin-sidebar.active {
+        transform: translateX(0);
+    }
+    
+    /* Mobile sidebar overlay */
+    .admin-sidebar-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+    }
+    
+    .admin-sidebar-overlay.active {
+        display: block;
+    }
+}
+
+@media (max-width: 768px) {
+    .admin-topbar {
+        flex-direction: column;
+        gap: 15px;
+        align-items: flex-start;
+    }
+    
+    .admin-topbar-right {
+        width: 100%;
+        justify-content: space-between;
+        flex-wrap: wrap;
+    }
+    
+    .vcms-mode-indicator {
+        font-size: 11px;
+        padding: 6px 12px;
+    }
+    
+    .admin-actions {
+        width: 100%;
+        flex-direction: column;
+    }
+    
+    .btn-preview {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .vcms-preview-container {
+        padding: 15px;
+    }
+}

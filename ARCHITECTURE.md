@@ -279,7 +279,7 @@ class FaqFields
 - Settings: satu `PATCH` per field yang berubah. Item: satu `POST`/`PATCH` berisi semua field; gambar hanya dikirim bila dipilih file baru.
 - Klik tombol editor ditangkap di fase capture, jadi tidak ikut membuka accordion, slider, atau link template.
 - Tidak ada pengetahuan khusus per entitas di JS. Menambah entitas baru = definisi field + endpoint, tanpa mengubah JS.
-- Tampilan modal mengikuti gaya `admin-vcms.css` yang sekarang supaya terasa sama bagi admin.
+- Tampilan modal mengikuti warna panel admin (`public/css/admin.css`, dulu `admin-vcms.css`) supaya terasa sama bagi admin.
 - Website publik tetap memakai jQuery dan plugin template. Editor baru tidak memakai jQuery.
 
 ---

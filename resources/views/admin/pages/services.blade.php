@@ -165,7 +165,6 @@
 @endsection
 
 @push('scripts')
-    <script src="{{ asset('js/admin-vcms.js') }}"></script>
     <script>
         $(document).ready(function() {
             // Admin services page pagination

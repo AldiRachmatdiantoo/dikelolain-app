@@ -1,4 +1,4 @@
-/* VCMS editor: only loaded for an admin in edit mode. Colours follow the old admin-vcms.css. */
+/* VCMS editor: only loaded for an admin in edit mode. Colours follow the admin panel (public/css/admin.css). */
 
 [x-cloak] { display: none !important; }
 

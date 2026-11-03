@@ -44,6 +44,7 @@
 
     .dash-card {
         display: flex;
+        flex-wrap: wrap;
         align-items: center;
         gap: 14px;
         height: 100%;
@@ -65,14 +66,14 @@
         font-size: 18px;
     }
 
-    .dash-card-body { flex: 1; min-width: 0; }
+    /* The buttons move under the name when the card is too narrow for both. */
+    .dash-card-body { flex: 1 1 110px; min-width: 0; }
     .dash-card-body h3 { margin: 0 0 2px; font-size: 17px; color: #fff; }
     .dash-card-body p { margin: 0; font-size: 13px; color: #8f8f8f; }
 
-    .dash-card-actions { display: flex; gap: 6px; }
+    .dash-card-actions { display: flex; gap: 6px; margin-left: auto; }
 
     @media (max-width: 575px) {
-        .dash-card { flex-wrap: wrap; }
         .dash-card-actions { width: 100%; }
         .dash-card-actions .dash-btn { flex: 1; }
     }
