@@ -12,21 +12,21 @@
 
 | Status | Jumlah | PBI |
 |---|---|---|
-| ✅ Selesai | 2 | **003** (ARCHITECTURE.md), **004** (status backlog) |
+| ✅ Selesai | 3 | **001** (jalan di lokal + README), **003** (ARCHITECTURE.md), **004** (status backlog) |
 | ⏳ Sedang dikerjakan | 0 | – |
-| ⏸️ Menunggu keputusan | 3 | **005** (K-1 s.d. K-4), **203** (K-4), **504** (K-3) |
-| ❌ Belum | 42 | Semua PBI lain |
+| ⏸️ Menunggu keputusan | 4 | **005** (K-1 s.d. K-4), **203** (K-4), **504** (K-3), **507** (K-3) |
+| ❌ Belum | 45 | Semua PBI lain |
 
-Total **47 PBI** dalam 6 epic:
+Total **52 PBI** dalam 6 epic:
 
 | Epic | Isi | PBI | Selesai |
 |---|---|---|---|
-| 0 | Persiapan | 001–005 | 2/5 |
-| 1 | Beres-beres tanpa risiko | 101–108 | 0/8 |
+| 0 | Persiapan | 001–005 | 3/5 |
+| 1 | Beres-beres tanpa risiko | 101–110 | 0/10 |
 | 2 | Fondasi VCMS baru + FAQ | 201–210 | 0/10 |
 | 3 | Migrasi entitas | 301–313 | 0/13 |
 | 4 | Pembersihan akhir | 401–406 | 0/6 |
-| 5 | Setelah rombak (fitur & rilis) | 501–505 | 0/5 |
+| 5 | Setelah rombak (fitur & rilis) | 501–508 | 0/8 |
 
 **Urutan wajib:** Epic 0 → 1 → 2 → 3 → 4. Fitur baru (Epic 5) baru dikerjakan setelah Epic 4, kecuali yang tidak menyentuh model konten (lihat [PBI-501](#epic-5-setelah-rombak-fitur--rilis)).
 
@@ -42,6 +42,8 @@ Total **47 PBI** dalam 6 epic:
 | K-4 | Mode edit di **halaman publik** dengan bilah admin (usulan di [ARCHITECTURE.md §6.1](ARCHITECTURE.md#61-mode-edit)), bukan lagi `/admin/pages/*` | Bentuk Epic 2 | Mengikuti usulan | ❓ Perlu konfirmasi |
 | K-5 | Tetap edit inline (VCMS) | – | – | ✅ Diputuskan 3 Nov 2026: **ya**, inti produk |
 | K-6 | Editor baru tanpa jQuery (Alpine.js + Vite); website publik tetap jQuery | – | – | ✅ Disepakati 3 Nov 2026 |
+| K-7 | Index database: unique, foreign key, dan index gabungan untuk query daftar; tidak meng-index semua kolom | Aturan setiap migration | – | ✅ Disepakati 3 Nov 2026, aturan di [ARCHITECTURE §4.6](ARCHITECTURE.md#46-index) |
+| K-8 | **Tanpa Redis.** Kalau perlu cache, pakai facade `Cache` dengan driver `database`/`file` dan key eksplisit (tanpa `Cache::tags()`); pindah ke Redis nanti cukup ubah `CACHE_STORE` | Infrastruktur rilis | – | ✅ Disepakati 3 Nov 2026, aturan di [ARCHITECTURE §10](ARCHITECTURE.md#10-performa--cache) |
 
 ---
 
@@ -53,7 +55,7 @@ Legenda: ✅ selesai · ⏳ sedang dikerjakan · ❌ belum · ⏸️ menunggu ke
 
 | PBI | Judul | Status | Catatan |
 |---|---|---|---|
-| 001 | Project jalan di lokal (`composer install`, `.env`, `migrate --seed`, `storage:link`, `npm install`) dan langkahnya ditulis di README | ❌ | README sekarang masih bawaan Laravel |
+| 001 | Project jalan di lokal (`composer install`, `.env`, `migrate --seed`, `storage:link`) dan langkahnya ditulis di README | ✅ | 3 Nov 2026, lihat [Hasil PBI-001](#hasil-pbi-001-3-november-2026). npm belum diperlukan (Vite hanya dirujuk `welcome.blade.php`) |
 | 002 | Smoke test: semua halaman publik 200, semua halaman admin 200 saat login / redirect saat belum login | ❌ | Jaring pengaman sebelum mengubah apa pun |
 | 003 | `ARCHITECTURE.md`: target arsitektur, model data, kontrak API, VCMS, konvensi | ✅ | 3 Nov 2026 |
 | 004 | Status backlog (file ini) | ✅ | 3 Nov 2026 |
@@ -63,7 +65,7 @@ Legenda: ✅ selesai · ⏳ sedang dikerjakan · ❌ belum · ⏸️ menunggu ke
 
 | PBI | Judul | Status | Catatan |
 |---|---|---|---|
-| 101 | Hapus controller dan model yang tidak dipakai: `ContentController` (root), `SectionController`, `MediaController`, `Admin/ProjectController`, model `Home`, `HomeController::getContent` | ❌ | Tidak dirujuk route mana pun |
+| 101 | Hapus controller dan model yang tidak dipakai: `ContentController` (root), `SectionController`, `MediaController`, `Admin/ProjectController`, model `Home`, `HomeController::getContent` | ❌ | Tidak dirujuk route mana pun. `SectionController` juga memicu peringatan PSR-4 saat `composer install` (namespace `Admin`, file di root `Controllers`) |
 | 102 | Hapus route ke view yang tidak ada: `/admin/portfolio/*`, `/admin/services/*`, `/admin/team/*`, `/admin/testimonials/*`, `/admin/settings/general`, `/admin/media-library` | ❌ | Semuanya error 500 kalau dibuka |
 | 103 | Hapus view tak terpakai: `welcome.blade.php`, `admin/pages/service.blade.php` (kosong), `portfolio-experiment` (+ route), `layouts/sidebar.blade.php` bila tak dirujuk | ❌ | Cek dulu dengan grep |
 | 104 | Upload: validasi mime sebenarnya (gambar/video), ekstensi dari mime, bukan dari nama file pengguna | ❌ | Sekarang file apa pun (termasuk `.php`) bisa masuk ke folder publik |
@@ -71,6 +73,8 @@ Legenda: ✅ selesai · ⏳ sedang dikerjakan · ❌ belum · ⏸️ menunggu ke
 | 106 | Respons error API tidak lagi menyertakan `$e->getMessage()` | ❌ | Bocor detail internal |
 | 107 | `.env.example`: `APP_NAME=Dikelolain`, `APP_LOCALE=id`, variabel admin | ❌ | |
 | 108 | Link project di seeder mengarah ke `/portfolio/single` yang tidak punya route (jatuh ke 404); `portfolio-single.blade.php` tidak dipakai | ❌ | Putuskan: buat route detail project atau hapus view |
+| 109 | Halaman 404 dikirim dengan status **200**, bukan 404 (`Route::fallback` mengembalikan view tanpa status) | ❌ | Buruk untuk SEO; ditemukan di PBI-001 |
+| 110 | Error JS di setiap halaman: `magiccursor.js:104` `Cannot read properties of undefined (reading 'x')` saat halaman dimuat sebelum mouse bergerak | ❌ | Plugin template; ditemukan di PBI-001 |
 
 ### Epic 2: Fondasi VCMS baru + FAQ
 
@@ -126,11 +130,39 @@ Belum dirinci. Diisi setelah Epic 4.
 
 | PBI | Judul | Status | Catatan |
 |---|---|---|---|
-| 501 | Fitur yang **tidak** menyentuh model konten (boleh dikerjakan kapan saja): form kontak disimpan ke DB / dikirim email, meta SEO + sitemap, optimasi gambar | ❌ | |
+| 501 | Fitur yang **tidak** menyentuh model konten (boleh dikerjakan kapan saja): form kontak disimpan ke DB / dikirim email, meta SEO + sitemap | ❌ | |
+| 506 | Gambar & video: kompres 103 gambar `public/images` ke WebP, `loading="lazy"` di bawah layar, video hero disimpan sendiri (sekarang dari server demo Awaiken) | ❌ | Dampak kecepatan terbesar; boleh dikerjakan kapan saja |
+| 507 | Optimasi rilis: `php artisan optimize`, OPcache di server | ⏸️ | Menunggu K-3 |
+| 508 | Cache data per halaman (`Cache::rememberForever('page.home')`, dihapus saat admin menyimpan) | ❌ | Hanya bila PBI-313 + 506 + 507 belum cukup; tanpa Redis (K-8) |
 | 502 | Ganti konten demo template dengan konten asli (video Awaiken, link YouTube acak, award 2015–2020, logo klien contoh, nama tim) | ❌ | Butuh konten dari pemilik |
 | 503 | Branding: `<html lang="id">`, meta author/description, judul halaman | ❌ | `lang="zxx"` dan author "Awaiken" masih dari template |
 | 504 | Deploy | ⏸️ | Menunggu K-3 |
 | 505 | Fitur baru (diisi kemudian) | ❌ | |
+
+---
+
+## Hasil PBI-001 (3 November 2026)
+
+Dijalankan di Windows dengan Laragon: PHP 8.3.29, Composer 2.9.3, SQLite. `composer install`, `migrate --seed` (7 migration + `SectionContentSeeder`), dan `storage:link` berhasil.
+
+**Halaman publik** (dicek di browser, `php artisan serve`):
+
+| Halaman | Status |
+|---|---|
+| `/`, `/about`, `/services`, `/portfolio`, `/portfolio-experiment`, `/pricing`, `/faqs`, `/team`, `/testimonials`, `/contact` | 200 |
+| `/pages/service/01`, `/pages/team/0` | 200 |
+| URL yang tidak ada (`/portfolio/single`, `/halaman-tidak-ada`) | 200 berisi halaman 404 → **PBI-109** |
+
+**Admin** (login dengan akun dari seeder):
+
+| Halaman | Status |
+|---|---|
+| `/admin/dashboard`, `/admin/pages/{analytics,home,about,services,portfolio,team,pricing,contact,faqs,testimonials}`, `/admin/pages/service/01`, `/admin/profile-detail`, `/admin/reset-password` | 200 |
+| `/admin/api/content/hero`, `/admin/api/content/media-list` | 200 |
+| `/admin/dashboard` tanpa login | redirect ke login |
+| `/admin/portfolio`, `/admin/services`, `/admin/team`, `/admin/testimonials`, `/admin/settings/general`, `/admin/media-library` | **500** (view tidak ada) → PBI-102 |
+
+**Temuan lain:** error JS `magiccursor.js` di semua halaman (dimuat oleh layout publik dan admin) → **PBI-110**; peringatan PSR-4 `SectionController` saat `composer install` → dicatat di PBI-101.
 
 ---
 
@@ -173,3 +205,5 @@ Ringkasan hasil membaca kode di commit `02fa1fd` (isi sama dengan branch `back-e
 |---|---|
 | 3 Nov 2026 | Repo dipisah dari `abahdzanil/dikelolain-app`: isi branch `back-end` dijadikan satu commit di `main` (`02fa1fd`); riwayat lama disimpan lokal di branch `arsip/*` (tidak di-push) |
 | 3 Nov 2026 | Audit kode, `ARCHITECTURE.md` dan status backlog dibuat (PBI-003, PBI-004) |
+| 3 Nov 2026 | Keputusan index (K-7) dan tanpa Redis (K-8) dicatat; PBI-506–508 (performa) ditambahkan |
+| 3 Nov 2026 | PBI-001 selesai: project jalan di lokal, README ditulis ulang; temuan baru PBI-109, PBI-110 |

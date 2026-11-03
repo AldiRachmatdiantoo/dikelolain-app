@@ -142,6 +142,21 @@ Dipakai untuk: judul dan deskripsi hero, header setiap halaman, judul section, C
 
 `sections`, `section_contents`, `media`.
 
+### 4.6 Index
+
+Index di project ini terutama untuk **keabsahan data** (unik, relasi), baru kemudian kecepatan. Datanya kecil, jadi jangan meng-index kolom yang tidak dipakai query.
+
+| Jenis | Kolom | Cara di migration |
+|---|---|---|
+| Primary key | `id` semua tabel | `$table->id()` |
+| Unique | `page_settings.key`, `services.slug`, `projects.slug`, `team_members.slug` | `->unique()` |
+| Foreign key | kolom `*_id` di tabel anak | `->foreignId('service_id')->constrained()->cascadeOnDelete()` **plus** `->index()` eksplisit, karena SQLite dan PostgreSQL tidak membuat index FK otomatis |
+| Daftar | `(is_active, sort_order)` di setiap tabel daftar | `$table->index(['is_active', 'sort_order'])` |
+| Daftar per kategori/grup | `faqs (category, is_active, sort_order)`, `projects (category, is_active, sort_order)`, `page_list_items (page, group, sort_order)` | index gabungan |
+| Tabel anak | `(parent_id, sort_order)` | index gabungan (menggantikan index FK tunggal) |
+
+Query tidak boleh memakai `LIKE '%...'` dengan wildcard di depan, karena index tidak akan terpakai.
+
 ---
 
 ## 5. Kontrak API admin
@@ -271,3 +286,29 @@ Setiap entitas dianggap selesai kalau semua poin ini terpenuhi:
 - Pesan untuk admin berbahasa Indonesia. Nama kode berbahasa Inggris.
 - Tidak ada fungsi global di view. Helper tampilan ditaruh di komponen Blade atau accessor model.
 - Semua output Blade memakai `{{ }}`, kecuali `rich_text` yang sudah dibersihkan.
+
+---
+
+## 10. Performa & cache
+
+Urutan prioritas bila website terasa lambat:
+
+1. **Query per halaman:** setiap halaman hanya mengambil data yang dipakainya, dengan eager loading (`with()`) untuk relasi. Tidak ada lagi "muat semua section".
+2. **Gambar & video:** WebP, ukuran sesuai tampilan, `loading="lazy"` untuk gambar di bawah layar, video disimpan sendiri.
+3. **Optimasi rilis:** `php artisan optimize` dan OPcache.
+4. **Cache data halaman** bila 1–3 belum cukup.
+
+Aturan cache:
+
+- **Tanpa Redis.** Driver `database` (default `.env.example`) atau `file` sudah cukup untuk website ini. Redis baru dipertimbangkan bila aplikasi berjalan di beberapa server, ada antrean berat, atau trafik sangat tinggi.
+- Selalu lewat facade `Cache`, jadi pindah driver cukup dengan mengubah `CACHE_STORE`, tanpa mengubah kode.
+- Key eksplisit per halaman (`page.home`, `page.faqs`, ...). **Jangan pakai `Cache::tags()`** karena tidak didukung driver `database`/`file`.
+- Page service yang menyimpan cache, dan service entitas yang menghapusnya setelah tambah, ubah, hapus, atau urutkan:
+
+```php
+// HomePageService
+return Cache::rememberForever('page.home', fn () => [...]);
+
+// FaqService::update(), setelah data tersimpan
+Cache::forget('page.faqs');
+```
