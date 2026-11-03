@@ -14,26 +14,6 @@ class SectionContentSeeder extends Seeder
     public function run(): void
     {
         // ========================================
-        // 1. DEFAULT DATA DEFINITIONS (FIXED SCOPE)
-        // ========================================
-        
-        // Data Default untuk Section Work Projects (12 projects)
-        $defaultProjects = [
-            ['type' => 'video', 'src' => 'https://www.youtube.com/embed/EszaEO236lw', 'title' => 'Viera - Bersamamu', 'desc' => 'Music video project.', 'link' => '/portfolio/single'],
-            ['type' => 'video', 'src' => 'https://www.youtube.com/embed/PG0ZAriaBEY', 'title' => 'News Coverage', 'desc' => 'Berita terkini.', 'link' => '/portfolio/single'],
-            ['type' => 'video', 'src' => 'https://www.youtube.com/embed/oUFJJNQGwhk', 'title' => 'Cinematic Village', 'desc' => 'Cinematic pedasaan.', 'link' => '/portfolio/single'],
-            ['type' => 'video', 'src' => 'https://www.youtube.com/embed/dQw4w9WgXcQ', 'title' => 'Brand Story', 'desc' => 'Corporate video.', 'link' => '/portfolio/single'],
-            ['type' => 'video', 'src' => 'https://www.youtube.com/embed/9bZkp7q19f0', 'title' => 'Product Launch', 'desc' => 'Launch event video.', 'link' => '/portfolio/single'],
-            ['type' => 'video', 'src' => 'https://www.youtube.com/embed/kJQP7kiw5Fk', 'title' => 'Music Video Pro', 'desc' => 'Professional MV.', 'link' => '/portfolio/single'],
-            ['type' => 'video', 'src' => 'https://www.youtube.com/embed/RgKAFK5djSk', 'title' => 'Tribute Video', 'desc' => 'Memorial project.', 'link' => '/portfolio/single'],
-            ['type' => 'video', 'src' => 'https://www.youtube.com/embed/JGwWNGJdvx8', 'title' => 'Dance Cover', 'desc' => 'Choreography video.', 'link' => '/portfolio/single'],
-            ['type' => 'video', 'src' => 'https://www.youtube.com/embed/fRh_vgS2dFE', 'title' => 'Live Performance', 'desc' => 'Concert recording.', 'link' => '/portfolio/single'],
-            ['type' => 'video', 'src' => 'https://www.youtube.com/embed/OPf0YbXqDm0', 'title' => 'Classic Hits', 'desc' => 'Retro compilation.', 'link' => '/portfolio/single'],
-            ['type' => 'video', 'src' => 'https://www.youtube.com/embed/hTWKbfoikeg', 'title' => 'Viral Content', 'desc' => 'Social media hit.', 'link' => '/portfolio/single'],
-            ['type' => 'video', 'src' => 'https://www.youtube.com/embed/YQHsXMglC9A', 'title' => 'Pop Music Video', 'desc' => 'Popular song MV.', 'link' => '/portfolio/single'],
-        ];
-        
-        // ========================================
         // 2. CORE SECTION DEFINITION (Keys di sini disesuaikan)
         // ========================================
 
@@ -53,16 +33,6 @@ class SectionContentSeeder extends Seeder
                     ['key' => 'hero-images-1_image_3', 'type' => 'image', 'value' => 'images/hero-img-3.jpg', 'order' => 8],
                     ['key' => 'hero-images-1_image_4', 'type' => 'image', 'value' => 'images/hero-img-4.jpg', 'order' => 9],
                     ['key' => 'hero-images-1_image_5', 'type' => 'image', 'value' => 'images/hero-img-5.jpg', 'order' => 10],
-                ]
-            ],
-            // 4. OUR WORK SECTION (Order 4)
-            [
-                'key' => 'our-work', 'name' => 'Our Work', 'order' => 4,
-                'contents' => [
-                    ['key' => 'work_sub_title', 'type' => 'text', 'value' => 'our work', 'order' => 1], // KEY CHANGE: work-title_sub_title -> work_sub_title
-                    ['key' => 'work_main_title', 'type' => 'text', 'value' => 'Our latest <span>Projects</span>', 'order' => 2], // KEY CHANGE: work-title_main_title -> work_main_title
-                    ['key' => 'work_btn_text', 'type' => 'text', 'value' => 'view all portfolio', 'order' => 3], // KEY CHANGE: work-btn_button_text -> work_btn_text
-                    ['key' => 'work_btn_link', 'type' => 'url', 'value' => '/portfolio', 'order' => 4], // KEY CHANGE: work-btn_button_link -> work_btn_link
                 ]
             ],
         ];
@@ -87,30 +57,6 @@ class SectionContentSeeder extends Seeder
             }
         }
 
-        // ========================================
-        // 5. SEED LOOPED CONTENT (Project List)
-        // ========================================
-        $workSection = Section::where('key', 'our-work')->first();
-        if ($workSection) {
-            $order = 5;
-            foreach ($defaultProjects as $index => $project) {
-                $idx = $index + 1;
-                $baseKey = "project-list-1_project_{$idx}";
-
-                $contents = [
-                    ['key' => $baseKey . '_title', 'type' => 'text', 'value' => $project['title'], 'order' => $order++],
-                    ['key' => $baseKey . '_desc', 'type' => 'textarea', 'value' => $project['desc'], 'order' => $order++],
-                    ['key' => $baseKey . '_link', 'type' => 'url', 'value' => $project['link'], 'order' => $order++],
-                    ['key' => $baseKey . '_media_src', 'type' => $project['type'] == 'video' ? 'video' : 'image', 'value' => $project['src'], 'order' => $order++],
-                    ['key' => $baseKey . '_media_type', 'type' => 'text', 'value' => $project['type'], 'order' => $order++],
-                ];
-
-                foreach ($contents as $content) {
-                    $workSection->contents()->updateOrCreate(['key' => $content['key']], $content);
-                }
-            }
-        }
-        
         $this->command->info('✅ All VCMS section content seeded successfully!');
     }
 }

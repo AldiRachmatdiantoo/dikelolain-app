@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\Api\ClientLogoController;
 use App\Http\Controllers\Admin\Api\CounterController;
 use App\Http\Controllers\Admin\Api\FaqController;
 use App\Http\Controllers\Admin\Api\ProcessStepController;
+use App\Http\Controllers\Admin\Api\ProjectController;
 use App\Http\Controllers\Admin\Api\ServiceBenefitController;
 use App\Http\Controllers\Admin\Api\ServiceController;
 use App\Http\Controllers\Admin\Api\ServiceFaqController;
@@ -19,6 +20,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Pages\AboutPageController;
 use App\Http\Controllers\Pages\FaqPageController;
 use App\Http\Controllers\Pages\HomePageController;
+use App\Http\Controllers\Pages\PortfolioPageController;
 use App\Http\Controllers\Pages\PricingPageController;
 use App\Http\Controllers\Pages\ServiceDetailPageController;
 use App\Http\Controllers\Pages\ServicePageController;
@@ -45,15 +47,8 @@ Route::get('/contact', function () {
     return view('pages.contact', compact('sections'));
 })->name('contact');
 
-Route::get('/portfolio', function () {
-    $sections = App\Models\Section::with('contents.media')->active()->ordered()->get()->keyBy('key');
-    return view('pages.portfolio', compact('sections'));
-})->name('portfolio');
-
-Route::get('/portfolio-experiment', function () {
-    $sections = App\Models\Section::with('contents.media')->active()->ordered()->get()->keyBy('key');
-    return view('pages.portfolio-experiment', compact('sections'));
-})->name('portfolio.experiment');
+Route::get('/portfolio', [PortfolioPageController::class, 'index'])->name('portfolio');
+Route::get('/portfolio-experiment', [PortfolioPageController::class, 'experiment'])->name('portfolio.experiment');
 
 Route::get('/pricing', PricingPageController::class)->name('pricing');
 
@@ -132,6 +127,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
                 'services' => ServiceController::class,
                 'service-benefits' => ServiceBenefitController::class,
                 'service-faqs' => ServiceFaqController::class,
+                'projects' => ProjectController::class,
             ];
             foreach ($lists as $uri => $controller) {
                 Route::get("/{$uri}", [$controller, 'index'])->name("{$uri}.index");

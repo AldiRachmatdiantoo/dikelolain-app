@@ -107,36 +107,34 @@
     (function($) {
         "use strict";
 
+        // Built with text()/attr() so project titles and descriptions can never inject HTML.
+        // The media source is prepared by the server (YouTube embed or image URL).
         function openPortfolioModal($trigger) {
-            var title = $trigger.data('title') || 'Project Title';
-            var desc = $trigger.data('desc') || 'Project description';
-            var link = $trigger.data('link') || '#';
-            var mediaType = $trigger.data('media-type') || 'image';
-            var mediaSrc = $trigger.data('media-src') || '';
+            var title = $trigger.attr('data-title') || '';
+            var desc = $trigger.attr('data-desc') || '';
+            var link = $trigger.attr('data-link') || '';
+            var category = $trigger.attr('data-category') || '';
+            var mediaType = $trigger.attr('data-media-type') === 'video' ? 'video' : 'image';
+            var mediaSrc = $trigger.attr('data-media-src') || '';
 
-            var detailsHTML = '<div class="category-list-item"><h3>Project Name:</h3><p>' + title + '</p></div>' +
-                '<div class="category-list-item"><h3>Category:</h3><p>' + (mediaType === 'video' ? 'Video Production' : 'Design') + '</p></div>';
-            $('#modalProjectDetails').html(detailsHTML);
+            var $details = $('#modalProjectDetails').empty();
+            [['Project Name:', title], ['Category:', category]].forEach(function (row) {
+                $('<div class="category-list-item">').append($('<h3>').text(row[0]), $('<p>').text(row[1])).appendTo($details);
+            });
 
-            var mediaHTML = '';
-            if (mediaType === 'video' && mediaSrc) {
-                var embedUrl = mediaSrc;
-                if (embedUrl.indexOf('youtube.com/watch') !== -1) {
-                    var match = embedUrl.match(/[?&]v=([a-zA-Z0-9_-]+)/);
-                    if (match) embedUrl = 'https://www.youtube-nocookie.com/embed/' + match[1];
-                } else if (embedUrl.indexOf('youtu.be/') !== -1) {
-                    var match = embedUrl.match(/youtu\.be\/([a-zA-Z0-9_-]+)/);
-                    if (match) embedUrl = 'https://www.youtube-nocookie.com/embed/' + match[1];
-                }
-                mediaHTML = '<div class="project-media"><iframe src="' + embedUrl + '" allowfullscreen></iframe></div>';
-            } else if (mediaSrc) {
-                mediaHTML = '<div class="project-media"><img src="' + mediaSrc + '" alt="' + title + '"></div>';
+            var $overview = $('#modalProjectOverview').empty().append('<h2>Project <span>Overview</span></h2>');
+            if (mediaSrc) {
+                var $media = mediaType === 'video'
+                    ? $('<iframe allowfullscreen>').attr({ src: mediaSrc, title: title })
+                    : $('<img>').attr({ src: mediaSrc, alt: title });
+                $('<div class="project-media">').append($media).appendTo($overview);
             }
-
-            var overviewHTML = '<h2>Project <span>Overview</span></h2>' + mediaHTML +
-                '<p>' + desc + '</p>' +
-                '<a href="' + link + '" class="visit-btn" target="_blank">Visit Project</a>';
-            $('#modalProjectOverview').html(overviewHTML);
+            if (desc) {
+                $('<p>').text(desc).appendTo($overview);
+            }
+            if (/^https?:\/\//i.test(link)) {
+                $('<a class="visit-btn" target="_blank" rel="noopener">').attr('href', link).text('Visit Project').appendTo($overview);
+            }
 
             $('#portfolioModal').addClass('active');
             $('body').css({'overflow': 'hidden', 'overflow-x': 'clip'});
@@ -147,6 +145,7 @@
             $modal.addClass('closing');
             setTimeout(function() {
                 $modal.removeClass('active closing');
+                $('#modalProjectOverview').empty(); // stops a playing video
                 $('body').css({'overflow-y': 'auto', 'overflow-x': 'clip'});
             }, 300);
         }

@@ -3,8 +3,10 @@
 namespace App\Services\Pages;
 
 use App\Services\ProcessStepService;
+use App\Services\ProjectService;
 use App\Services\ServiceService;
 use App\Vcms\Fields\ProcessStepFields;
+use App\Vcms\Fields\ProjectFields;
 use App\Vcms\Fields\ServiceFields;
 
 class HomePageService
@@ -13,6 +15,7 @@ class HomePageService
         private SectionData $sections,
         private ProcessStepService $processSteps,
         private ServiceService $services,
+        private ProjectService $projects,
     ) {
     }
 
@@ -33,6 +36,8 @@ class HomePageService
             'processStepFields' => $editing ? ProcessStepFields::definition() : [],
             'services' => $this->services->all(activeOnly: !$editing),
             'serviceFields' => $editing ? ServiceFields::definition() : [],
+            'projects' => $this->projects->highlights(6),
+            'projectFields' => $editing ? ProjectFields::definition() : [],
         ];
     }
 }

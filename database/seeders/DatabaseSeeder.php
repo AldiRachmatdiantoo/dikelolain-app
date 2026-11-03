@@ -41,6 +41,7 @@ class DatabaseSeeder extends Seeder
             CounterSeeder::class,
             TeamMemberSeeder::class,
             ServiceSeeder::class,
+            ProjectSeeder::class,
         ]);
     }
 }

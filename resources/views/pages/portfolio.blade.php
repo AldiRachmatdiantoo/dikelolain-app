@@ -3,58 +3,22 @@
 @section('title', 'Our Portfolio - Dikelolain')
 
 @php
-    // Helper function to get content from database
-    if (!function_exists('getPortfolioContent')) {
-        function getPortfolioContent($sections, $sectionKey, $contentKey, $default = '') {
-            $section = collect($sections)->firstWhere('key', $sectionKey);
-            if (!$section || !isset($section['contents'])) {
-                return $default;
-            }
-            $content = collect($section['contents'])->firstWhere('key', $contentKey);
-            return $content ? $content['value'] : $default;
-        }
-    }
+    $totalProjects = $projects->count();
+    $videoCount = $projects->filter->isVideo()->count();
+    $imageCount = $totalProjects - $videoCount;
 
-    // Get projects from database
-    $projects = [];
-    $workSection = collect($sections)->firstWhere('key', 'our-work');
-    
-    if ($workSection && isset($workSection['contents'])) {
-        $projectIds = [];
-        foreach ($workSection['contents'] as $content) {
-            if (preg_match('/project-list-1_project_(.+)_title$/', $content['key'], $matches)) {
-                $projectIds[$matches[1]] = $content['value'];
-            }
-        }
-        foreach ($projectIds as $id => $title) {
-            $mediaType = getPortfolioContent($sections, 'our-work', "project-list-1_project_{$id}_media_type", 'video');
-            $projects[] = [
-                'id' => $id, 
-                'title' => $title,
-                'media_type' => $mediaType
-            ];
-        }
-    }
-    
-    // Count for filter tabs
-    $totalProjects = count($projects);
-    $videoCount = count(array_filter($projects, fn($p) => $p['media_type'] == 'video'));
-    $imageCount = count(array_filter($projects, fn($p) => $p['media_type'] == 'image'));
-    
     // Pagination
     $projectsPerPage = 12;
-    $totalPages = ceil($totalProjects / $projectsPerPage);
-
-    // Page Header data
-    $headerTitle = getPortfolioContent($sections, 'portfolio-header', 'portfolio-header-1_title', 'Our <span>portfolio</span>');
-    $headerBreadcrumb = getPortfolioContent($sections, 'portfolio-header', 'portfolio-header-1_breadcrumb', 'Portfolio');
+    $totalPages = (int) ceil($totalProjects / $projectsPerPage);
 @endphp
 
 @section('content')
 
-    <x-page-header title="{!! $headerTitle !!}">
-        <li class="breadcrumb-item active" aria-current="page">{{ $headerBreadcrumb }}</li>
-    </x-page-header>
+    <x-vcms.settings :keys="['portfolio.header.title', 'portfolio.header.breadcrumb']" label="Header">
+        <x-page-header :title="$settings->get('portfolio.header.title')">
+            <li class="breadcrumb-item active" aria-current="page">{{ $settings->get('portfolio.header.breadcrumb') }}</li>
+        </x-page-header>
+    </x-vcms.settings>
 
     <div class="page-works">
         <div class="container">
@@ -88,79 +52,18 @@
 
                 <div class="col-lg-12">
                     <div class="row work-item-boxes align-items-center" id="portfolio-container">
-                        @if (count($projects) == 0)
+                        @forelse ($projects as $project)
+                            <div class="col-lg-4 col-md-6 work-item-box {{ $project->media_type }} portfolio-item" data-page="{{ intdiv($loop->index, $projectsPerPage) + 1 }}">
+                                @include('partials.work-item', ['delay' => 0.2 * ($loop->index % 3)])
+                            </div>
+                        @empty
                             <div class="col-12 text-center py-5" style="color: #888;">
                                 <p>No projects yet.</p>
                             </div>
-                        @endif
-
-                        @foreach ($projects as $index => $project)
-                            @php
-                                $projectId = $project['id'];
-                                $projectTitle = getPortfolioContent($sections, 'our-work', "project-list-1_project_{$projectId}_title", $project['title'] ?? 'Project Title');
-                                $projectDesc = getPortfolioContent($sections, 'our-work', "project-list-1_project_{$projectId}_desc", 'Project description');
-                                $projectLink = getPortfolioContent($sections, 'our-work', "project-list-1_project_{$projectId}_link", '#');
-                                $projectMediaSrc = getPortfolioContent($sections, 'our-work', "project-list-1_project_{$projectId}_media_src", 'https://www.youtube.com/embed/EszaEO236lw');
-                                $projectMediaType = $project['media_type'];
-                                $pageNum = floor($index / $projectsPerPage) + 1;
-                                $filterClass = $projectMediaType == 'video' ? 'video' : 'image';
-                            @endphp
-                            <div class="col-lg-4 col-md-6 work-item-box {{ $filterClass }} portfolio-item" data-page="{{ $pageNum }}">
-                                <div class="work-item wow fadeInUp" data-wow-delay="{{ 0.2 * ($index % 3) }}s">
-                                    <div class="work-image">
-                                        @if ($projectMediaType == 'video')
-                                            <div class="ratio" style="--bs-aspect-ratio: 76%; border-radius: 30px; overflow: hidden;">
-                                                @php
-                                                    $embedUrl = $projectMediaSrc;
-                                                    if (str_contains($embedUrl, 'youtube.com/embed/')) {
-                                                        $embedUrl = str_replace('youtube.com/embed/', 'youtube-nocookie.com/embed/', $embedUrl);
-                                                    } elseif (str_contains($embedUrl, 'youtu.be/')) {
-                                                        preg_match('/youtu\.be\/([a-zA-Z0-9_-]+)/', $embedUrl, $matches);
-                                                        if (!empty($matches[1])) {
-                                                            $embedUrl = 'https://www.youtube-nocookie.com/embed/' . $matches[1];
-                                                        }
-                                                    } elseif (str_contains($embedUrl, 'youtube.com/watch')) {
-                                                        preg_match('/[?&]v=([a-zA-Z0-9_-]+)/', $embedUrl, $matches);
-                                                        if (!empty($matches[1])) {
-                                                            $embedUrl = 'https://www.youtube-nocookie.com/embed/' . $matches[1];
-                                                        }
-                                                    }
-                                                @endphp
-                                                <iframe src="{{ $embedUrl }}" title="YouTube video player"
-                                                    frameborder="0"
-                                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
-                                                </iframe>
-                                            </div>
-                                        @else
-                                            <a href="{{ $projectLink }}" data-cursor-text="View">
-                                                <figure class="image-anime">
-                                                    <img src="{{ asset($projectMediaSrc) }}" alt="{{ $projectTitle }}">
-                                                </figure>
-                                            </a>
-                                        @endif
-                                    </div>
-                                    <div class="work-body">
-                                        <div class="work-content">
-                                            <h3><a href="javascript:void(0)" class="portfolio-title">{{ $projectTitle }}</a></h3>
-                                            <p>{{ $projectDesc }}</p>
-                                        </div>
-                                        <div class="work-btn">
-                                            <a href="javascript:void(0)" class="open-portfolio-modal" 
-                                               data-portfolio="{{ $projectId }}"
-                                               data-title="{{ $projectTitle }}"
-                                               data-desc="{{ $projectDesc }}"
-                                               data-link="{{ $projectLink }}"
-                                               data-media-type="{{ $projectMediaType }}"
-                                               data-media-src="{{ $projectMediaSrc }}">
-                                                <img src="{{ asset('images/arrrow-light.svg') }}" alt="Arrow">
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        @endforeach
+                        @endforelse
                     </div>
+
+                    <x-vcms.add resource="projects" :fields="$projectFields" label="project" />
                 </div>
 
                 @if ($totalPages > 1)
@@ -389,32 +292,41 @@
                 }
             });
 
-            // Initial filter - show only page 1
+            // Initial filter - show only page 1 (images are loaded by now: this runs on window load)
             $portfolio.isotope({ filter: getIsotopeFilter() });
-
-            // Re-layout after images loaded
-            $portfolio.imagesLoaded().progress(function() {
-                $portfolio.isotope('layout');
-            });
         }
     });
+
+    // Number the pages within the current filter, so a filtered list starts on page 1 too
+    function paginate() {
+        var $all = $('.portfolio-item');
+        var $matching = currentFilter === '*' ? $all : $all.filter(currentFilter);
+
+        $all.attr('data-page', 0);
+        $matching.each(function (index) {
+            $(this).attr('data-page', Math.floor(index / portfolioProjectsPerPage) + 1);
+        });
+    }
 
     // Category filter click handler
     $('.our-work-nav ul li a').on('click', function(e) {
         e.preventDefault();
-        
+        // function.js binds a plain filter (no pages) to the same links later; this handler replaces it here.
+        e.stopImmediatePropagation();
+
         var $this = $(this);
         var filterValue = $this.attr('data-filter');
-        
+
         $('.our-work-nav ul li a').removeClass('active-btn');
         $this.addClass('active-btn');
-        
+
         // Update current filter
         currentFilter = filterValue;
-        
+
         // Reset to page 1 when changing filter
         currentPortfolioPage = 1;
-        
+        paginate();
+
         // Count visible items for this filter across all pages
         var visibleCount = 0;
         if (filterValue === '*') {

@@ -114,7 +114,7 @@ Semua tabel daftar punya `id`, `sort_order` (int), `is_active` (bool, default tr
 | `services` | `slug` (dibuat sekali dari nama), `name`, `summary`, `image`, `icon`, `feature_image`, `description` (paragraf dipisah baris kosong), `benefits_title`, `benefits_intro` | Home (tab), Services, Service detail |
 | `service_benefits` | `service_id`, `text` | Service detail |
 | `service_faqs` | `service_id`, `question`, `answer` | Service detail |
-| `projects` | `slug`, `title`, `category`, `media_type` (image/video), `media_url`, `thumbnail_path`, `description`, `client`, `link` | Home (our work), Portfolio |
+| `projects` | `title`, `description`, `media_type` (video/image), `video_url` (YouTube), `image`, `link` (opsional, http/https) | Home (our work: 6 video + 6 desain), Portfolio, Portfolio experiment |
 | `pricing_plans` | `name`, `price`, `period`, `description`, `is_featured`, `button_text`, `button_link` | Pricing |
 | `pricing_features` | `pricing_plan_id`, `text` | Pricing |
 | `page_list_items` | `page`, `group` (about_list, vision, mission, pricing_benefits), `text`, `icon_path` | About, Pricing |
@@ -168,7 +168,7 @@ Index di project ini terutama untuk **keabsahan data** (unik, relasi), baru kemu
 | Jenis | Kolom | Cara di migration |
 |---|---|---|
 | Primary key | `id` semua tabel | `$table->id()` |
-| Unique | `page_settings.key`, `services.slug`, `projects.slug`, `team_members.slug` | `->unique()` |
+| Unique | `page_settings.key`, `services.slug`, `team_members.slug` | `->unique()` |
 | Foreign key | kolom `*_id` di tabel anak | `->foreignId('service_id')->constrained()->cascadeOnDelete()` **plus** `->index()` eksplisit, karena SQLite dan PostgreSQL tidak membuat index FK otomatis |
 | Daftar | `(is_active, sort_order)` di setiap tabel daftar | `$table->index(['is_active', 'sort_order'])` |
 | Daftar per kategori/grup | `faqs (category, is_active, sort_order)`, `projects (category, is_active, sort_order)`, `page_list_items (page, group, sort_order)` | index gabungan |

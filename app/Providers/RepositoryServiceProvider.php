@@ -8,6 +8,7 @@ use App\Repositories\Contracts\CounterRepositoryInterface;
 use App\Repositories\Contracts\FaqRepositoryInterface;
 use App\Repositories\Contracts\PageSettingRepositoryInterface;
 use App\Repositories\Contracts\ProcessStepRepositoryInterface;
+use App\Repositories\Contracts\ProjectRepositoryInterface;
 use App\Repositories\Contracts\ServiceBenefitRepositoryInterface;
 use App\Repositories\Contracts\ServiceFaqRepositoryInterface;
 use App\Repositories\Contracts\ServiceRepositoryInterface;
@@ -22,6 +23,7 @@ use App\Repositories\Eloquent\EloquentCounterRepository;
 use App\Repositories\Eloquent\EloquentFaqRepository;
 use App\Repositories\Eloquent\EloquentPageSettingRepository;
 use App\Repositories\Eloquent\EloquentProcessStepRepository;
+use App\Repositories\Eloquent\EloquentProjectRepository;
 use App\Repositories\Eloquent\EloquentServiceBenefitRepository;
 use App\Repositories\Eloquent\EloquentServiceFaqRepository;
 use App\Repositories\Eloquent\EloquentServiceRepository;
@@ -47,6 +49,7 @@ class RepositoryServiceProvider extends ServiceProvider
         ClientLogoRepositoryInterface::class => EloquentClientLogoRepository::class,
         ToolRepositoryInterface::class => EloquentToolRepository::class,
         ProcessStepRepositoryInterface::class => EloquentProcessStepRepository::class,
+        ProjectRepositoryInterface::class => EloquentProjectRepository::class,
         AchievementRepositoryInterface::class => EloquentAchievementRepository::class,
         CounterRepositoryInterface::class => EloquentCounterRepository::class,
         TeamMemberRepositoryInterface::class => EloquentTeamMemberRepository::class,

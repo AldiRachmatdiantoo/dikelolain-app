@@ -53,6 +53,15 @@ return [
     'team.header.title' => ['type' => 'rich_text', 'label' => 'Judul header', 'default' => 'The minds behind <span>the magic</span>'],
     'team.header.breadcrumb' => ['type' => 'text', 'label' => 'Breadcrumb', 'default' => 'Our Team'],
 
+    // Our work section (Home), Portfolio page and the horizontal slider experiment
+    'work.sub_title' => ['type' => 'text', 'label' => 'Sub judul', 'default' => 'our work'],
+    'work.title' => ['type' => 'rich_text', 'label' => 'Judul', 'default' => 'Our latest <span>Projects</span>'],
+    'work.button_text' => ['type' => 'text', 'label' => 'Teks tombol', 'default' => 'view all portfolio'],
+    'work.button_link' => ['type' => 'url', 'label' => 'Link tombol', 'default' => '/portfolio'],
+    'portfolio.header.title' => ['type' => 'rich_text', 'label' => 'Judul header', 'default' => 'Our <span>portfolio</span>'],
+    'portfolio.header.breadcrumb' => ['type' => 'text', 'label' => 'Breadcrumb', 'default' => 'Portfolio'],
+    'portfolio.experiment_breadcrumb' => ['type' => 'text', 'label' => 'Breadcrumb halaman slider', 'default' => 'Portfolio Experiment'],
+
     // Creative tools section (Home, Services, Pricing, Testimonials)
     'tools.sub_title' => ['type' => 'text', 'label' => 'Sub judul', 'default' => 'creative toolkit'],
     'tools.title' => ['type' => 'rich_text', 'label' => 'Judul', 'default' => 'Our toolbox for <span>innovation</span>'],

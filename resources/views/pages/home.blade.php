@@ -182,128 +182,29 @@
         <div class="container">
             <div class="row section-row align-items-center">
                 <div class="col-lg-7">
-                    <div class="section-title">
-                        @php
-                            $workSubTitle = getContent($sections, 'our-work', 'work_sub_title', 'our work');
-                            $workMainTitle = getContent($sections, 'our-work', 'work_main_title', 'Our latest <span>Projects</span>');
-                        @endphp
-                        <h3 class="wow fadeInUp">{{ $workSubTitle }}</h3>
-                        <h2 class="text-anime-style-2" data-cursor="-opaque">{!! $workMainTitle !!}</h2>
-                    </div>
+                    <x-vcms.settings :keys="['work.sub_title', 'work.title']" label="Judul" class="section-title">
+                        <h3 class="wow fadeInUp">{{ $settings->get('work.sub_title') }}</h3>
+                        <h2 class="text-anime-style-2" data-cursor="-opaque">{!! $settings->get('work.title') !!}</h2>
+                    </x-vcms.settings>
                 </div>
                 <div class="col-lg-5">
-                    <div class="section-btn wow fadeInUp" data-wow-delay="0.2s">
-                        @php
-                            $workBtnText = getContent($sections, 'our-work', 'work_btn_text', 'view all portfolio');
-                            $workBtnLink = getContent($sections, 'our-work', 'work_btn_link', route('portfolio'));
-                        @endphp
-                        <a href="{{ $workBtnLink }}" class="btn-default">{{ $workBtnText }}</a>
-                    </div>
+                    <x-vcms.settings :keys="['work.button_text', 'work.button_link']" label="Tombol" class="section-btn wow fadeInUp" data-wow-delay="0.2s">
+                        <a href="{{ $settings->get('work.button_link') }}" class="btn-default">{{ $settings->get('work.button_text') }}</a>
+                    </x-vcms.settings>
                 </div>
             </div>
 
-            @php
-                $allProjects = [];
-                $workSection = collect($sections)->firstWhere('key', 'our-work');
-
-                if ($workSection && isset($workSection['contents'])) {
-                    $projectIds = [];
-                    foreach ($workSection['contents'] as $content) {
-                        if (preg_match('/project-list-1_project_(.+)_title$/', $content['key'], $matches)) {
-                            $projectIds[$matches[1]] = $content['value'];
-                        }
-                    }
-                    foreach ($projectIds as $id => $title) {
-                        $mediaType = getContent($sections, 'our-work', "project-list-1_project_{$id}_media_type", 'video');
-                        $allProjects[] = [
-                            'id' => $id,
-                            'title' => $title,
-                            'media_type' => $mediaType
-                        ];
-                    }
-                }
-
-                // Separate by media type: max 6 video and max 6 design (image)
-                $videoProjects = array_filter($allProjects, fn($p) => $p['media_type'] === 'video');
-                $imageProjects = array_filter($allProjects, fn($p) => $p['media_type'] === 'image');
-
-                // Take max 6 of each type
-                $videoProjects = array_slice($videoProjects, 0, 6);
-                $imageProjects = array_slice($imageProjects, 0, 6);
-
-                // Combine: videos first, then images (or interleave if preferred)
-                $projects = array_merge($videoProjects, $imageProjects);
-            @endphp
-
+            {{-- The first six videos, then the first six designs; order and add on the Portfolio page. --}}
             <div class="row">
-                @if (count($projects) == 0)
+                @forelse ($projects as $project)
+                    <div class="col-lg-4 col-md-6">
+                        @include('partials.work-item', ['delay' => 0.2 * ($loop->index % 3), 'movable' => false, 'ratioImage' => true])
+                    </div>
+                @empty
                     <div class="col-12 text-center py-5" style="color: #888;">
                         <p>No projects yet.</p>
                     </div>
-                @endif
-
-                @foreach ($projects as $index => $project)
-                    @php
-                        $projectId = $project['id'];
-                        $projectTitle = getContent($sections, 'our-work', "project-list-1_project_{$projectId}_title", $project['title'] ?? 'Project Title');
-                        $projectDesc = getContent($sections, 'our-work', "project-list-1_project_{$projectId}_desc", 'Project description');
-                        $projectLink = getContent($sections, 'our-work', "project-list-1_project_{$projectId}_link", '#');
-                        $projectMediaSrc = getContent($sections, 'our-work', "project-list-1_project_{$projectId}_media_src", 'https://www.youtube.com/embed/EszaEO236lw');
-                        $projectMediaType = $project['media_type'] ?? 'video';
-                    @endphp
-                    <div class="col-lg-4 col-md-6">
-                        <div class="work-item wow fadeInUp" data-wow-delay="{{ 0.2 * ($index % 3) }}s">
-                            <div class="work-image">
-                                <div class="ratio" style="--bs-aspect-ratio: 76%; border-radius: 30px; overflow: hidden;">
-                                    @if ($projectMediaType == 'video')
-                                        @php
-                                            $embedUrl = $projectMediaSrc;
-                                            if (str_contains($embedUrl, 'youtube.com/embed/')) {
-                                                $embedUrl = str_replace('youtube.com/embed/', 'youtube-nocookie.com/embed/', $embedUrl);
-                                            } elseif (str_contains($embedUrl, 'youtu.be/')) {
-                                                preg_match('/youtu\.be\/([a-zA-Z0-9_-]+)/', $embedUrl, $matches);
-                                                if (!empty($matches[1])) {
-                                                    $embedUrl = 'https://www.youtube-nocookie.com/embed/' . $matches[1];
-                                                }
-                                            } elseif (str_contains($embedUrl, 'youtube.com/watch')) {
-                                                preg_match('/[?&]v=([a-zA-Z0-9_-]+)/', $embedUrl, $matches);
-                                                if (!empty($matches[1])) {
-                                                    $embedUrl = 'https://www.youtube-nocookie.com/embed/' . $matches[1];
-                                                }
-                                            }
-                                        @endphp
-                                        <iframe src="{{ $embedUrl }}" title="YouTube video player"
-                                            frameborder="0"
-                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                            referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
-                                        </iframe>
-                                    @else
-                                        <figure class="image-anime">
-                                            <img src="{{ asset($projectMediaSrc) }}" alt="{{ $projectTitle }}">
-                                        </figure>
-                                    @endif
-                                </div>
-                            </div>
-                            <div class="work-body">
-                                <div class="work-content">
-                                    <h3><a href="javascript:void(0)" class="portfolio-title">{{ $projectTitle }}</a></h3>
-                                    <p>{{ $projectDesc }}</p>
-                                </div>
-                                <div class="work-btn">
-                                    <a href="javascript:void(0)" class="open-portfolio-modal"
-                                       data-portfolio="{{ $projectId }}"
-                                       data-title="{{ $projectTitle }}"
-                                       data-desc="{{ $projectDesc }}"
-                                       data-link="{{ $projectLink }}"
-                                       data-media-type="{{ $projectMediaType }}"
-                                       data-media-src="{{ $projectMediaSrc }}">
-                                        <img src="{{ asset('images/arrrow-light.svg') }}" alt="Arrow">
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                @endforeach
+                @endforelse
             </div>
         </div>
     </div>
