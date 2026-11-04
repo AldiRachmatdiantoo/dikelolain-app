@@ -14,7 +14,7 @@
 
 **Mode:** eksekusi otomatis atas instruksi pemilik (3 Nov 2026): kerjakan PBI berurutan tanpa bertanya, uji setiap PBI (`php artisan test` + cek browser bila terlihat), commit + push per PBI, kendala dicatat di [kendala_backlog.md](kendala_backlog.md).
 
-**Sedang dikerjakan:** tidak ada. **Semua PBI yang bisa dikerjakan tanpa pemilik sudah selesai** (Epic 0–4, lalu 501, 503, 506, 509–515; 510–515 atas aba-aba pemilik 4 Nov 2026). Sisanya menunggu pemilik: 502 konten asli (KD-2), 504 dan 507 hosting (KD-1). PBI-508 (cache) belum perlu, 505 belum diisi. Lanjutkan begitu salah satu kendala di [kendala_backlog.md](kendala_backlog.md) terjawab. Selesai: Epic 0–4 (rombak arsitektur tuntas). Tabel dan model konten lama sudah tidak ada; cadangan isi lamanya di `storage/app/private/backups/` (lihat kendala_backlog).
+**Sedang dikerjakan:** tidak ada. **Semua PBI yang bisa dikerjakan tanpa pemilik sudah selesai** (Epic 0–4, lalu 501, 503, 506, 509–516; 510–516 atas aba-aba pemilik 4 Nov 2026). Sisanya menunggu pemilik: 502 konten asli (KD-2), 504 dan 507 hosting (KD-1). PBI-508 (cache) belum perlu, 505 belum diisi. Lanjutkan begitu salah satu kendala di [kendala_backlog.md](kendala_backlog.md) terjawab. Selesai: Epic 0–4 (rombak arsitektur tuntas). Tabel dan model konten lama sudah tidak ada; cadangan isi lamanya di `storage/app/private/backups/` (lihat kendala_backlog).
 
 **Contoh pola entitas = Testimonial** (memakai kerangka daftar bersama, [ARCHITECTURE §7.1](ARCHITECTURE.md#71-kerangka-bersama-untuk-daftar-terurut)). Entitas berikutnya meniru file-file ini:
 - `database/migrations/2026_11_03_000003_create_testimonials_table.php`, `app/Models/Testimonial.php` (scope + accessor `logo_url`/`photo_url`)
@@ -35,12 +35,12 @@
 
 | Status | Jumlah | PBI |
 |---|---|---|
-| ✅ Selesai | 55 | **001–005** (seluruh Epic 0), **101–111** (seluruh Epic 1), **201–210** (seluruh Epic 2), **301–313** (seluruh Epic 3), **401–406** (seluruh Epic 4), **501**, **503**, **506**, **509–515** |
+| ✅ Selesai | 56 | **001–005** (seluruh Epic 0), **101–111** (seluruh Epic 1), **201–210** (seluruh Epic 2), **301–313** (seluruh Epic 3), **401–406** (seluruh Epic 4), **501**, **503**, **506**, **509–516** |
 | ⏳ Sedang dikerjakan | 0 | – |
 | ⏸️ Menunggu pemilik | 3 | **502** (konten asli, KD-2), **504**, **507** (hosting, lihat [kendala_backlog.md](kendala_backlog.md) KD-1) |
 | ❌ Belum | 2 | **505** (belum diisi), **508** (cache, hanya bila perlu) |
 
-Total **60 PBI** dalam 6 epic:
+Total **61 PBI** dalam 6 epic:
 
 | Epic | Isi | PBI | Selesai |
 |---|---|---|---|
@@ -49,7 +49,7 @@ Total **60 PBI** dalam 6 epic:
 | 2 | Fondasi VCMS baru + FAQ | 201–210 | 10/10 ✅ |
 | 3 | Migrasi entitas | 301–313 | 13/13 ✅ |
 | 4 | Pembersihan akhir | 401–406 | 6/6 ✅ |
-| 5 | Setelah rombak (fitur & rilis) | 501–515 | 10/15 |
+| 5 | Setelah rombak (fitur & rilis) | 501–516 | 11/16 |
 
 **Urutan wajib:** Epic 0 → 1 → 2 → 3 → 4. Fitur baru (Epic 5) baru dikerjakan setelah Epic 4, kecuali yang tidak menyentuh model konten (lihat [PBI-501](#epic-5-setelah-rombak-fitur--rilis)).
 
@@ -153,7 +153,7 @@ Urutan dari yang paling sederhana. Setiap PBI mengikuti checklist [ARCHITECTURE 
 
 ### Epic 5: Setelah rombak (fitur & rilis)
 
-Fitur dan persiapan rilis setelah rombak arsitektur. PBI-509 sampai 515 ditambahkan selama eksekusi.
+Fitur dan persiapan rilis setelah rombak arsitektur. PBI-509 sampai 516 ditambahkan selama eksekusi.
 
 | PBI | Judul | Status | Catatan |
 |---|---|---|---|
@@ -172,6 +172,7 @@ Fitur dan persiapan rilis setelah rombak arsitektur. PBI-509 sampai 515 ditambah
 | 513 | Pangkas CSS template yang tidak dipakai: `custom.css` (6.599 baris), Font Awesome, dan Bootstrap di dalam `css/site.min.css` | ✅ 4 Nov 2026 | `css/site.min.css` turun dari **416 KB ke 163 KB** (gzip 73 KB → 30 KB, sekitar 60% lebih kecil). `npm run build:site` kini memakai PurgeCSS: kelas yang tidak disebut di `resources/views`, `resources/js` (daftar `scan` di `site-assets.json`), atau JS bundle ikut dibuang. File sumber tidak berubah, dan panel admin tetap memakai file penuhnya. Kelas Swiper dan SlickNav dikecualikan karena sebagian dirangkai saat jalan; kelas plugin lain tertangkap karena file JS-nya ikut dipindai. Yang terbuang (181 selektor dari `custom.css` dan `mousecursor.css`) sudah ditinjau: sisa template seperti blog (`.post-*`), `hero-slider`, `team-social-icon`, `design-process`. **Konsekuensi:** kelas yang baru dipakai di view butuh build ulang, jadi hash bundle CSS kini mencakup view dan JS; `SiteAssetsTest` gagal bila lupa `npm run build:site` setelah mengubah view. **Cara cek:** rekaman computed style diulang dan dibandingkan dengan sebelum dipangkas: 54 rekaman pengunjung (13 halaman + login, lebar 1280 dan 390, dengan dan tanpa JavaScript), 12 mode edit, 28 admin, **semuanya sama persis**, kecuali satu rekaman Analytics pembanding yang tampaknya diambil sebelum stylesheet termuat (rekaman ulangnya sama). Keadaan setelah interaksi dibandingkan langsung CSS pangkasan vs CSS penuh pada DOM yang sama: menu HP terbuka, scroll Home, accordion FAQ, modal project, paginasi + filter, video diputar, slider + filter, error validasi Contact, skillbar, status kursor, Pricing HP: sama. Tidak dipangkas lebih jauh: CSS komponen Bootstrap yang disebut di `bootstrap.min.js` (carousel, tooltip, dan lain-lain) tetap ada demi keamanan. 442 test hijau |
 | 514 | Font ikon dipangkas: bundle publik hanya memuat ikon yang dipakai | ✅ 4 Nov 2026 | Font ikon per halaman turun dari 254 KB ke ±5 KB (solid 147 KB → 3 KB, brands 107 KB → 1,6 KB). `npm run build:site` membaca ikon yang tersisa di CSS setelah PurgeCSS (`content` dan `--fa`), membuat font kecil di `public/webfonts/site/` lewat paket `subset-font`, lalu mengganti URL `@font-face` di bundle (dengan `?v=` hash, tanpa `.ttf`). Admin tetap memakai `all.min.css` dan font penuh. Kelas ikon hanya ada di view dan JS (field ikon VCMS berupa gambar; ikon `EditablePages` hanya tampil di admin), jadi daftar ikon dari CSS lengkap. Konsekuensi: ikon baru perlu build ulang. **Cara cek:** isi tiap font pangkasan dibandingkan dengan font penuh, tidak ada ikon yang hilang atau berlebih; 49 ikon digambar di canvas dari kedua font dan hasilnya identik; 24 halaman publik (isi sitemap, slider eksperimen, 404) hanya memakai ikon itu dan hanya mengunduh font kecil. Build ulang menghasilkan file yang sama persis. 443 test hijau |
 | 515 | Video hero tidak diunduh di HP | ✅ 4 Nov 2026 | Dulu browser mengunduh seluruh video (terukur 20 dari 20 detik; 12,3 MB, sekitar 90% berat Home), termasuk di HP. Kini `<source media="(min-width: 768px)">` membuat HP melewati video (browser lama yang mengabaikan `media` tetap mengunduh seperti dulu), ditambah `poster` dari setting baru `hero.poster` di tombol "Gambar & video". Lebar 768 px ke atas tetap memutar video. Home di lebar 375 kini 27 request dan 887 KB sebelum gzip, sebelum di-scroll. **Temuan:** belum ada gambar yang layak dipakai: `images/hero-bg.jpg` hanya placeholder abu-abu bertuliskan ukuran, ffmpeg tidak terpasang, dan video demo ada di domain lain. Jadi `hero.poster` kosong secara default dan HP menampilkan latar polos sampai pemilik mengunggah gambar (KD-2). Gambar tampil redup karena tertutup gradient gelap `.hero::before`, sama seperti video. **Cara cek** dengan akun QA sementara (dihapus setelahnya, bersama setting dan file ujinya): lebar 375 tanpa poster dan dengan poster hasil unggah lewat mode edit, tidak ada request video; lebar 768 dan desktop video tetap berputar. Test: `SitePagesSettingsTest` (2 baru). 445 test hijau |
+| 516 | Video hero dikompres dan disimpan sendiri | ✅ 4 Nov 2026 | Atas permintaan pemilik, yang memakai video bola dunia bawaan demo Rovex seterusnya (template sudah dibeli; apakah lisensinya mencakup video demo belum dipastikan, lihat KD-2). Video 4096×2304, 12,3 MB → `public/videos/hero.mp4` 1920×1080, 3,0 MB (turun 75%), warnanya dibuang karena CSS sudah menampilkannya hitam-putih. Setelan ffmpeg: `scale=1920:-2:flags=lanczos,hue=s=0`, `libx264 -preset veryslow -crf 33`, `aq-mode=3:aq-strength=1.2:deblock=-2,-2`, `-an`, `-movflags +faststart`. Dipilih dari 7 versi (2,0–4,7 MB), SSIM 0,965 terhadap aslinya. Garis paling tipis sedikit melunak bila dilihat pada ukuran penuh, dan sebagian besar tertutup lapisan gelap hero. Situs tidak lagi bergantung pada `demo.awaikenthemes.com`. Default setting `/videos/hero.mp4` (dengan garis miring supaya lolos validasi nilai video). ffmpeg dipasang di folder sementara, tidak masuk proyek. Dicek di browser: lebar 1280 video lokal berputar dan berulang, lebar 375 tetap tanpa video. `php artisan serve` tidak mendukung Range, jadi di lokal video tidak bisa dilompati; pemutaran dan pengulangan tetap jalan. 446 test hijau |
 
 ---
 
@@ -310,3 +311,4 @@ Ringkasan hasil membaca kode di commit `02fa1fd` (isi sama dengan branch `back-e
 | 4 Nov 2026 | PBI-514 (pangkas font ikon) dan 515 (video hero tidak diunduh di HP) dicatat atas permintaan pemilik, dari hasil ukur berat halaman; jumlah PBI dikoreksi (angka lama 55 keliru, seharusnya 58, kini 60) |
 | 4 Nov 2026 | PBI-514 selesai: font ikon per halaman 254 KB → ±5 KB, ikon terbukti sama dengan font penuh; 443 test hijau |
 | 4 Nov 2026 | PBI-515 selesai: HP tidak lagi mengunduh video hero, gambar penggantinya bisa diunggah di mode edit; semua PBI yang tidak menunggu pemilik selesai; 445 test hijau |
+| 4 Nov 2026 | PBI-516 selesai: video hero 12,3 MB → 3,0 MB dan disimpan di proyek, situs lepas dari server demo Awaiken; 446 test hijau |

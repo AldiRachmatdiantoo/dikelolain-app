@@ -40,9 +40,15 @@ class SitePagesSettingsTest extends TestCase
         $this->get('/')
             ->assertOk()
             ->assertSee('Where <span>creativity</span> meets strategy', false)
-            ->assertSee('<source src="https://demo.awaikenthemes.com/assets/videos/rovex-video-1.mp4" type="video/mp4"', false)
+            ->assertSee('<source src="' . asset('videos/hero.mp4') . '" type="video/mp4"', false)
             ->assertSee('<a href="/portfolio" class="btn-default">view our portfolio</a>', false)
             ->assertSeeInOrder(array_map(fn ($i) => asset("images/hero-img-{$i}.jpg"), range(1, 5)), false);
+    }
+
+    public function test_the_default_hero_video_is_a_small_file_of_our_own(): void
+    {
+        $this->assertFileExists(public_path('videos/hero.mp4'));
+        $this->assertLessThan(4 * 1024 * 1024, filesize(public_path('videos/hero.mp4')));
     }
 
     public function test_home_hero_shows_saved_values(): void
