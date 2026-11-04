@@ -70,6 +70,21 @@ class SiteAssetsTest extends TestCase
         }
     }
 
+    public function test_the_icon_fonts_only_hold_the_icons_the_site_uses(): void
+    {
+        $css = file_get_contents(public_path('css/site.min.css'));
+
+        foreach (['fa-brands-400', 'fa-regular-400', 'fa-solid-900', 'fa-v4compatibility'] as $font) {
+            $this->assertStringContainsString("../webfonts/site/{$font}.woff2?v=", $css);
+            $this->assertStringNotContainsString("../webfonts/{$font}", $css, "{$font} is loaded in full");
+            $this->assertLessThan(10 * 1024, filesize(public_path("webfonts/site/{$font}.woff2")));
+        }
+
+        // Admin pages load Font Awesome on their own, with every icon.
+        $this->assertStringContainsString('../webfonts/fa-solid-900.woff2', file_get_contents(public_path('css/all.min.css')));
+        $this->assertGreaterThan(100 * 1024, filesize(public_path('webfonts/fa-solid-900.woff2')));
+    }
+
     public function test_pages_load_only_the_bundles(): void
     {
         $html = $this->get('/')->assertOk()->getContent();

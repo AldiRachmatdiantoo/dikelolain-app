@@ -354,6 +354,7 @@ Urutan prioritas bila website terasa lambat:
    - `function.js` berbentuk IIFE dengan satu fungsi `init*` per fitur. Script khusus satu halaman (filter dan paginasi Portfolio/Services, slider eksperimen) tetap di `@push('scripts')` halaman itu, juga IIFE, tanpa fungsi global, `onclick`, atau gaya lewat `.css()`: tampilan diatur dengan kelas dan atribut `hidden`.
    - Video YouTube tampil sebagai thumbnail (`.video-facade`); pemutarnya baru dimuat saat diklik.
    - CSS yang tidak dipakai dibuang saat build (PBI-513, PurgeCSS): kelas harus tertulis utuh di view, `resources/js`, atau JS bundle. Jangan merangkai nama kelas (`'col-' . $n`); kelas plugin yang dirangkai saat jalan masuk daftar `runtimeClasses` di `scripts/build-site.mjs`. File sumber dan panel admin tidak ikut dipangkas.
+   - Font ikon juga dipangkas saat build (PBI-514, `subset-font`): `public/webfonts/site/` hanya berisi ikon yang tersisa di CSS, jadi ikon baru cukup ditulis kelasnya di view lalu `npm run build:site`. Panel admin tetap memakai font penuh di `public/webfonts/`.
 4. **Optimasi rilis:** `php artisan optimize`, OPcache, kompresi gzip dan header cache untuk `css/`, `js/`, `images/` (PBI-507).
 5. **Cache data halaman** bila 1–4 belum cukup.
 
