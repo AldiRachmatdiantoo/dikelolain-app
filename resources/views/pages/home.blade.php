@@ -7,8 +7,9 @@
     <!-- Hero Section Start -->
     <div class="hero">
         <div class="hero-bg-video">
-            <video autoplay muted loop id="myVideo">
-                <source src="{{ $settings->url('hero.video') }}" type="video/mp4">
+            <video autoplay muted loop id="myVideo" @if ($settings->get('hero.poster')) poster="{{ $settings->url('hero.poster') }}" @endif>
+                {{-- Phones skip the video, the heaviest file on the site, and show the poster instead. --}}
+                <source src="{{ $settings->url('hero.video') }}" type="video/mp4" media="(min-width: 768px)">
             </video>
         </div>
         <div class="container">
@@ -27,7 +28,7 @@
 
                 <div class="col-lg-5">
                     {{-- The background video sits behind the content, so it is edited with the images. --}}
-                    <x-vcms.settings :keys="['hero.image_1', 'hero.image_2', 'hero.image_3', 'hero.image_4', 'hero.image_5', 'hero.video']" label="Gambar & video" class="hero-images">
+                    <x-vcms.settings :keys="['hero.image_1', 'hero.image_2', 'hero.image_3', 'hero.image_4', 'hero.image_5', 'hero.video', 'hero.poster']" label="Gambar & video" class="hero-images">
                         @foreach ([[1, 2], [3], [4, 5]] as $box => $images)
                             <div class="{{ $box === 1 ? 'hero-image-box-2' : 'hero-image-box-1' }}">
                                 @foreach ($images as $i)

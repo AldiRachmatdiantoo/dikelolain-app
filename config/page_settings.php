@@ -113,6 +113,7 @@ return [
 
     // Hero section (Home)
     'hero.video' => ['type' => 'video', 'label' => 'Video latar', 'default' => 'https://demo.awaikenthemes.com/assets/videos/rovex-video-1.mp4'],
+    'hero.poster' => ['type' => 'image', 'label' => 'Gambar pengganti video (tampil di HP)', 'default' => ''],
     'hero.title' => ['type' => 'rich_text', 'label' => 'Judul', 'default' => 'Where <span>creativity</span> meets strategy'],
     'hero.description' => ['type' => 'textarea', 'label' => 'Deskripsi', 'default' => 'We\'re a full-service design agency specializing in branding, web design, and creative strategies that elevate businesses.'],
     'hero.button_text' => ['type' => 'text', 'label' => 'Teks tombol', 'default' => 'view our portfolio'],

@@ -40,7 +40,7 @@ class SitePagesSettingsTest extends TestCase
         $this->get('/')
             ->assertOk()
             ->assertSee('Where <span>creativity</span> meets strategy', false)
-            ->assertSee('<source src="https://demo.awaikenthemes.com/assets/videos/rovex-video-1.mp4" type="video/mp4">', false)
+            ->assertSee('<source src="https://demo.awaikenthemes.com/assets/videos/rovex-video-1.mp4" type="video/mp4"', false)
             ->assertSee('<a href="/portfolio" class="btn-default">view our portfolio</a>', false)
             ->assertSeeInOrder(array_map(fn ($i) => asset("images/hero-img-{$i}.jpg"), range(1, 5)), false);
     }
@@ -57,6 +57,20 @@ class SitePagesSettingsTest extends TestCase
             ->assertSee('<a href="/services" class="btn-default">lihat layanan</a>', false)
             ->assertSee('<source src="' . asset('storage/uploads/settings/hero.mp4') . '"', false)
             ->assertDontSee('meets strategy');
+    }
+
+    public function test_phones_skip_the_hero_video(): void
+    {
+        $this->get('/')
+            ->assertSee('type="video/mp4" media="(min-width: 768px)"', false)
+            ->assertDontSee('poster=', false);
+    }
+
+    public function test_the_hero_poster_replaces_the_video_on_phones(): void
+    {
+        PageSetting::create(['key' => 'hero.poster', 'value' => 'storage/uploads/settings/hero.webp']);
+
+        $this->get('/')->assertSee('poster="' . asset('storage/uploads/settings/hero.webp') . '"', false);
     }
 
     public function test_contact_page_shows_the_defaults(): void
