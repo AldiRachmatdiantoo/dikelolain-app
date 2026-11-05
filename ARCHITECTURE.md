@@ -358,8 +358,6 @@ Urutan prioritas bila website terasa lambat:
 4. **Optimasi rilis** (PBI-507, PBI-517): `scripts/deploy.sh` menjalankan `php artisan optimize`, dan OPcache diatur di `php.ini` server. `public/.htaccess` mengompres teks (brotli/gzip) dan mengatur cache browser: setahun untuk URL berversi (`?v=`, `build/assets/`), 30 hari untuk gambar, font, dan video, satu jam untuk CSS/JS tanpa versi.
 5. **Cache data halaman** bila 1–4 belum cukup. Diukur 5 Nov 2026: belum perlu, database hanya 1–3 ms per halaman (PBI-508).
 
-**Versi statis** (PBI-518): `php artisan site:export <alamat>` menyimpan halaman publik ke `dist/` untuk host tanpa PHP. Daftar halamannya dari `SitemapService`, ditambah `ExportStaticSite::EXTRA_PAGES` untuk halaman di luar sitemap. Halaman publik baru harus masuk salah satunya, dan tidak boleh bergantung pada server selain form kontak, yang tetap membuka WhatsApp bila penyimpanan gagal.
-
 Aturan cache:
 
 - **Tanpa Redis.** Driver `database` (default `.env.example`) atau `file` sudah cukup untuk website ini. Redis baru dipertimbangkan bila aplikasi berjalan di beberapa server, ada antrean berat, atau trafik sangat tinggi.
