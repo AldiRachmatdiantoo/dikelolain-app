@@ -14,7 +14,7 @@
 
 **Mode:** eksekusi otomatis atas instruksi pemilik (3 Nov 2026): kerjakan PBI berurutan tanpa bertanya, uji setiap PBI (`php artisan test` + cek browser bila terlihat), commit + push per PBI, kendala dicatat di [kendala_backlog.md](kendala_backlog.md).
 
-**Sedang dikerjakan:** tidak ada. **Semua PBI yang bisa dikerjakan tanpa pemilik sudah selesai** (Epic 0–4, lalu 501, 503, 506, 509–517; 510–517 atas aba-aba pemilik 4–5 Nov 2026). Sisanya menunggu pemilik: 502 konten asli (KD-2), 504 dan 507 akun hosting (KD-1; kodenya sudah siap dan digladikan, langkahnya di [DEPLOY.md](DEPLOY.md)). PBI-508 (cache) diukur dan dinilai tidak perlu, 505 belum diisi. Ekspor statis untuk Vercel sempat dibuat lalu dibatalkan pemilik 5 Nov 2026 (kodenya ada di commit `f7af7c5` bila dibutuhkan lagi). Belum ada rencana deploy: pemilik menyiapkan postingan LinkedIn tentang refactor ini. Lanjutkan begitu salah satu kendala di [kendala_backlog.md](kendala_backlog.md) terjawab. Selesai: Epic 0–4 (rombak arsitektur tuntas). Tabel dan model konten lama sudah tidak ada; cadangan isi lamanya di `storage/app/private/backups/` (lihat kendala_backlog).
+**Sedang dikerjakan:** tidak ada. **Semua PBI yang bisa dikerjakan tanpa pemilik sudah selesai** (Epic 0–4, lalu 501, 503, 506, 509–517, 519; 510–517 dan 519 atas aba-aba pemilik 4–5 Nov 2026). Sisanya menunggu pemilik: 502 konten asli (KD-2), 504 dan 507 akun hosting (KD-1; kodenya sudah siap dan digladikan, langkahnya di [DEPLOY.md](DEPLOY.md)). PBI-508 (cache) diukur dan dinilai tidak perlu, 505 belum diisi. Ekspor statis untuk Vercel sempat dibuat lalu dibatalkan pemilik 5 Nov 2026 (kodenya ada di commit `f7af7c5` bila dibutuhkan lagi). Belum ada rencana deploy: pemilik menyiapkan postingan LinkedIn tentang refactor ini. Lanjutkan begitu salah satu kendala di [kendala_backlog.md](kendala_backlog.md) terjawab. Selesai: Epic 0–4 (rombak arsitektur tuntas). Tabel dan model konten lama sudah tidak ada; cadangan isi lamanya di `storage/app/private/backups/` (lihat kendala_backlog).
 
 **Contoh pola entitas = Testimonial** (memakai kerangka daftar bersama, [ARCHITECTURE §7.1](ARCHITECTURE.md#71-kerangka-bersama-untuk-daftar-terurut)). Entitas berikutnya meniru file-file ini:
 - `database/migrations/2026_11_03_000003_create_testimonials_table.php`, `app/Models/Testimonial.php` (scope + accessor `logo_url`/`photo_url`)
@@ -35,12 +35,12 @@
 
 | Status | Jumlah | PBI |
 |---|---|---|
-| ✅ Selesai | 57 | **001–005** (seluruh Epic 0), **101–111** (seluruh Epic 1), **201–210** (seluruh Epic 2), **301–313** (seluruh Epic 3), **401–406** (seluruh Epic 4), **501**, **503**, **506**, **509–517** |
+| ✅ Selesai | 58 | **001–005** (seluruh Epic 0), **101–111** (seluruh Epic 1), **201–210** (seluruh Epic 2), **301–313** (seluruh Epic 3), **401–406** (seluruh Epic 4), **501**, **503**, **506**, **509–517**, **519** |
 | ⏳ Sedang dikerjakan | 0 | – |
 | ⏸️ Menunggu pemilik | 3 | **502** (konten asli, KD-2), **504**, **507** (hosting, lihat [kendala_backlog.md](kendala_backlog.md) KD-1) |
 | ❌ Belum | 2 | **505** (belum diisi), **508** (cache, diukur 5 Nov 2026: tidak perlu) |
 
-Total **62 PBI** dalam 6 epic:
+Total **63 PBI** dalam 6 epic:
 
 | Epic | Isi | PBI | Selesai |
 |---|---|---|---|
@@ -49,7 +49,7 @@ Total **62 PBI** dalam 6 epic:
 | 2 | Fondasi VCMS baru + FAQ | 201–210 | 10/10 ✅ |
 | 3 | Migrasi entitas | 301–313 | 13/13 ✅ |
 | 4 | Pembersihan akhir | 401–406 | 6/6 ✅ |
-| 5 | Setelah rombak (fitur & rilis) | 501–517 | 12/17 |
+| 5 | Setelah rombak (fitur & rilis) | 501–519 (518 batal) | 13/18 |
 
 **Urutan wajib:** Epic 0 → 1 → 2 → 3 → 4. Fitur baru (Epic 5) baru dikerjakan setelah Epic 4, kecuali yang tidak menyentuh model konten (lihat [PBI-501](#epic-5-setelah-rombak-fitur--rilis)).
 
@@ -174,6 +174,7 @@ Fitur dan persiapan rilis setelah rombak arsitektur. PBI-509 sampai 516 ditambah
 | 515 | Video hero tidak diunduh di HP | ✅ 4 Nov 2026 | Dulu browser mengunduh seluruh video (terukur 20 dari 20 detik; 12,3 MB, sekitar 90% berat Home), termasuk di HP. Kini `<source media="(min-width: 768px)">` membuat HP melewati video (browser lama yang mengabaikan `media` tetap mengunduh seperti dulu), ditambah `poster` dari setting baru `hero.poster` di tombol "Gambar & video". Lebar 768 px ke atas tetap memutar video. Home di lebar 375 kini 27 request dan 887 KB sebelum gzip, sebelum di-scroll. **Temuan:** belum ada gambar yang layak dipakai: `images/hero-bg.jpg` hanya placeholder abu-abu bertuliskan ukuran, ffmpeg tidak terpasang, dan video demo ada di domain lain. Jadi `hero.poster` kosong secara default dan HP menampilkan latar polos sampai pemilik mengunggah gambar (KD-2). Gambar tampil redup karena tertutup gradient gelap `.hero::before`, sama seperti video. **Cara cek** dengan akun QA sementara (dihapus setelahnya, bersama setting dan file ujinya): lebar 375 tanpa poster dan dengan poster hasil unggah lewat mode edit, tidak ada request video; lebar 768 dan desktop video tetap berputar. Test: `SitePagesSettingsTest` (2 baru). 445 test hijau |
 | 516 | Video hero dikompres dan disimpan sendiri | ✅ 4 Nov 2026 | Atas permintaan pemilik, yang memakai video bola dunia bawaan demo Rovex seterusnya (template sudah dibeli; apakah lisensinya mencakup video demo belum dipastikan, lihat KD-2). Video 4096×2304, 12,3 MB → `public/videos/hero.mp4` 1920×1080, 3,0 MB (turun 75%), warnanya dibuang karena CSS sudah menampilkannya hitam-putih. Setelan ffmpeg: `scale=1920:-2:flags=lanczos,hue=s=0`, `libx264 -preset veryslow -crf 33`, `aq-mode=3:aq-strength=1.2:deblock=-2,-2`, `-an`, `-movflags +faststart`. Dipilih dari 7 versi (2,0–4,7 MB), SSIM 0,965 terhadap aslinya. Garis paling tipis sedikit melunak bila dilihat pada ukuran penuh, dan sebagian besar tertutup lapisan gelap hero. Situs tidak lagi bergantung pada `demo.awaikenthemes.com`. Default setting `/videos/hero.mp4` (dengan garis miring supaya lolos validasi nilai video). ffmpeg dipasang di folder sementara, tidak masuk proyek. Dicek di browser: lebar 1280 video lokal berputar dan berulang, lebar 375 tetap tanpa video. `php artisan serve` tidak mendukung Range, jadi di lokal video tidak bisa dilompati; pemutaran dan pengulangan tetap jalan. 446 test hijau |
 | 517 | Siap deploy: gladi rilis dari salinan bersih, lalu perbaiki yang gagal | ✅ 5 Nov 2026 | **Bug:** `db:seed` gagal di server (`Call to undefined function fake()`) karena `DatabaseSeeder` memakai factory, sedangkan Faker tidak ikut `composer install --no-dev`; kini `User::forceCreate`. **Ditambah:** `.env.production.example`, `scripts/deploy.sh`, [DEPLOY.md](DEPLOY.md), `config/trustedproxy.php` (`TRUSTED_PROXIES`, agar batas login dan form kontak tidak terpakai bersama di balik proxy), `URL::forceScheme('https')` bila `APP_URL` https, aturan brotli/gzip dan cache di `public/.htaccess`. **Gladi** (Apache 2.4 Laragon, PHP 8.3, OPcache, mode produksi, config di-cache): semua halaman 200, 404 benar, login, mode edit, unggah gambar, form kontak, `.env` tidak terbaca, debug tidak bocor, video bisa di-seek (206), HTTPS di balik proxy, dan skrip yang gagal di tengah tetap melepas mode pemeliharaan. Home 69,5 KB → 6,0 KB (brotli), `site.min.css` 167 → 29 KB, `site.min.js` 421 → 132 KB; respons hangat 53–123 ms. **Database:** 451 test lolos di SQLite dan MySQL 8.0; PostgreSQL belum diuji. Test: `ReleaseTest` (5) |
+| 519 | Perbarui dependency PHP di dalam Laravel 12 | ✅ 5 Nov 2026 | `composer audit` melaporkan 55 catatan keamanan di 15 paket (1 critical, 16 high, 25 medium, 6 low, 7 tanpa tingkat); catatan critical ada di TokenGuard, yang tidak dipakai karena login memakai sesi. `composer update` memperbarui 77 paket, hanya `composer.lock` yang berubah: Laravel 12.36 → 12.71, Symfony 7.3 → 7.4, Guzzle 7.10 → 7.16. Hasilnya **audit 0 catatan**, `npm audit` tetap 0. Paket produksi tetap jalan di PHP 8.2; hanya `laravel/pint` (dev) kini butuh PHP 8.3. **Cara cek:** salinan bersih dari git dengan `composer install --no-dev`, mode produksi, `migrate`, `db:seed`, `optimize`: 18 URL menjawab status yang benar lewat HTTP kernel. Server lokal: 15 URL benar dan tidak ada error server. Laravel 13 tidak dikerjakan (pekerjaan terpisah). 451 test hijau |
 
 ---
 
@@ -315,3 +316,4 @@ Ringkasan hasil membaca kode di commit `02fa1fd` (isi sama dengan branch `back-e
 | 4 Nov 2026 | PBI-516 selesai: video hero 12,3 MB → 3,0 MB dan disimpan di proyek, situs lepas dari server demo Awaiken; 446 test hijau |
 | 5 Nov 2026 | PBI-517 selesai: gladi rilis di Apache dan MySQL lokal menemukan bug `db:seed` tanpa Faker; skrip dan panduan deploy, aturan kompresi dan cache, HTTPS, dan proxy ditambahkan. PBI-508 diukur dan dinilai tidak perlu. Total 62 PBI |
 | 5 Nov 2026 | Ekspor statis untuk Vercel (`f7af7c5`) dibatalkan atas keputusan pemilik, kodenya dihapus. Belum ada rencana deploy; pemilik menyiapkan postingan LinkedIn tentang refactor ini |
+| 5 Nov 2026 | PBI-519 selesai: dependency PHP diperbarui di dalam Laravel 12 (12.36 → 12.71), `composer audit` dari 55 catatan menjadi 0; 451 test hijau. Total 63 PBI |
