@@ -355,8 +355,8 @@ Urutan prioritas bila website terasa lambat:
    - Video YouTube tampil sebagai thumbnail (`.video-facade`); pemutarnya baru dimuat saat diklik.
    - CSS yang tidak dipakai dibuang saat build (PBI-513, PurgeCSS): kelas harus tertulis utuh di view, `resources/js`, atau JS bundle. Jangan merangkai nama kelas (`'col-' . $n`); kelas plugin yang dirangkai saat jalan masuk daftar `runtimeClasses` di `scripts/build-site.mjs`. File sumber dan panel admin tidak ikut dipangkas.
    - Font ikon juga dipangkas saat build (PBI-514, `subset-font`): `public/webfonts/site/` hanya berisi ikon yang tersisa di CSS, jadi ikon baru cukup ditulis kelasnya di view lalu `npm run build:site`. Panel admin tetap memakai font penuh di `public/webfonts/`.
-4. **Optimasi rilis:** `php artisan optimize`, OPcache, kompresi gzip dan header cache untuk `css/`, `js/`, `images/` (PBI-507).
-5. **Cache data halaman** bila 1–4 belum cukup.
+4. **Optimasi rilis** (PBI-507, PBI-517): `scripts/deploy.sh` menjalankan `php artisan optimize`, dan OPcache diatur di `php.ini` server. `public/.htaccess` mengompres teks (brotli/gzip) dan mengatur cache browser: setahun untuk URL berversi (`?v=`, `build/assets/`), 30 hari untuk gambar, font, dan video, satu jam untuk CSS/JS tanpa versi.
+5. **Cache data halaman** bila 1–4 belum cukup. Diukur 5 Nov 2026: belum perlu, database hanya 1–3 ms per halaman (PBI-508).
 
 Aturan cache:
 

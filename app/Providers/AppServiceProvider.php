@@ -8,6 +8,7 @@ use App\View\Composers\AdminSidebarComposer;
 use App\View\Composers\FooterComposer;
 use App\View\Composers\SeoComposer;
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
@@ -27,6 +28,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // A host that ends HTTPS at a proxy hands PHP plain HTTP, and http:// assets would be blocked.
+        if (str_starts_with(config('app.url'), 'https://')) {
+            URL::forceScheme('https');
+        }
+
         // @vcmsediting ... @endvcmsediting: only rendered for an admin in edit mode.
         Blade::if('vcmsediting', fn () => EditMode::active());
 

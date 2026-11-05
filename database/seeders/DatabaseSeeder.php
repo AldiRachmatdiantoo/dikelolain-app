@@ -23,10 +23,12 @@ class DatabaseSeeder extends Seeder
             $this->command?->warn('ADMIN_PASSWORD kosong, password admin dibuat acak: ' . $password);
         }
 
-        User::factory()->create([
+        // Not a factory: those need Faker, which a release install leaves out.
+        User::forceCreate([
             'name' => config('app.admin.name'),
             'email' => config('app.admin.email'),
             'password' => $password,
+            'email_verified_at' => now(),
         ]);
 
         // Demo content for the lists (single values fall back to config/page_settings.php)

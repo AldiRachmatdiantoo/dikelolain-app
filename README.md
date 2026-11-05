@@ -55,6 +55,10 @@ php artisan migrate:fresh --seed
 
 Perintah ini menghapus semua isi database lokal, termasuk perubahan yang dibuat lewat admin.
 
+## Rilis ke server
+
+Langkahnya ada di [DEPLOY.md](DEPLOY.md).
+
 ## Struktur singkat (kondisi sekarang)
 
 | Bagian | Lokasi |
