@@ -82,6 +82,8 @@ app/
 │   ├── EditablePages.php          halaman publik yang bisa diedit (tautan di dashboard)
 │   └── Fields/                    definisi field yang bisa diedit per entitas (FaqFields, ...)
 ├── View/Composers/                FooterComposer (data footer untuk semua halaman, 404 juga), SeoComposer (meta description + og:image), AdminSidebarComposer (jumlah pesan belum dibaca)
+├── Legacy/                        sekali jalan: pindah isi web lama ke tabel baru (LegacyContent, LegacyImporter, LegacyReport, LegacyBackup)
+├── Console/Commands/              LegacyReportCommand (`php artisan legacy:report`, rencana pindah tanpa menulis)
 └── Providers/                     AppServiceProvider (composer, scoped SettingService), RepositoryServiceProvider
 
 config/page_settings.php           daftar semua nilai tunggal: tipe, label, default
@@ -170,6 +172,8 @@ Di luar konten: `contact_messages` (`first_name`, `last_name`, `email`, `phone`,
 ### 4.5 Tabel yang dihapus di akhir
 
 `sections`, `section_contents`, `media`: sudah di-drop oleh migration `2026_11_03_000014_drop_legacy_content_tables` (PBI-405).
+
+Di database web lama, migration itu lebih dulu menyalin isinya ke JSON dan memindahkannya ke tabel baru lewat `app/Legacy` (PBI-520, langkahnya di [DEPLOY.md](DEPLOY.md#pindah-dari-web-lama-isi-ikut-pindah)). `app/Legacy` adalah pengecualian yang disengaja dari pola berlapis: kode sekali jalan yang membaca tabel lama langsung dengan query builder dan menulis lewat model serta `PageSettingRepositoryInterface`. Tidak ada controller atau route yang memakainya. Database baru dan database demo tidak punya isi lama, jadi bagian ini dilewati.
 
 ### 4.6 Index
 

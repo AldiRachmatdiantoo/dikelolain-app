@@ -1,7 +1,7 @@
 # Ringkasan Proyek Dikelolain
 
-**Kondisi per:** 5 November 2026, setelah PBI-519
-**Hasil test:** 451 test lolos, 1.872 assertion (`php artisan test`)
+**Kondisi per:** 9 November 2026, setelah PBI-520
+**Hasil test:** 463 test lolos, 1.957 assertion (`php artisan test`)
 
 > Dokumen internal. Isinya menyebut kelemahan versi lama dan rencana rilis, jadi jangan dibagikan ke publik.
 >
@@ -9,12 +9,10 @@
 
 ## Kondisi singkat
 
-- **Refactor selesai di sisi kode.** 58 dari 63 PBI selesai, dan seluruh Epic 0–4 tuntas.
-- **Versi ini belum pernah dirilis.** Hasil refactor hanya ada di repo ini dan di komputer lokal.
-- **Tiga PBI menunggu pemilik:** konten asli (502), deploy (504), dan pengaturan server (507).
-- **Dua hal paling penting sebelum rilis:**
-  1. Konten di web resmi berbeda dari isi repo ini, jadi perlu rencana pemindahan data.
-  2. Rilis perlu persetujuan tim, karena proyek ini milik bersama.
+- **Refactor selesai di sisi kode.** 59 dari 64 PBI selesai, dan seluruh Epic 0–4 tuntas.
+- **Deploy sedang berjalan (PBI-504).** Versi ini akan menggantikan dikelolain.com di Hostinger. Pemilik sudah mendapat izin dosen.
+- **Isi web resmi ikut pindah** lewat migration (PBI-520), dan foto unggahannya dijadikan WebP.
+- **Dua PBI menunggu pemilik:** konten asli (502) dan pengaturan server (507).
 
 ---
 
@@ -171,7 +169,7 @@ Angka di atas diukur di lingkungan lokal. Kenaikan kecepatan lokal 2,4 detik ke 
 | PBI | Pekerjaan | Status | Menunggu | Langkah berikutnya |
 |---|---|---|---|---|
 | 502 | Ganti konten demo dengan konten asli | ⏸️ | Konten dari pemilik atau klien | Lihat daftar di bawah |
-| 504 | Deploy | ⏸️ | Hosting dan database | Pilih hosting, lalu ikuti [DEPLOY.md](DEPLOY.md) |
+| 504 | Deploy | ⏳ | Dipandu bersama pemilik | Ikuti [bagian Hostinger di DEPLOY.md](DEPLOY.md#hostinger-single-web-hosting-tanpa-ssh) |
 | 507 | Optimasi server | ⏸️ | Hosting | Aktifkan OPcache; tulis ulang aturan `.htaccess` bila server bukan Apache |
 | 505 | Fitur baru | ❌ | Belum diisi | Tentukan kalau ada kebutuhan baru |
 | 508 | Cache data halaman | ❌ | Tidak perlu saat ini | Ukur ulang bila database terpisah dari server web |
@@ -194,29 +192,25 @@ PBI-518 (ekspor statis untuk Vercel) dibatalkan. Kodenya masih ada di commit `f7
 
 | Keputusan | Kenapa penting |
 |---|---|
-| Apakah refactor ini akan menggantikan web resmi? | Belum ada rencana deploy saat dokumen ini ditulis |
-| Hosting dan database (K-3) | Menentukan PBI-504 dan 507 |
-| Cara memindahkan konten web resmi | Lihat poin 6.1 |
+| Banner slider horizontal di Portfolio (KD-4) | Sudah dihapus dosen di web live, tapi masih tampil di versi ini |
+| Pengalihan alamat detail lama (KD-6) | Link lama `/pages/team/0` dan sejenisnya kini 404 |
 | Apakah refactor digabung ke repo asal? | Perlu persetujuan tim |
 
 ---
 
 ## 6. Yang harus diperhatikan
 
-### 6.1 Konten web resmi tidak ada di repo ini ⚠️
+### 6.1 Konten web resmi ✅ (ditangani 9 Nov 2026, PBI-520)
 
-Keputusan K-1 memakai asumsi bahwa tidak ada database online berisi konten asli. **Asumsi ini perlu ditinjau ulang.** Screenshot web resmi 5 November 2026 menampilkan teks hero "Cuma Bayar Satu Kali Gaji untuk Fasilitas Satu Tim Agensi". Teks itu tidak ada di `main`, di branch `arsip/back-end`, atau di cadangan JSON lokal.
+Asumsi K-1 ternyata keliru. dikelolain.com berjalan di Hostinger dengan versi lama, dan isi aslinya tersimpan di database MariaDB serta folder `storage/app/public/media`. Repo asal tidak punya commit setelah 16 Januari 2026, jadi perbedaannya hanya isi database, bukan kode.
 
-Artinya, web resmi kemungkinan punya database dan unggahan sendiri. Refactor juga menghapus tabel `sections`, `section_contents`, dan `media`, tanpa skrip pemindahan data.
+Migration `2026_11_03_000014` kini menyalin isi tabel lama ke JSON, memindahkannya ke tabel baru, dan mengubah foto unggahan ke WebP sebelum tabel lama dihapus. Hasilnya sudah dibandingkan dengan salinan database asli: semua halaman sama, kecuali perubahan yang disengaja. Rinciannya ada di [status_backlog.md](status_backlog.md) (PBI-520), dan langkahnya di [DEPLOY.md](DEPLOY.md#pindah-dari-web-lama-isi-ikut-pindah).
 
-**Jangan menimpa web resmi dengan versi ini sebelum:**
+Yang tetap berlaku:
 
-1. Database dan folder unggahan web resmi dicadangkan.
-2. Bentuk datanya dicek.
-3. Diputuskan apakah konten dipindah lewat skrip atau dimasukkan ulang lewat mode edit.
-4. Hasilnya dicoba di server uji.
-
-Cek juga apakah repo asal punya commit setelah 16 Januari 2026, karena snapshot refactor berhenti di tanggal itu.
+1. Ekspor ulang database dan folder `media` tepat sebelum pengalihan.
+2. Biarkan folder dan database web lama di Hostinger sebagai jalan kembali.
+3. Ganti password admin setelah rilis.
 
 ### 6.2 Dependency
 
@@ -302,7 +296,8 @@ Dependency PHP sudah diperbarui di PBI-519. `composer audit` turun dari 55 catat
 | File | Isi | Catatan |
 |---|---|---|
 | `database/database.sqlite` | Database lokal | Masih berisi data demo |
-| `storage/app/private/backups/` | Cadangan sebelum tabel lama dihapus | Boleh dihapus kalau tidak ada teks lama yang perlu disalin |
+| `storage/app/private/backups/` | Cadangan sebelum tabel lama dihapus, dan cadangan serta laporan import web live | Boleh dihapus kalau tidak ada teks lama yang perlu disalin |
+| `storage/app/private/live/` | Dump database web live dan `media.zip` | Berisi hash password admin dan data sesi. Jangan dibagikan |
 | `linkedin/` | Carousel VCMS (PPTX, PDF, gambar) | Materi postingan LinkedIn |
 | `ss/` | Screenshot web resmi dan VCMS | Bahan carousel |
 | `.env` | Konfigurasi lokal | Jangan di-commit |
@@ -314,7 +309,7 @@ Dependency PHP sudah diperbarui di PBI-519. `composer audit` turun dari 55 catat
 1. **Sepakati arah dengan tim.** Tentukan apakah refactor ini akan dirilis, dan apakah kodenya digabung ke repo asal.
 2. **Rapikan dokumen usang** di poin 6.10.
 3. **Amankan web resmi.** Cadangkan database dan unggahan, lalu ganti password lama bila masih dipakai.
-4. **Tentukan cara pindah konten** dan tinjau ulang K-1.
+4. ~~Tentukan cara pindah konten dan tinjau ulang K-1.~~ Selesai 9 Nov 2026 (PBI-520).
 5. **Lengkapi konten dan cek lisensi video.**
 6. **Pilih hosting** yang mendukung PHP, disk menetap, dan database.
 7. **Coba di server uji** dengan [DEPLOY.md](DEPLOY.md), termasuk hal-hal di poin 6.6.

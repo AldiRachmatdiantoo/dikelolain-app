@@ -61,21 +61,57 @@ class ImageUploadService
      */
     private function toWebp(UploadedFile $file): ?string
     {
-        $type = $file->getMimeType();
-        $size = @getimagesize($file->getRealPath());
+        return $this->webpFromFile($file->getRealPath(), (string) $file->getMimeType(), (int) $file->getSize());
+    }
+
+    /**
+     * Converts a picture that is already on the public disk (an upload of the old site) exactly
+     * like a new upload, and stores it as storage/uploads/{folder}/{same name}.webp.
+     *
+     * @param  string  $value  stored value, e.g. "storage/media/images/photo.jpg"
+     * @return string|null the new value, or null to keep the old one (missing file, GIF, video,
+     *                     or a picture that would not get smaller)
+     */
+    public function convertStored(string $value, string $folder): ?string
+    {
+        if (!str_starts_with($value, self::PREFIX)) {
+            return null;
+        }
+
+        $disk = Storage::disk('public');
+        $source = substr($value, strlen(self::PREFIX));
+        if (!$disk->exists($source)) {
+            return null;
+        }
+
+        $path = $disk->path($source);
+        $webp = $this->webpFromFile($path, (string) mime_content_type($path), (int) filesize($path));
+        if ($webp === null) {
+            return null;
+        }
+
+        $target = 'uploads/' . trim($folder, '/') . '/' . pathinfo($source, PATHINFO_FILENAME) . '.webp';
+        $disk->put($target, $webp);
+
+        return self::PREFIX . $target;
+    }
+
+    private function webpFromFile(string $path, string $type, int $bytes): ?string
+    {
+        $size = @getimagesize($path);
 
         if (!in_array($type, ['image/jpeg', 'image/png', 'image/webp'], true) || !$size || !$this->fitsInMemory($size[0], $size[1])) {
             return null;
         }
 
-        $image = @imagecreatefromstring((string) file_get_contents($file->getRealPath()));
+        $image = @imagecreatefromstring((string) file_get_contents($path));
         if ($image === false) {
             return null;
         }
 
         imagepalettetotruecolor($image);
         $scaled = $this->scaleDown($image);
-        $rotated = $type === 'image/jpeg' && $this->turnUpright($image, $file);
+        $rotated = $type === 'image/jpeg' && $this->turnUpright($image, $path);
 
         imagealphablending($image, false);
         imagesavealpha($image, true);
@@ -84,7 +120,7 @@ class ImageUploadService
         $written = imagewebp($image, null, self::WEBP_QUALITY);
         $webp = (string) ob_get_clean();
 
-        if (!$written || $webp === '' || (!$scaled && !$rotated && strlen($webp) >= $file->getSize())) {
+        if (!$written || $webp === '' || (!$scaled && !$rotated && strlen($webp) >= $bytes)) {
             return null;
         }
 
@@ -111,9 +147,9 @@ class ImageUploadService
      * Phone photos are often stored sideways with an EXIF "Orientation" tag. GD ignores the
      * tag and WebP output drops it, so the pixels themselves are turned instead.
      */
-    private function turnUpright(GdImage &$image, UploadedFile $file): bool
+    private function turnUpright(GdImage &$image, string $path): bool
     {
-        $exif = function_exists('exif_read_data') ? @exif_read_data($file->getRealPath()) : false;
+        $exif = function_exists('exif_read_data') ? @exif_read_data($path) : false;
         $orientation = (int) ($exif['Orientation'] ?? 1);
 
         if ($orientation < 2 || $orientation > 8) {

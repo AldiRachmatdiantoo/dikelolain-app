@@ -12,26 +12,28 @@ use Illuminate\Support\Str;
  */
 class ServiceSeeder extends Seeder
 {
+    /** Also what the old detail page showed for a service without benefits of its own. */
+    public const BENEFITS = [
+        'enhanced online presence',
+        'secure platforms to protect data',
+        'improved user experience (ux)',
+        'seamless e-commerce integration',
+        'mobile-friendly & responsive design',
+        'higher user engagement & retention',
+    ];
+
+    /** Also what the old detail page showed for a service without FAQs of its own. */
+    public const FAQS = [
+        ['What services does your agency provide?', 'We specialize in including graphic design, branding, website design and development, UX/UI design, social media marketing, digital advertising, video production, and content creation.'],
+        ['Who are your typical clients?', 'We work with businesses of all sizes, from startups and small businesses to large enterprises. Our clients span industries such as technology, retail, hospitality, healthcare, and more.'],
+        ['How long does a typical project take?', 'The timeline depends on the scope and complexity of the project. Smaller projects may take 2-4 weeks, while larger ones can take several months. We\'ll provide an estimated timeline after discussing your needs.'],
+        ['What is your pricing structure?', 'We offer customized pricing based on the specific requirements of each project. After our initial consultation, we\'ll provide a detailed proposal with a breakdown of costs.'],
+        ['Why are UX and UI important?', 'User Experience (UX) design focuses on enhancing the overall experience users have when interacting with a product or service. It involves researching user needs, creating user personas, designing user journeys, and testing how easy or efficient the product is to use.'],
+    ];
+
     public function run(): void
     {
         $names = ['UI/UX Design', 'Web Development', '3D Designs', 'Digital Marketing Design', 'Motion Graphics'];
-
-        $benefits = [
-            'enhanced online presence',
-            'secure platforms to protect data',
-            'improved user experience (ux)',
-            'seamless e-commerce integration',
-            'mobile-friendly & responsive design',
-            'higher user engagement & retention',
-        ];
-
-        $faqs = [
-            ['What services does your agency provide?', 'We specialize in including graphic design, branding, website design and development, UX/UI design, social media marketing, digital advertising, video production, and content creation.'],
-            ['Who are your typical clients?', 'We work with businesses of all sizes, from startups and small businesses to large enterprises. Our clients span industries such as technology, retail, hospitality, healthcare, and more.'],
-            ['How long does a typical project take?', 'The timeline depends on the scope and complexity of the project. Smaller projects may take 2-4 weeks, while larger ones can take several months. We\'ll provide an estimated timeline after discussing your needs.'],
-            ['What is your pricing structure?', 'We offer customized pricing based on the specific requirements of each project. After our initial consultation, we\'ll provide a detailed proposal with a breakdown of costs.'],
-            ['Why are UX and UI important?', 'User Experience (UX) design focuses on enhancing the overall experience users have when interacting with a product or service. It involves researching user needs, creating user personas, designing user journeys, and testing how easy or efficient the product is to use.'],
-        ];
 
         foreach ($names as $index => $name) {
             $lower = Str::lower($name);
@@ -48,11 +50,11 @@ class ServiceSeeder extends Seeder
                 'sort_order' => $index + 1,
             ]);
 
-            foreach ($benefits as $order => $text) {
+            foreach (self::BENEFITS as $order => $text) {
                 $service->benefits()->create(['text' => $text, 'sort_order' => $order + 1]);
             }
 
-            foreach ($faqs as $order => [$question, $answer]) {
+            foreach (self::FAQS as $order => [$question, $answer]) {
                 $service->faqs()->create(['question' => $question, 'answer' => $answer, 'sort_order' => $order + 1]);
             }
         }

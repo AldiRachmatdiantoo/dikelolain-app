@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('counters', function (Blueprint $table) {
             $table->id();
             $table->string('number', 12);
-            $table->string('suffix', 10)->nullable();
+            $table->string('suffix', 30)->nullable();
             $table->string('label', 100);
             $table->unsignedInteger('sort_order')->default(0);
             $table->boolean('is_active')->default(true);
