@@ -21,6 +21,37 @@
         $('.slicknav_btn').attr('aria-label', 'Menu');
     }
 
+    /**
+     * Home hero video on phones. The full video's <source> is for 768px and up, so a phone first
+     * shows the poster; once the page has loaded it plays the small phone cut (data-mobile-src).
+     * Visitors who asked to save data or to reduce motion keep the poster.
+     */
+    function initHeroVideo() {
+        var video = document.getElementById('myVideo');
+        var src = video && video.getAttribute('data-mobile-src');
+        var saveData = navigator.connection && navigator.connection.saveData;
+
+        if (!src || saveData
+            || !window.matchMedia('(max-width: 767px)').matches
+            || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            return;
+        }
+
+        function start() {
+            video.src = src;
+            var playing = video.play();
+            if (playing) {
+                playing.catch(function () {}); // e.g. iPhone Low Power Mode blocks autoplay; the poster stays
+            }
+        }
+
+        if (document.readyState === 'complete') {
+            start();
+        } else {
+            window.addEventListener('load', start);
+        }
+    }
+
     /** Client logo carousel (partials/client-logos). */
     function initClientLogoSlider() {
         var slider = document.querySelector('.trusted-clients-slider .swiper');
@@ -187,6 +218,7 @@
         gsap.registerPlugin(ScrollTrigger);
 
         initMobileMenu();
+        initHeroVideo();
         initClientLogoSlider();
         initSkillBars();
         initCounters();

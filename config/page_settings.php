@@ -113,7 +113,8 @@ return [
 
     // Hero section (Home)
     'hero.video' => ['type' => 'video', 'label' => 'Video latar', 'default' => '/videos/hero.mp4'],
-    'hero.poster' => ['type' => 'image', 'label' => 'Gambar pengganti video (tampil di HP)', 'default' => ''],
+    'hero.video_mobile' => ['type' => 'video', 'label' => 'Video latar versi HP (kecil; HP hanya menampilkan sisi kiri video)', 'default' => '/videos/hero-mobile.mp4'],
+    'hero.poster' => ['type' => 'image', 'label' => 'Gambar sebelum video diputar (dan di HP mode hemat data)', 'default' => ''],
     'hero.title' => ['type' => 'rich_text', 'label' => 'Judul', 'default' => 'Where <span>creativity</span> meets strategy'],
     'hero.description' => ['type' => 'textarea', 'label' => 'Deskripsi', 'default' => 'We\'re a full-service design agency specializing in branding, web design, and creative strategies that elevate businesses.'],
     'hero.button_text' => ['type' => 'text', 'label' => 'Teks tombol', 'default' => 'view our portfolio'],

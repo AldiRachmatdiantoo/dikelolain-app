@@ -6,9 +6,13 @@
 
     <!-- Hero Section Start -->
     <div class="hero">
+        @php
+            // The phone cut is made from the main video. If the owner replaces only the main video, phones keep the poster rather than show the old one.
+            $mobileVideo = $settings->isDefault('hero.video') || !$settings->isDefault('hero.video_mobile') ? $settings->url('hero.video_mobile') : null;
+        @endphp
         <div class="hero-bg-video">
-            <video autoplay muted loop id="myVideo" @if ($settings->get('hero.poster')) poster="{{ $settings->url('hero.poster') }}" @endif>
-                {{-- Phones skip the video, the heaviest file on the site, and show the poster instead. --}}
+            <video autoplay muted loop playsinline id="myVideo" @if ($settings->get('hero.poster')) poster="{{ $settings->url('hero.poster') }}" @endif @if ($mobileVideo) data-mobile-src="{{ $mobileVideo }}" @endif>
+                {{-- Phones skip the full video and show the poster; function.js loads the small phone cut (data-mobile-src) once the page has loaded. --}}
                 <source src="{{ $settings->url('hero.video') }}" type="video/mp4" media="(min-width: 768px)">
             </video>
         </div>
@@ -28,7 +32,7 @@
 
                 <div class="col-lg-5">
                     {{-- The background video sits behind the content, so it is edited with the images. --}}
-                    <x-vcms.settings :keys="['hero.image_1', 'hero.image_2', 'hero.image_3', 'hero.image_4', 'hero.image_5', 'hero.video', 'hero.poster']" label="Gambar & video" class="hero-images">
+                    <x-vcms.settings :keys="['hero.image_1', 'hero.image_2', 'hero.image_3', 'hero.image_4', 'hero.image_5', 'hero.video', 'hero.video_mobile', 'hero.poster']" label="Gambar & video" class="hero-images">
                         @foreach ([[1, 2], [3], [4, 5]] as $box => $images)
                             <div class="{{ $box === 1 ? 'hero-image-box-2' : 'hero-image-box-1' }}">
                                 @foreach ($images as $i)

@@ -79,6 +79,31 @@ class SitePagesSettingsTest extends TestCase
         $this->get('/')->assertSee('poster="' . asset('storage/uploads/settings/hero.webp') . '"', false);
     }
 
+    public function test_phones_get_a_small_cut_of_the_hero_video(): void
+    {
+        $this->assertFileExists(public_path('videos/hero-mobile.mp4'));
+        $this->assertLessThan(filesize(public_path('videos/hero.mp4')) / 2, filesize(public_path('videos/hero-mobile.mp4')));
+
+        $this->get('/')
+            ->assertSee('<video autoplay muted loop playsinline id="myVideo"', false)
+            ->assertSee('data-mobile-src="' . asset('videos/hero-mobile.mp4') . '"', false);
+    }
+
+    public function test_phones_keep_the_poster_when_only_the_main_video_is_replaced(): void
+    {
+        PageSetting::create(['key' => 'hero.video', 'value' => 'storage/uploads/settings/hero.mp4']);
+
+        $this->get('/')->assertDontSee('data-mobile-src', false);
+    }
+
+    public function test_an_uploaded_phone_video_goes_with_an_uploaded_main_video(): void
+    {
+        PageSetting::create(['key' => 'hero.video', 'value' => 'storage/uploads/settings/hero.mp4']);
+        PageSetting::create(['key' => 'hero.video_mobile', 'value' => 'storage/uploads/settings/hero-hp.mp4']);
+
+        $this->get('/')->assertSee('data-mobile-src="' . asset('storage/uploads/settings/hero-hp.mp4') . '"', false);
+    }
+
     public function test_contact_page_shows_the_defaults(): void
     {
         $this->get('/contact')

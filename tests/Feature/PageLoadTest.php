@@ -45,6 +45,16 @@ class PageLoadTest extends TestCase
         $this->assertStringContainsString('.preloader{animation:preloader-out .6s ease 3s forwards}', file_get_contents(public_path('css/site.min.css')));
     }
 
+    public function test_the_phone_hero_video_waits_for_the_page_and_respects_visitor_settings(): void
+    {
+        $js = file_get_contents(public_path('js/function.js'));
+
+        $this->assertStringContainsString("window.addEventListener('load', start);", $js);
+        $this->assertStringContainsString('navigator.connection.saveData', $js);
+        $this->assertStringContainsString("matchMedia('(prefers-reduced-motion: reduce)')", $js);
+        $this->assertStringContainsString("matchMedia('(max-width: 767px)')", $js);
+    }
+
     public function test_zoom_is_allowed_and_icon_links_have_names(): void
     {
         $html = $this->get('/')->assertOk()->getContent();

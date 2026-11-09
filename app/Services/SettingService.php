@@ -59,6 +59,16 @@ class SettingService
     }
 
     /**
+     * True while the key still holds its registry default (nothing stored, or the same value).
+     */
+    public function isDefault(string $key): bool
+    {
+        $default = $this->definition($key)['default'];
+
+        return ($this->stored()[$key] ?? $default) === $default;
+    }
+
+    /**
      * URL for image/video settings.
      */
     public function url(string $key): string

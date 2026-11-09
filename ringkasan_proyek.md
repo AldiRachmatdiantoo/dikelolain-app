@@ -9,10 +9,10 @@
 
 ## Kondisi singkat
 
-- **Refactor selesai di sisi kode.** 61 dari 65 PBI selesai, dan seluruh Epic 0–4 tuntas.
+- **Refactor selesai di sisi kode.** 62 dari 66 PBI selesai, dan seluruh Epic 0–4 tuntas.
 - **Sudah online sejak 9 Nov 2026 (PBI-504).** dikelolain.com di Hostinger kini menjalankan versi ini, dengan izin dosen. Web lama disimpan sebagai jalan kembali.
 - **Isi web resmi ikut pindah** lewat migration (PBI-520), dan foto unggahannya dijadikan WebP.
-- **PageSpeed mobile (PBI-521):** 78 setelah rilis; perbaikan pergeseran tata letak dan gambar responsif sudah selesai di kode, menunggu diunggah ke Hostinger.
+- **PageSpeed mobile (PBI-521):** 78 setelah rilis; perbaikan pergeseran tata letak dan gambar responsif sudah selesai di kode, menunggu diunggah ke Hostinger. Dalam paket yang sama, video hero kembali diputar di HP dengan potongan kecil 880 KB (PBI-522).
 - **Tugas pemilik setelah rilis (KD-7):** coba mode edit, ganti password admin, hapus folder sementara.
 - **Dua PBI menunggu pemilik:** konten asli (502) dan pengaturan server (507).
 
@@ -175,7 +175,7 @@ Angka di atas diukur di lingkungan lokal. Kenaikan kecepatan lokal 2,4 detik ke 
 | 505 | Fitur baru | ❌ | Belum diisi | Tentukan kalau ada kebutuhan baru |
 | 508 | Cache data halaman | ❌ | Tidak perlu saat ini | Ukur ulang bila database terpisah dari server web |
 
-PBI-518 (ekspor statis untuk Vercel) dibatalkan. Kodenya masih ada di commit `f7af7c5` dan tidak dihitung dalam 65 PBI.
+PBI-518 (ekspor statis untuk Vercel) dibatalkan. Kodenya masih ada di commit `f7af7c5` dan tidak dihitung dalam 66 PBI.
 
 ### Konten yang masih dibutuhkan (KD-2)
 
