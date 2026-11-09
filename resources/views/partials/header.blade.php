@@ -2,8 +2,10 @@
     <div class="header-sticky">
         <nav class="navbar navbar-expand-lg">
             <div class="container">
-                <a class="navbar-brand" href="{{ route('home') }}"> <x-img :src="asset('images/logo-dikelolain.webp')" alt="Logo" />
-                </a>
+                {{-- The logo link itself is the edit zone, so visitors get the same <a class="navbar-brand"> as before. Shown 45px high (custom.css). --}}
+                <x-vcms.settings :keys="['header.logo']" label="Logo" tag="a" class="navbar-brand" :href="route('home')">
+                    <x-img :src="$settings->url('header.logo')" sizes="180px" alt="Logo" />
+                </x-vcms.settings>
                 <div class="collapse navbar-collapse main-menu">
                     <div class="nav-menu-wrapper">
                         <ul class="navbar-nav mr-auto" id="menu">

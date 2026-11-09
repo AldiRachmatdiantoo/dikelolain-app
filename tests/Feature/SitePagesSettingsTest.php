@@ -206,9 +206,32 @@ class SitePagesSettingsTest extends TestCase
             ->assertDontSee('<img src=x', false);
     }
 
+    public function test_header_logo_shows_the_default_on_every_page_including_404(): void
+    {
+        $this->get('/')->assertOk()
+            ->assertSee('<a class="navbar-brand" href="' . route('home') . '"', false)
+            ->assertSee('<img src="' . asset('images/logo-dikelolain.webp') . '" width="720" height="180" alt="Logo">', false);
+
+        $this->get('/halaman-yang-tidak-ada')->assertNotFound()
+            ->assertSee('<img src="' . asset('images/logo-dikelolain.webp') . '"', false);
+    }
+
+    public function test_header_logo_is_not_squeezed_by_the_menu(): void
+    {
+        $this->assertStringContainsString('.navbar-brand{flex-shrink:0}', file_get_contents(public_path('css/site.min.css')));
+    }
+
+    public function test_header_logo_shows_the_uploaded_logo(): void
+    {
+        PageSetting::create(['key' => 'header.logo', 'value' => 'storage/uploads/settings/logo.webp']);
+
+        $this->get('/')->assertSee('<img src="' . asset('storage/uploads/settings/logo.webp') . '"', false);
+    }
+
     public function test_edit_mode_shows_the_new_zones(): void
     {
         $this->editor()->get('/')
+            ->assertSee('&#9998; Logo</button>', false)
             ->assertSee('Gambar &amp; video', false)
             ->assertSee('Judul footer')
             ->assertSee('Link cepat');

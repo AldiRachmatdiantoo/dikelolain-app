@@ -586,3 +586,9 @@ img {
         visibility: hidden;
     }
 }
+
+/* The header logo keeps its width. As a flex item next to the menu it used to shrink between
+   992 and about 1150 px wide, squeezing its 45px-high image (46px wide at 992). */
+.navbar-brand {
+    flex-shrink: 0;
+}
