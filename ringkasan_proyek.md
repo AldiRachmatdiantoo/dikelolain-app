@@ -9,7 +9,7 @@
 
 ## Kondisi singkat
 
-- **Refactor selesai di sisi kode.** 60 dari 64 PBI selesai, dan seluruh Epic 0–4 tuntas.
+- **Refactor selesai di sisi kode.** 60 dari 65 PBI selesai, dan seluruh Epic 0–4 tuntas.
 - **Sudah online sejak 9 Nov 2026 (PBI-504).** dikelolain.com di Hostinger kini menjalankan versi ini, dengan izin dosen. Web lama disimpan sebagai jalan kembali.
 - **Isi web resmi ikut pindah** lewat migration (PBI-520), dan foto unggahannya dijadikan WebP.
 - **Tugas pemilik setelah rilis (KD-7):** coba mode edit, ganti password admin, hapus folder sementara.
@@ -171,14 +171,15 @@ Angka di atas diukur di lingkungan lokal. Kenaikan kecepatan lokal 2,4 detik ke 
 |---|---|---|---|---|
 | 502 | Ganti konten demo dengan konten asli | ⏸️ | Konten dari pemilik atau klien | Lihat daftar di bawah |
 | 507 | Optimasi server | ⏸️ | Pemilik di hPanel | Pilih PHP 8.3 dan aktifkan OPcache. Aturan `.htaccess` sudah jalan di LiteSpeed (brotli aktif) |
+| 521 | Skor PageSpeed mobile (78) | ❌ | Persetujuan pemilik | Hilangkan pergeseran teks hero (font dan animasi huruf), perkecil gambar hero untuk HP |
 | 505 | Fitur baru | ❌ | Belum diisi | Tentukan kalau ada kebutuhan baru |
 | 508 | Cache data halaman | ❌ | Tidak perlu saat ini | Ukur ulang bila database terpisah dari server web |
 
-PBI-518 (ekspor statis untuk Vercel) dibatalkan. Kodenya masih ada di commit `f7af7c5` dan tidak dihitung dalam 63 PBI.
+PBI-518 (ekspor statis untuk Vercel) dibatalkan. Kodenya masih ada di commit `f7af7c5` dan tidak dihitung dalam 65 PBI.
 
 ### Konten yang masih dibutuhkan (KD-2)
 
-- [ ] Gambar pengganti video untuk HP (`hero.poster`). Saat ini kosong, jadi HP menampilkan latar polos.
+- [x] Gambar pengganti video untuk HP (`hero.poster`). Diisi 9 Nov 2026 dengan frame pertama video (WebP 71 KB).
 - [ ] Foto, video, dan link project
 - [ ] Nama dan foto tim
 - [ ] Logo klien
