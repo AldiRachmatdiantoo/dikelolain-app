@@ -340,7 +340,7 @@ class LegacyContentImportTest extends TestCase
                 'hero-images-1_image_1' => 'https://dikelolain.com/storage/media/images/hero.jpg',
                 // The same upload used twice is converted once.
                 'hero-images-1_image_2' => 'storage/media/images/hero.jpg',
-                'hero-images-1_image_3' => 'images/hero-image-3.jpg',
+                'hero-images-1_image_3' => 'images/hero-img-3.jpg',
             ],
             'creative-tools' => [
                 'tools-list-1_tool_0_name' => 'Photoshop',
@@ -353,7 +353,7 @@ class LegacyContentImportTest extends TestCase
         $settings = app(PageSettingRepositoryInterface::class)->all();
         $this->assertSame('storage/uploads/legacy/hero.webp', $settings['hero.image_1']);
         $this->assertSame('storage/uploads/legacy/hero.webp', $settings['hero.image_2']);
-        $this->assertSame('images/hero-image-3.jpg', $settings['hero.image_3']);
+        $this->assertSame('images/hero-img-3.jpg', $settings['hero.image_3']);
 
         [$width, , $type] = getimagesizefromstring(Storage::disk('public')->get('uploads/legacy/hero.webp'));
         $this->assertSame(IMAGETYPE_WEBP, $type);
@@ -364,6 +364,27 @@ class LegacyContentImportTest extends TestCase
         $this->assertSame(['storage/media/images/missing.png'], $result['kept']);
         // The originals stay where they were.
         Storage::disk('public')->assertExists('media/images/hero.jpg');
+    }
+
+    public function test_template_images_replaced_by_webp_point_to_the_webp_copy(): void
+    {
+        $importer = $this->importer();
+        $result = $importer->apply($importer->plan($this->content([
+            // The old editor stored the template defaults by path; these PNGs became WebP in PBI-506.
+            'how-it-works' => [
+                'how-cta-btn_image_file' => 'images/contact-circle-yellow.png',
+                'how-images_main_image' => 'images/how-it-work-image.jpg',
+                'how-images_circle_deco' => 'images/no-such-picture.png',
+            ],
+        ])));
+
+        $settings = app(PageSettingRepositoryInterface::class)->all();
+        $this->assertSame('images/contact-circle-yellow.webp', $settings['process.cta_image']);
+        // Still there, so unchanged; unknown files are left for the report reader.
+        $this->assertSame('images/how-it-work-image.jpg', $settings['process.image']);
+        $this->assertSame('images/no-such-picture.png', $settings['process.circle_image']);
+        $this->assertSame(['images/no-such-picture.png'], $result['kept']);
+        $this->assertSame(0, $result['webp']);
     }
 
     public function test_convert_stored_only_handles_files_on_the_public_disk(): void

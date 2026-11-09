@@ -871,10 +871,21 @@ final class LegacyImporter
     }
 
     /**
-     * Uploads of the old site become WebP; anything else (template images, links) stays as it is.
+     * Uploads of the old site become WebP. Template images the old editor stored by path point to
+     * the WebP copy when the original was replaced by one (PBI-506); anything else stays as it is.
      */
     private function picture(?string $value): ?string
     {
+        if ($value !== null && str_starts_with($value, 'images/') && !is_file(public_path($value))) {
+            $webp = preg_replace('/\.(png|jpe?g)$/i', '.webp', $value);
+            if (is_file(public_path($webp))) {
+                return $webp;
+            }
+            $this->converted[$value] = $value; // listed in the report as a picture used as it is
+
+            return $value;
+        }
+
         if ($value === null || !str_starts_with($value, 'storage/media/')) {
             return $value;
         }
