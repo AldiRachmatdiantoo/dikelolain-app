@@ -100,7 +100,7 @@ Dipakai pertama kali untuk PBI-521. Perubahan kode yang tidak menyentuh database
   - `public_html/...` untuk salinan file `public/`. Layout membaca `filemtime(public_path(...))` dari `dikelolain-v2/public`, sedangkan browser mengunduh dari `public_html`, jadi file `public/` harus ada di kedua tempat.
 
   Daftar filenya: `git diff --name-only <commit di server> -- app resources/views public config routes`, ditambah file baru yang belum ada di server. Setelah `npm run build:site`, ikutkan `public/webfonts/site/*`.
-- **`pasang-pembaruan.php`** memeriksa isi ZIP (hanya dua folder itu), menyalin setiap file lama yang akan tertimpa ke `dikelolain-v2/storage/app/private/cadangan-pembaruan/<waktu>/`, memasang filenya, lalu menghapus ZIP. Setelah itu ia menjalankan `view:clear`, membangun ulang cache config bila ada (agar setting baru terbaca), dan `media:variants` (paling lama 20 detik sekali buka), lalu menghapus dirinya sendiri setelah selesai.
+- **`pasang-pembaruan.php`** menampilkan error sebagai teks (bukan halaman 500), dan hanya menghapus dirinya bila ada baris yang diawali "SELESAI:". Ia memeriksa isi ZIP (hanya dua folder itu), menyalin setiap file lama yang akan tertimpa ke `dikelolain-v2/storage/app/private/cadangan-pembaruan/<waktu>/`, memasang filenya, lalu menghapus ZIP. Setelah itu ia menjalankan `view:clear`, membangun ulang cache config bila ada (agar setting baru terbaca), dan `media:variants` (paling lama 20 detik sekali buka), lalu menghapus dirinya sendiri setelah selesai.
 
 Langkahnya:
 

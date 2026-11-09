@@ -6,6 +6,7 @@ use GdImage;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Throwable;
 
 /**
  * Stores uploaded images/videos on the public disk. Files must already have passed
@@ -44,8 +45,13 @@ class ImageUploadService
             Storage::disk('public')->put($path, $webp);
         }
 
+        // The copies only make pages lighter, so a failure is logged and the upload itself still counts.
         if ($optimize) {
-            $this->createVariants($path);
+            try {
+                $this->createVariants($path);
+            } catch (Throwable $e) {
+                report($e);
+            }
         }
 
         return self::PREFIX . $path;
@@ -129,9 +135,7 @@ class ImageUploadService
         imagepalettetotruecolor($image);
 
         foreach ($widths as $width) {
-            $copy = imagescale($image, $width, max(1, (int) round(imagesy($image) * $width / imagesx($image))), IMG_BICUBIC);
-            imagealphablending($copy, false);
-            imagesavealpha($copy, true);
+            $copy = $this->resized($image, $width, max(1, (int) round(imagesy($image) * $width / imagesx($image))));
 
             ob_start();
             imagewebp($copy, null, self::WEBP_QUALITY);
@@ -225,10 +229,23 @@ class ImageUploadService
             return false;
         }
 
-        imagealphablending($image, false);
-        $image = imagescale($image, max(1, (int) round($width * $ratio)), max(1, (int) round($height * $ratio)), IMG_BICUBIC);
+        $image = $this->resized($image, max(1, (int) round($width * $ratio)), max(1, (int) round($height * $ratio)));
 
         return true;
+    }
+
+    /**
+     * A resized copy that keeps transparency. imagecopyresampled() rather than imagescale():
+     * on the live server imagescale() with IMG_BICUBIC returns false (its GD build differs).
+     */
+    private function resized(GdImage $image, int $width, int $height): GdImage
+    {
+        $copy = imagecreatetruecolor($width, $height);
+        imagealphablending($copy, false);
+        imagesavealpha($copy, true);
+        imagecopyresampled($copy, $image, 0, 0, 0, 0, $width, $height, imagesx($image), imagesy($image));
+
+        return $copy;
     }
 
     /**
