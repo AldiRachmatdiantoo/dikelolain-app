@@ -62,33 +62,32 @@ Akun admin lama (tabel `users`) ikut terbawa, jadi `db:seed` tidak dijalankan. Y
 
 ## Hostinger Single Web Hosting (tanpa SSH)
 
-Paket ini tidak punya SSH dan Composer, jadi database diubah di komputer sendiri, lalu hasilnya diunggah. Folder dan database web lama tidak disentuh sampai langkah pengalihan, jadi web bisa dikembalikan kapan saja.
+Paket ini tidak punya SSH dan Composer, jadi semua yang biasanya dikerjakan `scripts/deploy.sh` disiapkan di komputer sendiri. Folder dan database web lama tidak disentuh sampai langkah pengalihan, jadi web bisa dikembalikan kapan saja.
 
-**Di komputer sendiri**
+**Susunan web lama** (dicek 9 Nov 2026): proyek di `~/dikelolain-app`, dan `public_html` berisi salinan isi folder `public/`. `index.php` di `public_html` sama dengan `public/index.php`, hanya tiga path-nya diubah menjadi `../dikelolain-app/`. `public_html/storage` adalah symlink ke `dikelolain-app/storage/app/public`, yang dibuat lewat `link.php`. Versi baru memakai susunan yang sama dengan folder `~/dikelolain-v2`.
 
-1. **Tepat sebelum pengalihan** (isi web lama masih bisa diubah sampai saat itu): ekspor database lama dari phpMyAdmin (Export → Quick → SQL). Lalu di File Manager, buka `storage/app/public` proyek lama, Compress folder `media` ke ZIP, unduh, dan hapus ZIP itu dari server.
-2. Muat SQL itu ke database MySQL lokal yang baru, salin isi ZIP ke `storage/app/public/media`, dan arahkan koneksi database lokal ke database itu. Jalankan `php artisan legacy:report`, lalu `php artisan migrate --force`, dan baca laporannya.
-3. Ekspor hasilnya: `mysqldump --no-tablespaces --single-transaction <nama-db> > dikelolain-baru.sql` (tanpa `--databases`). Server Hostinger memakai MariaDB 11.8. Dump dari MySQL 8 lokal bisa diimpor ke sana selama tidak ada collation `utf8mb4_0900_*`: tabel Laravel memakai `utf8mb4_unicode_ci`, dan ini sudah dicek pada hasil konversi 9 Nov 2026.
-4. Siapkan kode: `composer install --no-dev --optimize-autoloader` dan `npm run build`. Buat ZIP proyek berisi `vendor/`, `public/build/`, dan `storage/app/public/` (media lama dan `uploads/legacy`). Jangan ikutkan `.git`, `node_modules`, `tests`, `.env`, `storage/app/private`, dan isi `storage/logs` serta `storage/framework/*`. Foldernya tetap harus ada.
-5. Buat `APP_KEY` dengan `php artisan key:generate --show`.
+**Di komputer sendiri.** Hasilnya disimpan di `storage/app/private/deploy/`, tidak masuk git, dan jangan dibagikan.
+
+1. Konversi database. Ekspor database lama dari phpMyAdmin (Export → Quick → SQL), lalu unduh folder `dikelolain-app/storage/app/public/media` (Compress → ZIP, lalu hapus ZIP itu dari server). Muat SQL ke MySQL lokal yang baru, salin `media` ke `storage/app/public/media`, arahkan koneksi lokal ke database itu, lalu jalankan `php artisan legacy:report` dan `php artisan migrate --force`. Ekspor hasilnya tanpa isi tabel `sessions` ke `dikelolain-baru.sql` (`mysqldump --no-tablespaces --single-transaction`, tanpa `--databases`). Server memakai MariaDB 11.8, jadi pastikan dump tidak memuat collation `utf8mb4_0900_*`; tabel Laravel memakai `utf8mb4_unicode_ci`.
+2. `dikelolain-v2-kode.zip`: hasil `git archive`, ditambah `composer install --no-dev --optimize-autoloader`, folder `public/build` hasil `npm run build`, dan `.env` produksi berisi `APP_KEY` baru. Isian `DB_*` di `.env` dibiarkan kosong untuk diisi di server. Tanpa `tests` dan dokumen internal.
+3. `public_html_baru.zip`: isi folder `public/`, dengan tiga path di `index.php` diubah menjadi `../dikelolain-v2/`, ditambah `buat-link-storage.php` (pengganti `php artisan storage:link`).
+4. `uploads-legacy.zip`: foto WebP hasil konversi (`uploads/legacy`).
+5. `cek-v2.php`: file sementara untuk mengecek versi baru sebelum pengalihan.
 
 **Di hPanel**
 
-6. Buat database **baru** (Databases → Management). Catat nama database, user, dan password-nya sendiri. Impor `dikelolain-baru.sql` lewat phpMyAdmin database baru itu.
-7. Unggah ZIP kode ke folder baru di home, misalnya `dikelolain-v2`, lalu Extract. Buat `.env` dari `.env.production.example`, lalu isi `APP_KEY`, `APP_URL=https://dikelolain.com`, `DB_CONNECTION=mysql`, dan `DB_*` database baru.
-8. Pilih PHP 8.3 dan aktifkan OPcache (Advanced → PHP Configuration).
-9. **Pengalihan.** Cadangkan isi `public_html` (Compress → ZIP). Lalu isi `public_html` dengan isi folder `public/` versi baru, dan ubah tiga baris di `public_html/index.php` supaya menunjuk ke folder proyek:
-
-   ```php
-   if (file_exists($maintenance = __DIR__.'/../dikelolain-v2/storage/framework/maintenance.php')) {
-   require __DIR__.'/../dikelolain-v2/vendor/autoload.php';
-   $app = require_once __DIR__.'/../dikelolain-v2/bootstrap/app.php';
-   $app->usePublicPath(__DIR__);   // tambahkan di bawah baris $app
-   ```
-
-   `public_html/storage` harus menjadi symlink ke `dikelolain-v2/storage/app/public`. Tanpa SSH, symlink dibuat sekali lewat Cron Jobs hPanel dengan perintah `ln -sfn` (alamat lengkap dari home), lalu cron itu dihapus. Sebelum mengubah apa pun, cek dulu cara web lama menyambungkan `public_html` dan `storage`, lalu ikuti cara yang sama.
-10. Jalankan [Cek setelah online](#cek-setelah-online). Kalau ada yang salah, kembalikan isi `public_html` dari ZIP cadangan, dan web lama tampil lagi dengan database lamanya.
-11. Ganti password admin setelah rilis.
+6. Buat database **baru** (Databases → Management). Catat sendiri nama database, user, dan password-nya.
+7. Unggah `dikelolain-v2-kode.zip` ke home (bukan ke `public_html`), Extract, lalu isi tiga baris `DB_*` di `dikelolain-v2/.env`.
+8. Salin folder `dikelolain-app/storage/app/public/media` ke `dikelolain-v2/storage/app/public/`. Lalu unggah `uploads-legacy.zip` ke folder itu dan Extract.
+9. Di phpMyAdmin database baru, impor `dikelolain-baru.sql`.
+10. **Cek sebelum pengalihan.** Unggah `cek-v2.php` ke `public_html`, lalu buka `https://dikelolain.com/cek-v2.php?cek=server`; semua baris harus `[OK]`. Halaman versi baru bisa dibuka lewat `?p=/about`, `?p=/pages/team/hasan`, dan seterusnya. Tampilannya polos karena CSS-nya belum ada di `public_html`, jadi yang dicek isinya. Web lama tetap berjalan normal selama pengecekan.
+11. Unggah `public_html_baru.zip` ke home, lalu Extract menjadi folder `public_html_baru`.
+12. **Pengalihan.** Jika isi web lama diubah setelah ekspor, ulangi langkah 1, 8, dan 9 dulu. Lalu:
+    - Buat folder `public_html_lama` di home, kemudian pindahkan **semua** isi `public_html` ke sana (`.htaccess`, `storage`, `link.php`, `robots.txt`, dan lainnya). `robots.txt` lama tidak boleh tertinggal, karena versi baru membuat `/robots.txt` sendiri. Hapus `cek-v2.php`.
+    - Pindahkan semua isi `public_html_baru` ke `public_html`.
+    - Buka `https://dikelolain.com/buat-link-storage.php` sekali, lalu hapus file itu.
+13. Jalankan [Cek setelah online](#cek-setelah-online). **Untuk kembali ke versi lama**, pindahkan isi `public_html` kembali ke `public_html_baru`, lalu pindahkan isi `public_html_lama` ke `public_html`. Web lama tampil lagi dengan database lamanya.
+14. Setelah stabil: ganti password admin, lalu pilih PHP 8.3 dan aktifkan OPcache (Advanced → PHP Configuration). Folder `dikelolain-app`, `public_html_lama`, dan database lama baru dihapus setelah beberapa minggu tanpa masalah.
 
 ## Cek setelah online
 
