@@ -1,7 +1,7 @@
 # Ringkasan Proyek Dikelolain
 
-**Kondisi per:** 9 November 2026, setelah PBI-520
-**Hasil test:** 463 test lolos, 1.957 assertion (`php artisan test`)
+**Kondisi per:** 9 November 2026, setelah rilis (PBI-504)
+**Hasil test:** 464 test lolos, 1.962 assertion (`php artisan test`)
 
 > Dokumen internal. Isinya menyebut kelemahan versi lama dan rencana rilis, jadi jangan dibagikan ke publik.
 >
@@ -9,9 +9,10 @@
 
 ## Kondisi singkat
 
-- **Refactor selesai di sisi kode.** 59 dari 64 PBI selesai, dan seluruh Epic 0–4 tuntas.
-- **Deploy sedang berjalan (PBI-504).** Versi ini akan menggantikan dikelolain.com di Hostinger. Pemilik sudah mendapat izin dosen.
+- **Refactor selesai di sisi kode.** 60 dari 64 PBI selesai, dan seluruh Epic 0–4 tuntas.
+- **Sudah online sejak 9 Nov 2026 (PBI-504).** dikelolain.com di Hostinger kini menjalankan versi ini, dengan izin dosen. Web lama disimpan sebagai jalan kembali.
 - **Isi web resmi ikut pindah** lewat migration (PBI-520), dan foto unggahannya dijadikan WebP.
+- **Tugas pemilik setelah rilis (KD-7):** coba mode edit, ganti password admin, hapus folder sementara.
 - **Dua PBI menunggu pemilik:** konten asli (502) dan pengaturan server (507).
 
 ---
@@ -169,8 +170,7 @@ Angka di atas diukur di lingkungan lokal. Kenaikan kecepatan lokal 2,4 detik ke 
 | PBI | Pekerjaan | Status | Menunggu | Langkah berikutnya |
 |---|---|---|---|---|
 | 502 | Ganti konten demo dengan konten asli | ⏸️ | Konten dari pemilik atau klien | Lihat daftar di bawah |
-| 504 | Deploy | ⏳ | Dipandu bersama pemilik | Ikuti [bagian Hostinger di DEPLOY.md](DEPLOY.md#hostinger-single-web-hosting-tanpa-ssh) |
-| 507 | Optimasi server | ⏸️ | Hosting | Aktifkan OPcache; tulis ulang aturan `.htaccess` bila server bukan Apache |
+| 507 | Optimasi server | ⏸️ | Pemilik di hPanel | Pilih PHP 8.3 dan aktifkan OPcache. Aturan `.htaccess` sudah jalan di LiteSpeed (brotli aktif) |
 | 505 | Fitur baru | ❌ | Belum diisi | Tentukan kalau ada kebutuhan baru |
 | 508 | Cache data halaman | ❌ | Tidak perlu saat ini | Ukur ulang bila database terpisah dari server web |
 
@@ -192,7 +192,6 @@ PBI-518 (ekspor statis untuk Vercel) dibatalkan. Kodenya masih ada di commit `f7
 
 | Keputusan | Kenapa penting |
 |---|---|
-| Banner slider horizontal di Portfolio (KD-4) | Sudah dihapus dosen di web live, tapi masih tampil di versi ini |
 | Pengalihan alamat detail lama (KD-6) | Link lama `/pages/team/0` dan sejenisnya kini 404 |
 | Apakah refactor digabung ke repo asal? | Perlu persetujuan tim |
 
@@ -208,9 +207,8 @@ Migration `2026_11_03_000014` kini menyalin isi tabel lama ke JSON, memindahkann
 
 Yang tetap berlaku:
 
-1. Ekspor ulang database dan folder `media` tepat sebelum pengalihan.
-2. Biarkan folder dan database web lama di Hostinger sebagai jalan kembali.
-3. Ganti password admin setelah rilis.
+1. Biarkan `public_html_lama`, folder `dikelolain-app`, dan database lama di Hostinger beberapa minggu sebagai jalan kembali.
+2. Ganti password admin (KD-7).
 
 ### 6.2 Dependency
 
@@ -311,9 +309,8 @@ Dependency PHP sudah diperbarui di PBI-519. `composer audit` turun dari 55 catat
 3. **Amankan web resmi.** Cadangkan database dan unggahan, lalu ganti password lama bila masih dipakai.
 4. ~~Tentukan cara pindah konten dan tinjau ulang K-1.~~ Selesai 9 Nov 2026 (PBI-520).
 5. **Lengkapi konten dan cek lisensi video.**
-6. **Pilih hosting** yang mendukung PHP, disk menetap, dan database.
-7. **Coba di server uji** dengan [DEPLOY.md](DEPLOY.md), termasuk hal-hal di poin 6.6.
-8. **Rilis ke web resmi** setelah semua cek lolos, lalu perbarui status PBI-502, 504, dan 507.
+6. ~~Pilih hosting, coba, lalu rilis ke web resmi.~~ Selesai 9 Nov 2026 (PBI-504, Hostinger).
+7. **Kerjakan KD-7 dan KD-5** setelah rilis, lalu PBI-507 di hPanel.
 
 ---
 

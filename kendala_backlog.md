@@ -13,6 +13,7 @@
 | KD-4 | Banner "Try Our New Horizontal Slider!" di Portfolio dihapus dosen langsung di server web lama (tidak ada di git). Di versi ini banner masih tampil (K-9) | Keputusan | Tidak menghambat deploy | Pilih: sembunyikan banner seperti di web live, atau biarkan | ✅ Diputuskan pemilik 9 Nov 2026: **banner dihapus**, sama seperti web live. Halaman `/portfolio-experiment` tetap ada tanpa tautan (K-9), sama seperti di web live |
 | KD-5 | Isi asli yang perlu dirapikan pemilik setelah rilis, lewat mode edit: testimoni uji berisi "hai", anggota tim urutan ke-8 tanpa nama, telepon/email/alamat di halaman Contact masih contoh template (`+987 654 3210`, `info@domain.com`), dan FAQ layanan masih contoh bawaan | Konten | Tidak menghambat deploy | Rapikan lewat mode edit setelah rilis | ⏳ Menunggu pemilik |
 | KD-6 | Alamat detail lama (`/pages/team/0`, `/pages/service/new_...`) kini memakai slug, jadi link lama yang tersimpan di luar (Google, chat) menjadi 404 | Keputusan | Tidak menghambat deploy | Bila perlu, buat pengalihan 301 dari alamat lama ke slug baru | ❓ Default: tidak dialihkan (situs kecil, sitemap baru memuat alamat baru) |
+| KD-7 | Tugas setelah rilis 9 Nov 2026 yang hanya bisa dilakukan pemilik | Akun | Tidak menghambat | (1) Masuk `https://dikelolain.com/admin/login` dengan akun admin web lama, coba mode edit: ubah satu teks lalu kembalikan, unggah satu gambar. (2) Ganti password admin (menu profil). (3) Hapus folder `public_html_baru` yang sudah kosong. (4) Setelah beberapa minggu tanpa masalah, hapus `public_html_lama`, `dikelolain-app`, dan database lama `u592845481_dikelolain` (ekspor dulu sebagai arsip) | ⏳ Menunggu pemilik |
 
 ## Catatan masa transisi
 
@@ -23,6 +24,6 @@
 ## Data web lama (PBI-520, 9 Nov 2026)
 
 - Hanya ada di komputer ini, **jangan masuk git** dan jangan dibagikan: dump database berisi hash password admin dan data sesi. Lokasinya `storage/app/private/live/`: `u592845481_dikelolain.sql` (89 KB, diekspor 9 Nov 2026 pukul 01.36 waktu server; perubahan isi terakhir 5 Nov 2026) dan `media.zip` (41,6 MB).
-- Isi web live masih bisa diubah sampai pengalihan, jadi **ekspor ulang database dan folder `media` tepat sebelum pengalihan**, lalu ulangi konversinya.
-- Folder dan database web lama di Hostinger dibiarkan sampai versi baru terbukti jalan, sebagai jalan kembali.
-- Setelah rilis, ganti password admin.
+- Pengalihan selesai 9 Nov 2026. Isi web live tidak berubah sejak ekspor, jadi dump ini sama dengan isi yang dipindahkan. Paket yang diunggah (kode, foto, SQL hasil ubahan) ada di `storage/app/private/deploy/`, juga tidak masuk git.
+- Folder dan database web lama di Hostinger dibiarkan beberapa minggu sebagai jalan kembali (KD-7).
+- Ganti password admin (KD-7).
