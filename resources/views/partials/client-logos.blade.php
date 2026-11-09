@@ -25,7 +25,7 @@
                                             @foreach ($pair as $logo)
                                                 <x-vcms.item resource="client-logos" :item="$logo" :fields="$clientLogoFields" label="logo"
                                                     class="trusted-client-logo {{ $logo->is_active ? '' : 'vcms-hidden' }}">
-                                                    <img src="{{ $logo->logo_url }}" alt="{{ $logo->name ?: 'Client Logo' }}">
+                                                    <x-img :src="$logo->logo_url" sizes="(min-width: 992px) 200px, 160px" alt="{{ $logo->name ?: 'Client Logo' }}" />
                                                 </x-vcms.item>
                                             @endforeach
                                         </div>

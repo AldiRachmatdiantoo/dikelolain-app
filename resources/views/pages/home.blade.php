@@ -34,7 +34,7 @@
                                 @foreach ($images as $i)
                                     <div class="hero-img">
                                         <figure class="image-anime reveal">
-                                            <img src="{{ $settings->url("hero.image_{$i}") }}" alt="Hero Image {{ $i }}">
+                                            <x-img :src="$settings->url('hero.image_' . $i)" :sizes="$box === 1 ? '(min-width: 1200px) 512px, (min-width: 992px) 377px, (min-width: 768px) 506px, calc(100vw - 45px)' : '(min-width: 1200px) 246px, (min-width: 992px) 178px, (min-width: 768px) 243px, calc(50vw - 33px)'" alt="Hero Image {{ $i }}" />
                                         </figure>
                                     </div>
                                 @endforeach
@@ -88,12 +88,12 @@
                                 id="service-{{ $service->id }}" role="tabpanel">
                                 <div class="service-box-image">
                                     <figure>
-                                        <img src="{{ $service->image_url }}" alt="{{ $service->name }}" loading="lazy">
+                                        <x-img :src="$service->image_url" sizes="(min-width: 1200px) 727px, (min-width: 992px) 533px, calc(100vw - 45px)" alt="{{ $service->name }}" loading="lazy" />
                                     </figure>
                                 </div>
                                 <div class="service-box-item">
                                     <div class="icon-box">
-                                        <img src="{{ $service->icon_url }}" alt="Service Icon" loading="lazy">
+                                        <x-img :src="$service->icon_url" sizes="80px" alt="Service Icon" loading="lazy" />
                                     </div>
                                     <div class="service-box-item-content">
                                         <h3><a href="{{ route('pages.service.single', $service->slug) }}">{{ $service->name }}</a></h3>
@@ -159,7 +159,7 @@
                 </div>
                 <div class="col-lg-4">
                     <x-vcms.settings :keys="['process.cta_image', 'process.cta_link']" label="Tombol" class="contact-now-circle">
-                        <a href="{{ $settings->get('process.cta_link') }}"><img src="{{ $settings->url('process.cta_image') }}" alt="Contact Circle" loading="lazy"></a>
+                        <a href="{{ $settings->get('process.cta_link') }}"><x-img :src="$settings->url('process.cta_image')" sizes="144px" alt="Contact Circle" loading="lazy" /></a>
                     </x-vcms.settings>
                 </div>
             </div>
@@ -168,11 +168,11 @@
                 <div class="col-lg-6">
                     <x-vcms.settings :keys="['process.image', 'process.circle_image']" label="Gambar" class="how-it-work-images">
                         <div class="how-work-image-circle">
-                            <img src="{{ $settings->url('process.circle_image') }}" alt="Decorative Circle" loading="lazy">
+                            <x-img :src="$settings->url('process.circle_image')" sizes="(min-width: 1400px) 600px, (min-width: 1200px) 527px, (min-width: 992px) 423px, (min-width: 768px) 600px, calc(100vw - 45px)" alt="Decorative Circle" loading="lazy" />
                         </div>
                         <div class="how-it-work-image">
                             <figure class="image-anime">
-                                <img src="{{ $settings->url('process.image') }}" alt="Work Image" loading="lazy">
+                                <x-img :src="$settings->url('process.image')" sizes="(min-width: 768px) 423px, 250px" alt="Work Image" loading="lazy" />
                             </figure>
                         </div>
                     </x-vcms.settings>

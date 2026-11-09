@@ -24,7 +24,7 @@
                             <x-vcms.settings :keys="['footer.logo', 'footer.description', 'footer.facebook', 'footer.x', 'footer.linkedin', 'footer.instagram']" label="Logo & sosial media" class="about-footer">
                                 <!-- Footer Logo Start -->
                                 <div class="footer-logo">
-                                    <img src="{{ $settings->url('footer.logo') }}" alt="" loading="lazy">
+                                    <x-img :src="$settings->url('footer.logo')" sizes="168px" alt="" loading="lazy" />
                                 </div>
                                 <!-- Footer Logo End -->
 
@@ -35,10 +35,10 @@
                                 <!-- Footer Social Links Start -->
                                 <div class="footer-social-links">
                                     <ul>
-                                        <li><a href="{{ $settings->get('footer.facebook') }}"><i class="fa-brands fa-facebook-f"></i></a></li>
-                                        <li><a href="{{ $settings->get('footer.x') }}"><i class="fa-brands fa-x-twitter"></i></a></li>
-                                        <li><a href="{{ $settings->get('footer.linkedin') }}"><i class="fa-brands fa-linkedin-in"></i></a></li>
-                                        <li><a href="{{ $settings->get('footer.instagram') }}"><i class="fa-brands fa-instagram"></i></a></li>
+                                        <li><a href="{{ $settings->get('footer.facebook') }}" aria-label="Facebook"><i class="fa-brands fa-facebook-f" aria-hidden="true"></i></a></li>
+                                        <li><a href="{{ $settings->get('footer.x') }}" aria-label="X"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a></li>
+                                        <li><a href="{{ $settings->get('footer.linkedin') }}" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in" aria-hidden="true"></i></a></li>
+                                        <li><a href="{{ $settings->get('footer.instagram') }}" aria-label="Instagram"><i class="fa-brands fa-instagram" aria-hidden="true"></i></a></li>
                                     </ul>
                                 </div>
                                 <!-- Footer Social Links End -->

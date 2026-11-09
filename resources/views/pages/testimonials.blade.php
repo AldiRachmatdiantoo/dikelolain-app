@@ -23,7 +23,7 @@
                             <div class="testimonial-header">
                                 <div class="testimonial-logo-img">
                                     @if ($testimonial->logo)
-                                        <img src="{{ $testimonial->logo_url }}" alt="" loading="lazy">
+                                        <x-img :src="$testimonial->logo_url" sizes="160px" alt="" loading="lazy" />
                                     @endif
                                 </div>
                                 <div class="testimonial-rating">
@@ -39,7 +39,7 @@
                                 @if ($testimonial->photo)
                                     <div class="author-image">
                                         <figure class="image-anime">
-                                            <img src="{{ $testimonial->photo_url }}" alt="" loading="lazy">
+                                            <x-img :src="$testimonial->photo_url" sizes="48px" alt="" loading="lazy" />
                                         </figure>
                                     </div>
                                 @endif

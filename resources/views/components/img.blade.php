@@ -1,0 +1,1 @@
+<img {{ $attributes->merge(['src' => $src, 'srcset' => $srcset, 'sizes' => $srcset ? $sizes : null, 'width' => $width, 'height' => $height]) }}>

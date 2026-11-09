@@ -9,9 +9,10 @@
 
 ## Kondisi singkat
 
-- **Refactor selesai di sisi kode.** 60 dari 65 PBI selesai, dan seluruh Epic 0–4 tuntas.
+- **Refactor selesai di sisi kode.** 61 dari 65 PBI selesai, dan seluruh Epic 0–4 tuntas.
 - **Sudah online sejak 9 Nov 2026 (PBI-504).** dikelolain.com di Hostinger kini menjalankan versi ini, dengan izin dosen. Web lama disimpan sebagai jalan kembali.
 - **Isi web resmi ikut pindah** lewat migration (PBI-520), dan foto unggahannya dijadikan WebP.
+- **PageSpeed mobile (PBI-521):** 78 setelah rilis; perbaikan pergeseran tata letak dan gambar responsif sudah selesai di kode, menunggu diunggah ke Hostinger.
 - **Tugas pemilik setelah rilis (KD-7):** coba mode edit, ganti password admin, hapus folder sementara.
 - **Dua PBI menunggu pemilik:** konten asli (502) dan pengaturan server (507).
 
@@ -171,7 +172,6 @@ Angka di atas diukur di lingkungan lokal. Kenaikan kecepatan lokal 2,4 detik ke 
 |---|---|---|---|---|
 | 502 | Ganti konten demo dengan konten asli | ⏸️ | Konten dari pemilik atau klien | Lihat daftar di bawah |
 | 507 | Optimasi server | ⏸️ | Pemilik di hPanel | Pilih PHP 8.3 dan aktifkan OPcache. Aturan `.htaccess` sudah jalan di LiteSpeed (brotli aktif) |
-| 521 | Skor PageSpeed mobile (78) | ❌ | Persetujuan pemilik | Hilangkan pergeseran teks hero (font dan animasi huruf), perkecil gambar hero untuk HP |
 | 505 | Fitur baru | ❌ | Belum diisi | Tentukan kalau ada kebutuhan baru |
 | 508 | Cache data halaman | ❌ | Tidak perlu saat ini | Ukur ulang bila database terpisah dari server web |
 

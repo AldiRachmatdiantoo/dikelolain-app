@@ -27,7 +27,7 @@
                             <!-- Team Single Image Start -->
                             <div class="team-single-image">
                                 <figure class="image-anime reveal">
-                                    <img src="{{ $member->photo_url }}" alt="{{ $member->name }}">
+                                    <x-img :src="$member->photo_url" sizes="(min-width: 1400px) 605px, (min-width: 1200px) 547px, (min-width: 992px) 443px, calc(100vw - 45px)" alt="{{ $member->name }}" />
                                 </figure>
                             </div>
                             <!-- Team Single Image End -->

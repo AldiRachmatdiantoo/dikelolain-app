@@ -5,7 +5,7 @@
         <div class="team-image">
             <a href="{{ route('pages.team.single', $member->slug) }}" data-cursor-text="View">
                 <figure class="image-anime">
-                    <img src="{{ $member->photo_url }}" alt="{{ $member->name }}" loading="lazy">
+                    <x-img :src="$member->photo_url" sizes="(min-width: 1200px) 295px, (min-width: 992px) 214px, (min-width: 768px) 346px, calc(100vw - 45px)" alt="{{ $member->name }}" loading="lazy" />
                 </figure>
             </a>
         </div>

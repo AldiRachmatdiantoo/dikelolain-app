@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	{{-- $seo comes from App\View\Composers\SeoComposer; detail pages set meta_description themselves. --}}
 	<meta name="description" content="@yield('meta_description', $seo['description'])">
 	<link rel="canonical" href="{{ url()->current() }}">
@@ -20,9 +20,8 @@
 
 	<link rel="icon" type="image/png" href="{{ asset('images/favicon-dikelolain.png') }}">
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&display=swap" rel="stylesheet">
+    {{-- Montserrat comes from this site (css/fonts.css); fetching it now, alongside the CSS, means it is usually there before the first paint. --}}
+    <link rel="preload" href="{{ asset('webfonts/montserrat/montserrat-latin.woff2') }}" as="font" type="font/woff2" crossorigin>
 
     {{-- Template CSS joined and minified (resources/site-assets.json, npm run build:site). --}}
     <link href="{{ asset('css/site.min.css') }}?v={{ filemtime(public_path('css/site.min.css')) }}" rel="stylesheet">

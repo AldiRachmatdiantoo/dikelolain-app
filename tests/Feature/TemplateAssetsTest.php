@@ -44,9 +44,9 @@ class TemplateAssetsTest extends TestCase
     {
         $html = $this->get('/')->assertOk()->getContent();
 
-        // Hero pictures are on the first screen; the footer logo is not.
-        $this->assertMatchesRegularExpression('#<img src="[^"]*hero-img-1[^"]*" alt="Hero Image 1">#', $html);
-        $this->assertMatchesRegularExpression('#<img src="[^"]*logo-dikelolain-full-hitam\.webp" alt="" loading="lazy">#', $html);
+        // Hero pictures are on the first screen; the footer logo is not. Both keep their space (width/height).
+        $this->assertMatchesRegularExpression('#<img src="[^"]*hero-img-1[^"]*" width="\d+" height="\d+" alt="Hero Image 1">#', $html);
+        $this->assertMatchesRegularExpression('#<img src="[^"]*logo-dikelolain-full-hitam\.webp" width="\d+" height="\d+" alt="" loading="lazy">#', $html);
     }
 
     public function test_not_found_image_works_on_nested_urls(): void

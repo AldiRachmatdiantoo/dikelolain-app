@@ -7,18 +7,18 @@
 (function ($) {
     'use strict';
 
-    var $window = $(window);
-
-    /** Fades the loading screen out once the page (images included) has loaded. */
+    /**
+     * Fades the loading screen out as soon as the page is ready. It used to wait for every image,
+     * which kept a yellow screen up for seconds on a phone (custom CSS hides it after 3 s anyway).
+     */
     function initPreloader() {
-        $window.on('load', function () {
-            $('.preloader').fadeOut(600);
-        });
+        $('.preloader').fadeOut(600);
     }
 
-    /** Mobile menu: SlickNav copies #menu into .responsive-menu. */
+    /** Mobile menu: SlickNav copies #menu into .responsive-menu. Its button only shows an icon, so it gets a name. */
     function initMobileMenu() {
         $('#menu').slicknav({ label: '', prependTo: '.responsive-menu' });
+        $('.slicknav_btn').attr('aria-label', 'Menu');
     }
 
     /** Client logo carousel (partials/client-logos). */
@@ -182,9 +182,8 @@
             });
     }
 
-    initPreloader();
-
     $(function () {
+        initPreloader();
         gsap.registerPlugin(ScrollTrigger);
 
         initMobileMenu();

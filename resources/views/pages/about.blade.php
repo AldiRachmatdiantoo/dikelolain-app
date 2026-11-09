@@ -15,7 +15,7 @@
                 <div class="col-lg-6">
                     <x-vcms.settings :keys="['about.image']" label="Gambar" class="about-us-img">
                         <figure class="image-anime reveal">
-                            <img src="{{ $settings->url('about.image') }}" alt="">
+                            <x-img :src="$settings->url('about.image')" sizes="(min-width: 1400px) 590px, (min-width: 1200px) 532px, (min-width: 992px) 428px, calc(100vw - 45px)" alt="" />
                         </figure>
                     </x-vcms.settings>
                 </div>
@@ -36,7 +36,7 @@
                             </div>
                             <div class="col-md-6">
                                 <x-vcms.settings :keys="['about.circle_image', 'about.circle_link']" label="Tombol" class="about-contact-now">
-                                    <a href="{{ $settings->get('about.circle_link') }}"><img src="{{ $settings->url('about.circle_image') }}" alt="" loading="lazy"></a>
+                                    <a href="{{ $settings->get('about.circle_link') }}"><x-img :src="$settings->url('about.circle_image')" sizes="144px" alt="" loading="lazy" /></a>
                                 </x-vcms.settings>
                             </div>
                         </div>
@@ -72,7 +72,7 @@
                             <div class="vision-mission-item">
                                 <x-vcms.settings :keys="[$list . '.image']" label="Gambar" class="vision-mission-image">
                                     <figure class="image-anime reveal">
-                                        <img src="{{ $settings->url($list . '.image') }}" alt="{{ $list }}" loading="lazy">
+                                        <x-img :src="$settings->url($list . '.image')" sizes="(min-width: 1400px) 605px, (min-width: 1200px) 532px, (min-width: 992px) 428px, calc(100vw - 45px)" alt="{{ $list }}" loading="lazy" />
                                     </figure>
                                 </x-vcms.settings>
 

@@ -44,6 +44,8 @@ bash scripts/deploy.sh
 
 Situs menampilkan halaman pemeliharaan selama migrasi berjalan, lalu kembali normal sendiri, juga bila skripnya gagal di tengah.
 
+Sejak PBI-521, gambar mendapat salinan kecil untuk `srcset`. Gambar baru membuatnya sendiri saat diunggah. Untuk gambar yang diunggah sebelumnya, jalankan sekali `php artisan media:variants`; perintah ini aman diulang. Di hosting tanpa SSH, ikuti [Memperbarui kode](#memperbarui-kode-tanpa-ssh).
+
 ## Pindah dari web lama (isi ikut pindah)
 
 Database web lama menyimpan isi halaman di tabel `sections` dan `section_contents`. Migration `2026_11_03_000014` (PBI-520) melakukan ini sebelum menghapus tabel lama:
@@ -88,6 +90,27 @@ Paket ini tidak punya SSH dan Composer, jadi semua yang biasanya dikerjakan `scr
     - Buka `https://dikelolain.com/buat-link-storage.php` sekali, lalu hapus file itu.
 13. Jalankan [Cek setelah online](#cek-setelah-online). **Untuk kembali ke versi lama**, pindahkan isi `public_html` kembali ke `public_html_baru`, lalu pindahkan isi `public_html_lama` ke `public_html`. Web lama tampil lagi dengan database lamanya.
 14. Setelah stabil: ganti password admin, lalu pilih PHP 8.3 dan aktifkan OPcache (Advanced → PHP Configuration). Folder `dikelolain-app`, `public_html_lama`, dan database lama baru dihapus setelah beberapa minggu tanpa masalah.
+
+### Memperbarui kode (tanpa SSH)
+
+Dipakai pertama kali untuk PBI-521. Perubahan kode yang tidak menyentuh database cukup dipasang dengan dua file, dari `storage/app/private/deploy/` (tidak masuk git):
+
+- **`pembaruan.zip`** berisi file yang berubah sejak versi di server, dalam dua folder:
+  - `dikelolain-v2/...` dengan path yang sama seperti di proyek;
+  - `public_html/...` untuk salinan file `public/`. Layout membaca `filemtime(public_path(...))` dari `dikelolain-v2/public`, sedangkan browser mengunduh dari `public_html`, jadi file `public/` harus ada di kedua tempat.
+
+  Daftar filenya: `git diff --name-only <commit di server> -- app resources/views public config routes`, ditambah file baru yang belum ada di server. Setelah `npm run build:site`, ikutkan `public/webfonts/site/*`.
+- **`pasang-pembaruan.php`** memeriksa isi ZIP (hanya dua folder itu), menyalin setiap file lama yang akan tertimpa ke `dikelolain-v2/storage/app/private/cadangan-pembaruan/<waktu>/`, memasang filenya, lalu menghapus ZIP. Setelah itu ia menjalankan `view:clear` dan `media:variants` (paling lama 20 detik sekali buka), lalu menghapus dirinya sendiri setelah selesai.
+
+Langkahnya:
+
+1. Unggah kedua file ke `public_html`.
+2. Buka `https://dikelolain.com/pasang-pembaruan.php`. Muat ulang halaman sampai muncul "Semua langkah selesai".
+3. Jalankan [Cek setelah online](#cek-setelah-online).
+
+**Untuk kembali**, salin isi folder cadangan ke tempat asalnya: `dikelolain-v2/...` ke `~/dikelolain-v2`, dan `public_html/...` ke `public_html`.
+
+Perubahan yang butuh migration belum bisa lewat cara ini, karena perlu konversi database seperti langkah 1.
 
 ## Cek setelah online
 

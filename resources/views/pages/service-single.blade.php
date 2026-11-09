@@ -52,7 +52,7 @@
     <x-vcms.item resource="services" :item="$service" :fields="$serviceFields" label="detail layanan"
         :movable="false" :deletable="false" class="service-feature-image {{ $service->is_active ? '' : 'vcms-hidden' }}">
         <figure class="image-anime reveal">
-            <img src="{{ $service->feature_image_url }}" alt="{{ $service->name }}">
+            <x-img :src="$service->feature_image_url" sizes="(min-width: 1400px) 837px, (min-width: 1200px) 760px, (min-width: 992px) 621px, calc(100vw - 45px)" alt="{{ $service->name }}" />
         </figure>
     </x-vcms.item>
     <!-- Service Feature Image End -->

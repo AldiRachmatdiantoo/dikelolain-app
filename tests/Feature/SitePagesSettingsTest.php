@@ -140,7 +140,7 @@ class SitePagesSettingsTest extends TestCase
         $this->get('/about')
             ->assertSeeInOrder(['quick links', 'home', 'tentang kami', 'team', 'our portfolio'])
             ->assertSee('<a href="/about#tim">tentang kami</a>', false)
-            ->assertSee('<a href="https://instagram.com/dikelolain"><i class="fa-brands fa-instagram"></i></a>', false)
+            ->assertSee('<a href="https://instagram.com/dikelolain" aria-label="Instagram"><i class="fa-brands fa-instagram" aria-hidden="true"></i></a>', false)
             ->assertSee('<a href="/contact">Let&#039;s Connect</a>', false);
     }
 

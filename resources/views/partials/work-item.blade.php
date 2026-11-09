@@ -31,27 +31,27 @@
         @elseif ($ratioImage)
             <div class="ratio work-media-ratio">
                 <figure class="image-anime">
-                    <img src="{{ $project->image_url }}" alt="{{ $project->title }}" loading="lazy">
+                    <x-img :src="$project->image_url" sizes="(min-width: 1200px) 355px, (min-width: 992px) 248px, (min-width: 768px) 318px, calc(100vw - 73px)" alt="{{ $project->title }}" loading="lazy" />
                 </figure>
             </div>
         @else
-            <a href="javascript:void(0)" class="open-portfolio-modal" data-cursor-text="View" @foreach ($modalData as $name => $value) data-{{ $name }}="{{ $value }}" @endforeach>
+            <a href="#portfolioModal" role="button" class="open-portfolio-modal" data-cursor-text="View" @foreach ($modalData as $name => $value) data-{{ $name }}="{{ $value }}" @endforeach>
                 <figure class="image-anime">
-                    <img src="{{ $project->image_url }}" alt="{{ $project->title }}" loading="lazy">
+                    <x-img :src="$project->image_url" sizes="(min-width: 1200px) 355px, (min-width: 992px) 248px, (min-width: 768px) 318px, calc(100vw - 73px)" alt="{{ $project->title }}" loading="lazy" />
                 </figure>
             </a>
         @endif
     </div>
     <div class="work-body">
         <div class="work-content">
-            <h3><a href="javascript:void(0)" class="portfolio-title">{{ $project->title }}</a></h3>
+            <h3>{{ $project->title }}</h3>
             @if (filled($project->description))
                 <p>{{ $project->description }}</p>
             @endif
         </div>
         <div class="work-btn">
-            <a href="javascript:void(0)" class="open-portfolio-modal" @foreach ($modalData as $name => $value) data-{{ $name }}="{{ $value }}" @endforeach>
-                <img src="{{ asset('images/arrrow-light.svg') }}" alt="Arrow">
+            <a href="#portfolioModal" role="button" class="open-portfolio-modal" aria-label="Detail {{ $project->title }}" @foreach ($modalData as $name => $value) data-{{ $name }}="{{ $value }}" @endforeach>
+                <img src="{{ asset('images/arrrow-light.svg') }}" alt="">
             </a>
         </div>
     </div>

@@ -68,7 +68,7 @@
                         <ul>
                             @foreach ($benefits as $benefit)
                                 <x-vcms.item resource="page-list-items" :item="$benefit" :fields="$benefitFields" label="keuntungan" tag="li"
-                                    class="{{ $benefit->is_active ? '' : 'vcms-hidden' }}">@if (filled($benefit->icon))<img src="{{ $benefit->icon_url }}" alt="" loading="lazy">@endif{{ $benefit->text }}</x-vcms.item>
+                                    class="{{ $benefit->is_active ? '' : 'vcms-hidden' }}">@if (filled($benefit->icon))<x-img :src="$benefit->icon_url" sizes="48px" alt="" loading="lazy" />@endif{{ $benefit->text }}</x-vcms.item>
                             @endforeach
                         </ul>
                         <x-vcms.add resource="page-list-items" :fields="$benefitFields" label="keuntungan" :defaults="['list_key' => 'pricing_benefits']" />

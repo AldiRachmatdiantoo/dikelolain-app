@@ -545,3 +545,44 @@
         display: none;
     }
 }
+
+/* ---------------------------------------------------------------------------------------
+ * Page load without jumps (PBI-521)
+ * ------------------------------------------------------------------------------------- */
+
+/* Montserrat, then local fonts sized like it (css/fonts.css); the template fell back to serif. */
+:root {
+    --default-font: "Montserrat", "Montserrat Fallback", "Montserrat Fallback Roboto", sans-serif;
+}
+
+/*
+ * function.js splits these headings into letters for their animation. Letters drawn one by one
+ * lose kerning, so the split heading is wider and the hero title gained a line once the script
+ * ran, pushing everything below it down. Without kerning from the start the heading already
+ * has its final width (it looked like this after the split anyway).
+ */
+.text-anime-style-2 {
+    font-kerning: none;
+    font-variant-ligatures: none;
+}
+
+/*
+ * <x-img> gives pictures width/height attributes so the browser keeps their space before they
+ * load. height: auto keeps the attribute from fixing the height where the CSS only sets a width;
+ * rules that do set a height are more specific and still win.
+ */
+img {
+    height: auto;
+}
+
+/* function.js fades the loading screen out when the page is ready; this is the fallback if the script never runs. */
+.preloader {
+    animation: preloader-out 0.6s ease 3s forwards;
+}
+
+@keyframes preloader-out {
+    to {
+        opacity: 0;
+        visibility: hidden;
+    }
+}

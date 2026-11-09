@@ -159,7 +159,8 @@ Dipakai untuk: judul dan deskripsi hero, header setiap halaman, judul section, C
 - Disimpan di disk `public`, folder per entitas: `storage/app/public/uploads/{folder}/{nama-acak}.{ext}`; perlu `php artisan storage:link`.
 - Kolom menyimpan path yang siap untuk `asset()`: `storage/uploads/faqs/abc123.webp`. Gambar bawaan template tetap `images/...`. URL dibuat oleh `App\Support\Media::url()` (nilai yang sudah berupa `http(s)://` dipakai apa adanya).
 - Validasi di rule `App\Rules\MediaUpload`: tipe dideteksi dari **isi file**, JPG/PNG/GIF/WebP maks. 10 MB, MP4/WebM maks. 50 MB, SVG ditolak (K-10).
-- `ImageUploadService` memberi nama acak dengan ekstensi dari isi file, dan hanya menghapus file di bawah `storage/uploads/` saat diganti.
+- `ImageUploadService` memberi nama acak dengan ekstensi dari isi file, dan hanya menghapus file di bawah `storage/uploads/` saat diganti. Setiap gambar JPG/PNG/WebP juga mendapat salinan lebih sempit di sebelahnya (`abc-480w.webp`, `-800w`, `-1200w`, `-1600w`; hanya lebar yang lebih kecil dari aslinya), yang ikut terhapus saat gambar diganti (PBI-521). Gambar lama tanpa salinan dilengkapi dengan `php artisan media:variants`.
+- **View menampilkan gambar lewat `<x-img :src="..." sizes="..." alt="..." />`**, bukan `<img>` langsung. Komponen ini (`App\View\Components\Img`) memberi `width`/`height` dari file (ruangnya terjaga sebelum gambar datang, jadi halaman tidak bergeser) dan, bila salinan sempit ada, `srcset` + `sizes`. Isi `sizes` dengan lebar tampil gambar per lebar layar (diukur dari CSS); tanpa `sizes` browser menganggap selebar layar. URL luar (thumbnail YouTube) dan SVG tetap `<img>` biasa.
 - Video boleh berupa URL atau file MP4/WebM.
 - Tabel `media` dan media library sudah dihapus (PBI-405).
 
@@ -359,6 +360,7 @@ Urutan prioritas bila website terasa lambat:
    - Video YouTube tampil sebagai thumbnail (`.video-facade`); pemutarnya baru dimuat saat diklik.
    - CSS yang tidak dipakai dibuang saat build (PBI-513, PurgeCSS): kelas harus tertulis utuh di view, `resources/js`, atau JS bundle. Jangan merangkai nama kelas (`'col-' . $n`); kelas plugin yang dirangkai saat jalan masuk daftar `runtimeClasses` di `scripts/build-site.mjs`. File sumber dan panel admin tidak ikut dipangkas.
    - Font ikon juga dipangkas saat build (PBI-514, `subset-font`): `public/webfonts/site/` hanya berisi ikon yang tersisa di CSS, jadi ikon baru cukup ditulis kelasnya di view lalu `npm run build:site`. Panel admin tetap memakai font penuh di `public/webfonts/`.
+   - Halaman tidak boleh bergeser setelah tampil (PBI-521, CLS): Montserrat disimpan sendiri (`public/webfonts/montserrat/`, `css/fonts.css`, di-preload di layout) dengan font cadangan lokal yang lebarnya disamakan; judul `.text-anime-style-2` tanpa kerning sejak awal karena pemecahan per huruf menghapusnya; gambar lewat `<x-img>` (lihat 4.3). Preloader hilang saat halaman siap, tidak menunggu semua gambar.
 4. **Optimasi rilis** (PBI-507, PBI-517): `scripts/deploy.sh` menjalankan `php artisan optimize`, dan OPcache diatur di `php.ini` server. `public/.htaccess` mengompres teks (brotli/gzip) dan mengatur cache browser: setahun untuk URL berversi (`?v=`, `build/assets/`), 30 hari untuk gambar, font, dan video, satu jam untuk CSS/JS tanpa versi.
 5. **Cache data halaman** bila 1–4 belum cukup. Diukur 5 Nov 2026: belum perlu, database hanya 1–3 ms per halaman (PBI-508).
 

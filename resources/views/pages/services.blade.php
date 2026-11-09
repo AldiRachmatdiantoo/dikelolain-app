@@ -44,7 +44,7 @@
                             <div class="service-image">
                                 <a href="{{ $serviceLink }}" data-cursor-text="View">
                                     <figure class="image-anime">
-                                        <img src="{{ $service->image_url }}" alt="{{ $service->name }}" loading="lazy">
+                                        <x-img :src="$service->image_url" sizes="(min-width: 1200px) 355px, (min-width: 992px) 248px, (min-width: 768px) 318px, calc(100vw - 73px)" alt="{{ $service->name }}" loading="lazy" />
                                     </figure>
                                 </a>
                             </div>

@@ -28,7 +28,7 @@
                                 <x-vcms.settings :keys="['contact.' . $item . '_icon', 'contact.' . $item . '_label', 'contact.' . $item]" :label="$label"
                                     class="contact-info-item">
                                     <div class="icon-box">
-                                        <img src="{{ $settings->url('contact.' . $item . '_icon') }}" alt="">
+                                        <x-img :src="$settings->url('contact.' . $item . '_icon')" sizes="64px" alt="" />
                                     </div>
                                     <div class="contact-info-content">
                                         <h3>{{ $settings->get('contact.' . $item . '_label') }}</h3>
