@@ -326,3 +326,4 @@ Ringkasan hasil membaca kode di commit `02fa1fd` (isi sama dengan branch `back-e
 | 5 Nov 2026 | Ekspor statis untuk Vercel (`f7af7c5`) dibatalkan atas keputusan pemilik, kodenya dihapus. Belum ada rencana deploy; pemilik menyiapkan postingan LinkedIn tentang refactor ini |
 | 5 Nov 2026 | PBI-519 selesai: dependency PHP diperbarui di dalam Laravel 12 (12.36 → 12.71), `composer audit` dari 55 catatan menjadi 0; 451 test hijau. Total 63 PBI |
 | 9 Nov 2026 | Pemilik memutuskan mengganti dikelolain.com (Hostinger, versi lama) dengan versi ini, dengan izin dosen. K-1 ditinjau ulang: ada database online berisi konten asli. PBI-520 selesai: isi web lama dan fotonya (jadi WebP) ikut pindah saat migrate, terbukti sama pada salinan database asli; 463 test hijau. Total 64 PBI. PBI-504 berjalan |
+| 9 Nov 2026 | Banner "Try Our New Horizontal Slider!" di Portfolio dihapus atas keputusan pemilik (KD-4), sama seperti web live; `/portfolio-experiment` tetap ada tanpa tautan |
