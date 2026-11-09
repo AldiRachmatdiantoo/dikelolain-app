@@ -79,6 +79,21 @@ class SitePagesSettingsTest extends TestCase
         $this->get('/')->assertSee('poster="' . asset('storage/uploads/settings/hero.webp') . '"', false);
     }
 
+    public function test_nothing_is_preloaded_without_a_hero_poster(): void
+    {
+        $this->get('/')->assertDontSee('as="image"', false);
+    }
+
+    public function test_phones_fetch_the_hero_poster_early(): void
+    {
+        PageSetting::create(['key' => 'hero.poster', 'value' => 'storage/uploads/settings/hero.webp']);
+
+        $this->get('/')->assertSeeInOrder([
+            '<link rel="preload" href="' . asset('storage/uploads/settings/hero.webp') . '" as="image" fetchpriority="high" media="(max-width: 767px)">',
+            'css/site.min.css',
+        ], false);
+    }
+
     public function test_phones_get_a_small_cut_of_the_hero_video(): void
     {
         $this->assertFileExists(public_path('videos/hero-mobile.mp4'));

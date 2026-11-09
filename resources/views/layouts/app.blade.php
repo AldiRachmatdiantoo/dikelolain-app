@@ -22,6 +22,7 @@
 
     {{-- Montserrat comes from this site (css/fonts.css); fetching it now, alongside the CSS, means it is usually there before the first paint. --}}
     <link rel="preload" href="{{ asset('webfonts/montserrat/montserrat-latin.woff2') }}" as="font" type="font/woff2" crossorigin>
+    @stack('preload')
 
     {{-- Template CSS joined and minified (resources/site-assets.json, npm run build:site). --}}
     <link href="{{ asset('css/site.min.css') }}?v={{ filemtime(public_path('css/site.min.css')) }}" rel="stylesheet">

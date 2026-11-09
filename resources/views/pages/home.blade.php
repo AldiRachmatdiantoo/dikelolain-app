@@ -2,6 +2,13 @@
 
 @section('title', 'Dikelolain - Creative Agency')
 
+@if ($settings->get('hero.poster'))
+    @push('preload')
+        {{-- On phones the hero poster is the largest thing on screen (LCP), but the browser only finds it in <video poster> after the CSS. --}}
+        <link rel="preload" href="{{ $settings->url('hero.poster') }}" as="image" fetchpriority="high" media="(max-width: 767px)">
+    @endpush
+@endif
+
 @section('content')
 
     <!-- Hero Section Start -->
