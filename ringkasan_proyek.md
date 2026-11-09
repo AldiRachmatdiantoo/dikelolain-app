@@ -12,7 +12,7 @@
 - **Refactor selesai di sisi kode.** 62 dari 66 PBI selesai, dan seluruh Epic 0–4 tuntas.
 - **Sudah online sejak 9 Nov 2026 (PBI-504).** dikelolain.com di Hostinger kini menjalankan versi ini, dengan izin dosen. Web lama disimpan sebagai jalan kembali.
 - **Isi web resmi ikut pindah** lewat migration (PBI-520), dan foto unggahannya dijadikan WebP.
-- **PageSpeed (PBI-521, 522):** mobile naik dari 78 ke **89** (CLS 0,292 → 0,011, Aksesibilitas 99, SEO 100), desktop **98**, diukur 9 Nov 2026 setelah dipasang di Hostinger. Video hero kembali diputar di HP dengan potongan kecil 880 KB.
+- **PageSpeed (PBI-521, 522):** mobile naik dari 78 ke **92** (CLS 0,292 → 0, LCP 2,7 s, Aksesibilitas 99, SEO 100), desktop **98**, diukur 9 Nov 2026 setelah dipasang di Hostinger. Video hero kembali diputar di HP dengan potongan kecil 880 KB.
 - **Tugas pemilik setelah rilis (KD-7):** coba mode edit, ganti password admin, hapus folder sementara.
 - **Dua PBI menunggu pemilik:** konten asli (502) dan pengaturan server (507).
 
